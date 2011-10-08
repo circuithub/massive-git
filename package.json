@@ -1,0 +1,22 @@
+{
+  "author": "CircuitHub (circuithub.com)",
+  "name": "massive-git",
+  "description": "Revision database that implements Git Object Model",
+  "version": "0.0.1",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/circuithub/massive-git.git"
+  },
+  "main": "./index.coffee",
+  "engines": {
+    "node": "~v0.4.9"
+  },
+  "dependencies": {
+    "riak-js": ">=0.4.1"
+  },
+  "devDependencies": {
+    "expresso": ">=0.9.0"
+  }
+}
+
