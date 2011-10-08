@@ -1,10 +1,14 @@
-
+# id - SHA
+# type
+# size
+# content
 class GitObject
-  # type
-  # size
-  # content
+
+  constructor: (@repo, @type, @size) ->
+
 
 class Blob extends GitObject
+
 
 class Tree extends GitObject
 

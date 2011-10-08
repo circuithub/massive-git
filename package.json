@@ -13,7 +13,8 @@
     "node": "~v0.4.9"
   },
   "dependencies": {
-    "riak-js": ">=0.4.1"
+    "riak-js": ">=0.4.1",
+    "coffee-script": ">=1.1.2"
   },
   "devDependencies": {
     "expresso": ">=0.9.0"
