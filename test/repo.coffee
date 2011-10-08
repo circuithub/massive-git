@@ -1,5 +1,5 @@
-Repo = require("../lib/repo").Repo
 assert = require "assert"
+Repo = require("../lib/repo").Repo
 
 exports.testNewPublicRepo = ->
   repo = new Repo("circuithub.com/anton/project1", "project")
