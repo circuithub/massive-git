@@ -1,21 +1,5 @@
 assert = require "assert"
-Blob = require("../lib/objects").Blob
-Commit = require("../lib/objects").Commit
-
-exports.testCreateBlob = ->
-  blob = new Blob("test-content", "circuithub.com/anton/project1")
-  assert.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3", blob.id()
-  assert.equal "blob", blob.type
-  assert.equal "circuithub.com/anton/project1", blob.repo
-  assert.equal "test-content", blob.data
-  assert.equal blob.content(), blob.data
-  # test dao related methods
-  assert.equal "blob", blob.attributes().type
-  assert.equal 1, blob.links().length
-  repoLink = blob.links()[0]
-  assert.equal "repositories", repoLink.bucket
-  assert.equal "circuithub.com/anton/project1", repoLink.key
-  assert.equal "repository", repoLink.tag
+Commit = require("../lib/objects/commit").Commit
 
 exports.testCreateCommit = ->
   commit = new Commit("tree-id", "parent-id", "anton", "andrew", "initial commit", "circuithub.com/anton/project1")

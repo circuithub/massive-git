@@ -1,4 +1,4 @@
-riak = require "riak-js"
+riak      = require "riak-js"
 
 # Dao
 # -----------
@@ -15,7 +15,7 @@ class Dao
       if(err)
         callback err
       else
-        callback undefined, @_populateEntity(meta, attributes)
+        callback undefined, @populateEntity(meta, attributes)
 
   # Save entity.
   save: (entity, callback) =>
@@ -26,7 +26,7 @@ class Dao
        callback err
      else
        console.log "entity was saved in bucket", @bucket, "with id =", entity.id() if @log
-       callback undefined, @_populateEntity(meta, entity.attributes()), meta
+       callback undefined, @populateEntity(meta, entity.attributes()), meta
 
   # Delete entity by `id`.
   delete: (id, callback) ->
@@ -54,10 +54,10 @@ class Dao
         [data]
       .run(callback)
 
-  # Private method for building entity.
-  _populateEntity: (meta, attributes) =>
+  # Method for building GitEntity.
+  populateEntity: (meta, attributes) =>
     entity =
-      id         : meta.key
+      _id = meta.key
     entity
 
 exports.Dao = Dao
