@@ -21,13 +21,18 @@ class Repo extends GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: =>
     attributes =
-      type : @type
+      type   : @type
+      public : @public
 
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
-    owner      = { bucket : "users", key : @owner, tag : "owner"}
-    forkedFrom = { bucket : "repositories", key : @forkedFrom, tag : "forked_from"}
-    [owner, forkedFrom]
+    links = []
+    owner = { bucket : "users", key : @owner, tag : "owner"}
+    links.push owner
+    if(@forkedFrom)
+      forkedFrom = { bucket : "repositories", key : @forkedFrom, tag : "forked_from"}
+      links.push forkedFrom
+    links
 
 exports.Repo = Repo
 

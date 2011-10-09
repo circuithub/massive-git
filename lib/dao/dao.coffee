@@ -56,9 +56,6 @@ class Dao
 
   # Method for building GitEntity.
   populateEntity: (meta, attributes) =>
-    entity =
-      _id = meta.key
-    entity
 
 exports.Dao = Dao
 

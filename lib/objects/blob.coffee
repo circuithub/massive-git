@@ -2,7 +2,7 @@ GitObject = require("./git.object").GitObject
 
 class Blob extends GitObject
 
-  constructor: (@data, @repo = null) ->
+  constructor: (@data, @repo = null, @_id = null) ->
     super "blob", @repo
 
   content: =>
@@ -16,6 +16,10 @@ class Blob extends GitObject
     attributes = super()
     attributes.data = @data
     attributes
+
+  # Method for building `GitEntity` from plain meta and attributes.
+  build: (meta, attributes) =>
+    new Blob(attributes.data, meta.links[0].key, meta.key)
 
 exports.Blob = Blob
 
