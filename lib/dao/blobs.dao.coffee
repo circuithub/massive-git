@@ -1,4 +1,4 @@
 Dao = require("./dao").Dao
 
-class ObjectsDao extends Dao
+class BlobsDao extends Dao
 

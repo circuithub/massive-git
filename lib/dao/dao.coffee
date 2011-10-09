@@ -11,7 +11,7 @@ class Dao
   # Create new instance of the entity. Provide `id`, `attributes` and optionally `links`.
   create: (id, attributes, links = [], callback) =>
     console.log "creating new entity with id =", id, "in bucket =", @bucket
-    meta = @_prepareMetaForNewEntity links
+    meta = { links : links }
     @db.save @bucket, id, attributes, meta, (err, emptyEntity, meta) =>
       if(err)
         callback err
@@ -31,7 +31,6 @@ class Dao
   # Save entity.
   save: (entity, callback) =>
    console.log "saving entity with id =", entity.id, "into bucket =", @bucket
-   entity.meta.modified = new Date().getTime()
    @db.save @bucket, entity.id, entity.attributes, entity.meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
@@ -75,12 +74,6 @@ class Dao
         created  : meta.usermeta.created
         modified : meta.usermeta.modified
     entity
-
-  # Private method for populating metadata for newly created entity.
-  _prepareMetaForNewEntity: (links) =>
-    time = new Date().getTime()
-    # todo (anton) remove this version property from this class
-    { links : links, created : time, modified : time }
 
 exports.Dao = Dao
 
