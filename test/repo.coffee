@@ -17,7 +17,6 @@ exports.testCreatePrivateRepo = ->
   assert.ok !repo.public
   assert.isNull repo.forkedFrom
 
-
 exports.testCreateForkedRepo = ->
   repo = new Repo("circuithub.com/anton/project1", "anton", "project", false, "circuithub.com/andrew/project1")
   assert.equal "circuithub.com/anton/project1", repo.id()

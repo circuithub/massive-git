@@ -9,7 +9,6 @@ exports.testSaveBlob = ->
   step1 = (callback) ->
     blob = new Blob("test-content", "circuithub.com/anton/project1")
     assert.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3", blob.id()
-    console.log "a",blobsDao.populateEntity
     blobsDao.save blob, (err, data) ->
       assert.isUndefined err
       callback err, blob
