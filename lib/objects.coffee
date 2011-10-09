@@ -46,6 +46,15 @@ class Blob extends GitObject
   content: =>
     @data
 
+  # Dao related methods. Code is too riak-specific. Can be refactored later.
+  # ---------
+
+  # Method for getting plain `attributes` of the GitObject.
+  attributes: =>
+    attributes = super()
+    attributes.data = @data
+    attributes
+
 # todo (anton) author and commiter should also store date.
 class Commit extends GitObject
 
@@ -57,7 +66,7 @@ class Commit extends GitObject
     parentToken += "parent" + char for char in @parent
     "tree " + @tree + "\n" + parentToken + "author " + @author + "\ncommitter " + @committer + "\n\n" + @message
 
-  # Dao related methods
+  # Dao related methods. Code is too riak-specific. Can be refactored later.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.
@@ -69,9 +78,9 @@ class Commit extends GitObject
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = super()
-    tree = { bucket : "objects", key : @tree, tag : "tree"}
-    parent = { bucket : "objects", key : @parent, tag : "parent"}
-    author = { bucket : "users", key : @author, tag : "author"}
+    tree      = { bucket : "objects", key : @tree, tag : "tree"}
+    parent    = { bucket : "objects", key : @parent, tag : "parent"}
+    author    = { bucket : "users", key : @author, tag : "author"}
     committer = { bucket : "users", key : @committer, tag : "committer"}
     links.push tree
     links.push parent

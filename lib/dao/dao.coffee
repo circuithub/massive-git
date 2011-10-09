@@ -5,23 +5,12 @@ riak = require "riak-js"
 # Base class for all Dao classes. Some common methods should be implemented here.
 class Dao
 
-  constructor: (@bucket) ->
+  constructor: (@bucket, @log = true) ->
     @db = riak.getClient({ debug : true })
-
-  # Create new instance of the entity. Provide `id`, `attributes` and optionally `links`.
-  create: (id, attributes, links = [], callback) =>
-    console.log "creating new entity with id =", id, "in bucket =", @bucket
-    meta = { links : links }
-    @db.save @bucket, id, attributes, meta, (err, emptyEntity, meta) =>
-      if(err)
-        callback err
-      else
-        console.log "new entity was saved in bucket", @bucket, "with id =", id
-        callback undefined, @_populateEntity meta, attributes
 
   # Get entity by `id`. Callback takes `error` and `entity` object.
   get: (id, callback) =>
-   console.log "getting entity with id =", id, "from bucket =", @bucket
+   console.log "getting entity with id =", id, "from bucket =", @bucket if @log
    @db.get @bucket, id, (err, attributes, meta) =>
       if(err)
         callback err
@@ -30,12 +19,14 @@ class Dao
 
   # Save entity.
   save: (entity, callback) =>
-   console.log "saving entity with id =", entity.id, "into bucket =", @bucket
-   @db.save @bucket, entity.id, entity.attributes, entity.meta, (err, emptyEntity, meta) =>
+   console.log "saving entity with id =", entity.id(), "into bucket =", @bucket if @log
+   meta = { links : entity.links() }
+   @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
      else
-       callback undefined, @_populateEntity(meta, entity.attributes), meta
+       console.log "entity was saved in bucket", @bucket, "with id =", entity.id() if @log
+       callback undefined, @_populateEntity(meta, entity.attributes()), meta
 
   # Delete entity by `id`.
   delete: (id, callback) ->
@@ -67,12 +58,6 @@ class Dao
   _populateEntity: (meta, attributes) =>
     entity =
       id         : meta.key
-      attributes : attributes
-      meta       :
-        vclock   : meta.vclock
-        links    : meta.links
-        created  : meta.usermeta.created
-        modified : meta.usermeta.modified
     entity
 
 exports.Dao = Dao

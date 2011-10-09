@@ -1,4 +1,7 @@
-Dao = require("./dao").Dao
+ObjectsDao = require("./objects.dao").ObjectsDao
 
-class BlobsDao extends Dao
+class BlobsDao extends ObjectsDao
+
+
+exports.newInstance = -> new BlobsDao()
 
