@@ -1,4 +1,5 @@
-Dao = require("./dao").Dao
+Dao  = require("./dao").Dao
+Repo = require("../objects/repo").Repo
 
 class ReposDao extends Dao
 
@@ -6,11 +7,11 @@ class ReposDao extends Dao
     super "repositories"
 
   populateEntity: (meta, attributes) =>
-    entity = super meta, attributes
-    blob = new Repo(attributes.data, meta.links[0].key)
-    blob._id = entity._id
-    blob
-
+    # todo (anton) id is not correct at this point
+    owner = meta.links[0].key
+    if(meta.links[1])
+      forkedFrom = meta.links[1].key
+    new Repo(meta.key, owner, attributes.type, attributes.public, forkedFrom)
 
 exports.newInstance = -> new ReposDao()
 

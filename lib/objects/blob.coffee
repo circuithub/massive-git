@@ -17,9 +17,5 @@ class Blob extends GitObject
     attributes.data = @data
     attributes
 
-  # Method for building `GitEntity` from plain meta and attributes.
-  build: (meta, attributes) =>
-    new Blob(attributes.data, meta.links[0].key, meta.key)
-
 exports.Blob = Blob
 

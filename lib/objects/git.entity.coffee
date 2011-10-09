@@ -18,9 +18,5 @@ class GitEntity
   links: =>
     throw new Error("Should be implemented in every subclass!")
 
-  # Method for building `GitEntity` from plain meta and attributes.
-  build: (meta, attributes) =>
-    throw new Error("Should be implemented in every subclass!")
-
 exports.GitEntity = GitEntity
 
