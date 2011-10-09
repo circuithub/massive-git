@@ -29,7 +29,7 @@ exports.testBasicOperations =->
       callback err, project
   # create new project
   step1 = (callback) ->
-    dao.create "circuithub.com/anton/test-project",{title : "test-project", private : true}, [{bucket : "users", key : "anton", tag : "author"}], (err, project) ->
+    dao.save "circuithub.com/anton/test-project",{title : "test-project", private : true}, [{bucket : "users", key : "anton", tag : "author"}], (err, project) ->
       assert.equal "test-project", project.attributes.title
       assert.equal true, project.attributes.private
       assert.equal 1, project.meta.links.length
