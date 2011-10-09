@@ -10,6 +10,9 @@
 class Repo
   constructor: (@id, @type, @public = true, @forked_from = null) ->
 
+  commits: =>
+
+  commitAll: (message)
 
 exports.Repo = Repo
 

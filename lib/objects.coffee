@@ -5,10 +5,13 @@ sha1 = (data) ->
   shasum.update data
   shasum.digest "hex"
 
-# id - SHA
-# type
-# size
-# content
+# GitObject
+# ------------
+# Every git object has following attributes:
+# id - SHA as unique identifier.
+# type - type of the object: blob, commit, tree or tag.
+# content - raw content of the object.
+# repo - reference to the repo.
 class GitObject
 
   constructor: (@type, @repo = null) ->
@@ -20,7 +23,7 @@ class GitObject
     sha1 store
 
   content: =>
-    throw new Error("Should be implemnted in every subclass!")
+    throw new Error("Should be implemented in every subclass!")
 
 
 class Blob extends GitObject
@@ -31,8 +34,7 @@ class Blob extends GitObject
   content: =>
     @data
 
-class Tree extends GitObject
-
+# todo (anton) author and commiter should also store date.
 class Commit extends GitObject
 
   constructor: (@tree, @parent, @author, @committer, @message, @repo = null) ->
@@ -43,6 +45,9 @@ class Commit extends GitObject
     parentToken += "parent" + char for char in @parent
     "tree " + @tree + "\n" + parentToken + "author " + @author + "\ncommitter " + @committer + "\n\n" + @message
 
+class Tree extends GitObject
+
+# todo (anton) no need to implement at this stage. Can be implemented later
 class Tag extends GitObject
 
 
