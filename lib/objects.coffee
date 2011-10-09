@@ -15,7 +15,6 @@ class GitObject
 
   id: =>
     content = @content()
-    console.log content.length
     header = "#" + @type + " " + content.length + "\0" # type(space)size(null byte)
     store = header + content
     sha1 store
@@ -35,6 +34,14 @@ class Blob extends GitObject
 class Tree extends GitObject
 
 class Commit extends GitObject
+
+  constructor: (@tree, @parent, @author, @committer, @message, @repo = null) ->
+    super "commit", @repo
+
+  content: =>
+    parentToken = ""
+    parentToken += "parent" + char for char in @parent
+    "tree " + @tree + "\n" + parentToken + "author " + @author + "\ncommitter " + @committer + "\n\n" + @message
 
 class Tag extends GitObject
 
