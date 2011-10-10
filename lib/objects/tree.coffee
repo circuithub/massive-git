@@ -1,9 +1,9 @@
 GitObject = require("./git.object").GitObject
 
 # todo (anton) each entry (blob or tree) should have name. Think where put this attribute. Without `name` id will be not compatibe with Git.
-stringFromEntry = (entry) ->
+stringFromEntry = (name, entry) ->
   # todo (anton) we can hardcode `mode` right now
-  "644" + " " + entry.type + " " + entry.id() + "\t" + entry.name + "\n"
+  "644" + " " + entry.type + " " + entry.id() + "\t" + name + "\n"
 
 # Tree
 # ---------
@@ -15,7 +15,7 @@ class Tree extends GitObject
 
   content: =>
     rows = ""
-    rows += stringFromEntry entry for entry in @entries
+    rows += stringFromEntry entryName, entry for entryName, entry of @entries
     rows
 
   # Dao related methods.

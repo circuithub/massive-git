@@ -5,17 +5,30 @@ Tree = require("../lib/objects/tree").Tree
 exports.testCreatePlainTree = ->
   blob1 = new Blob("test-content", "anton-project1")
   blob2 = new Blob("1111", "anton-project1")
-  tree = new Tree([blob1, blob2], "anton-project1")
-  assert.equal "4c487817ad6285382384d0ddca1cfcc7ccf29b40", tree.id()
-  assert.equal 2, tree.entries.length
+  entries ={}
+  entries["datasheet.json"] = blob1
+  entries["symbol.json"] = blob2
+  tree = new Tree(entries, "anton-project1")
+  assert.equal "c5c119808287f1f63db40077b8b7a88c97cfcfeb", tree.id()
+  assert.equal 2, Object.keys(tree.entries).length
+  # test dao related methods
+  assert.equal tree.entries, tree.attributes().entries
+
 
 exports.testCreateHierarchicalTree = ->
   blob1 = new Blob("test-content", "anton-project1")
   blob2 = new Blob("1111", "anton-project1")
-  subtree = new Tree([blob2], "anton-project1")
-  assert.equal "e5703eef623188c5540d9ac3f203e069ed1382af", subtree.id()
-  assert.equal 1, subtree.entries.length
-  tree = new Tree([blob1, subtree], "anton-project1")
-  assert.equal "cd71f7398a2bf6a16bbb9be67eaf086585457406", tree.id()
-  assert.equal 2, tree.entries.length
+  subtreeEntries ={}
+  subtreeEntries["symbol.json"] = blob2
+  subtree = new Tree(subtreeEntries, "anton-project1")
+  assert.equal "4eb2725c1684d3186d57e2482492b283541b7080", subtree.id()
+  assert.equal 1, Object.keys(subtree.entries).length
+  entries ={}
+  entries["datasheet.json"] = blob1
+  entries["js"] = subtree
+  tree = new Tree(entries, "anton-project1")
+  assert.equal "aa23506c7f9225f4dca3fcb28111f198633bd71e", tree.id()
+  assert.equal 2, Object.keys(tree.entries).length
+  # test dao related methods
+  assert.equal tree.entries, tree.attributes().entries
 
