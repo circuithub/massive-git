@@ -16,7 +16,12 @@ exports.testSaveRepo = ->
   step2 = (repo, callback) ->
     reposDao.get repo.id(), (err, repoFromDao) ->
       assert.isUndefined err
-      console.log err, repoFromDao
+      assert.equal repo.id(), repoFromDao.id()
+      assert.equal repo.owner, repoFromDao.owner
+      assert.equal repo.public, repoFromDao.public
+      assert.equal repo.forkedFrom, repoFromDao.forkedFrom
+      assert.deepEqual repo.links(), repoFromDao.links()
+      assert.deepEqual repo.attributes(), repoFromDao.attributes()
       callback err
   async.waterfall [step1, step2], (err, results) ->
     # clear all temp data

@@ -26,7 +26,7 @@ class GitObject extends GitEntity
   content: =>
     throw new Error("Should be implemented in every subclass!")
 
-  # Dao related methods
+  # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.

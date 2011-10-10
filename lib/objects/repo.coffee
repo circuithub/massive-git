@@ -15,7 +15,7 @@ class Repo extends GitEntity
   id: =>
     @_id.replace /\//g, "-"
 
-  # Dao related methods
+  # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.

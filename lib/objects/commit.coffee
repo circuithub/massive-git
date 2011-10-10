@@ -11,7 +11,7 @@ class Commit extends GitObject
     parentToken += "parent" + char for char in @parent
     "tree " + @tree + "\n" + parentToken + "author " + @author + "\ncommitter " + @committer + "\n\n" + @message
 
-  # Dao related methods. Code is too riak-specific. Can be refactored later.
+  # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.

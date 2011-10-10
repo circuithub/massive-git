@@ -7,7 +7,7 @@ class GitEntity
   id: =>
     @_id
 
-  # Dao related methods
+  # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.

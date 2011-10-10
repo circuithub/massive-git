@@ -21,6 +21,8 @@ exports.testSaveBlob = ->
       assert.equal blob.data, blobFromDao.data
       assert.equal blob.content(), blobFromDao.content()
       assert.equal blob.repo, blobFromDao.repo
+      assert.deepEqual blob.links(), blobFromDao.links()
+      assert.deepEqual blob.attributes(), blobFromDao.attributes()
       callback err
   async.waterfall [step1, step2], (err, results) ->
     # clear all temp data
