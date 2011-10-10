@@ -37,6 +37,7 @@ class Dao
     @db.getAll @bucket, (err, objects) =>
       if(!err)
         objects.forEach (object) =>
+          console.log "removing entity from bucket", @bucket, "with id =", object.meta.key if @log
           @db.remove @bucket, object.meta.key
 
   # Checks if such key exists in database.
