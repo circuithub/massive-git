@@ -1,17 +1,18 @@
 _         = require "underscore"
 GitObject = require("./git.object").GitObject
 
-# todo (anton) each entry (blob or tree) should have name. Think where put this attribute. Without `name` id will be not compatibe with Git.
-stringFromEntry = (name, entry) ->
+stringFromEntry = (name, id, type) ->
   # todo (anton) we can hardcode `mode` right now
-  "644" + " " + entry.type + " " + entry.id() + "\t" + name + "\n"
+  "644" + " " + type + " " + id + "\t" + name + "\n"
 
 # Tree
 # ---------
 # Tree is one of the 4 core Git Objects. Tree stores `entries` which are links to blobs and other trees.
+# todo (anton) store entities also as riak links????
 class Tree extends GitObject
 
-  # Constructor takes Tree entries and optionally `repo` id and commit's `id`.
+  # Constructor takes Tree entries and optionally `repo` id and tree's `id`.
+  # Entry object has `name`, `id` and `type`.
   constructor: (entries, @repo = null, @_id = null) ->
     super "tree", @repo, @_id
     # Entries are ordered by name as in native Git implementation.
@@ -19,7 +20,7 @@ class Tree extends GitObject
 
   content: =>
     rows = ""
-    rows += stringFromEntry entry.name, entry.value for entry in @entries
+    rows += stringFromEntry entry.name, entry.id, entry.type for entry in @entries
     rows
 
   # Dao related methods.

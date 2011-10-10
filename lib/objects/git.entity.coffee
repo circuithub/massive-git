@@ -3,6 +3,7 @@ utils = require "./utils"
 # GitEntity
 # -----------
 # Base abstract class for each git entity: user, repository, git objects (blobs, commits, trees, tags).
+# Each entity has `id`, `attributes` and `links` to other `entities`.
 class GitEntity
 
   # Id of the entity.

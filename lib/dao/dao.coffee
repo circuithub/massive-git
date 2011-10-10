@@ -27,7 +27,7 @@ class Dao
        callback err
      else
        console.log "entity was saved in bucket", @bucket, "with id =", entity.id() if @log
-       callback undefined, @populateEntity(meta, entity.attributes()), meta
+       callback undefined, entity
 
   # Delete entity by `id`.
   delete: (id, callback) ->
