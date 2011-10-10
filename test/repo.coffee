@@ -6,6 +6,7 @@ exports.testCreateRepo = ->
   assert.equal "anton-project1", repo.id()
   assert.equal "project", repo.type
   assert.equal "anton", repo.owner
+  assert.equal "project1", repo.name
   assert.ok repo.public
   assert.isNull repo.forkedFrom
   # test dao related methods
@@ -22,6 +23,7 @@ exports.testCreatePrivateRepo = ->
   assert.equal "anton-project1", repo.id()
   assert.equal "project", repo.type
   assert.equal "anton", repo.owner
+  assert.equal "project1", repo.name
   assert.ok !repo.public
   assert.isNull repo.forkedFrom
 
@@ -30,6 +32,7 @@ exports.testCreateForkedRepo = ->
   assert.equal "anton-project1", repo.id()
   assert.equal "project", repo.type
   assert.equal "anton", repo.owner
+  assert.equal "project1", repo.name
   assert.ok !repo.public
   assert.equal "andrew-project1", repo.forkedFrom
   # test dao related methods

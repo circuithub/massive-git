@@ -1,4 +1,4 @@
-_ = require "underscore"
+utils = require "./utils"
 
 # GitEntity
 # -----------
@@ -21,9 +21,8 @@ class GitEntity
     []
 
   # Method for finding appropriate link `key` by tag name.
-  # todo (anton) maybe this is too big dependecy in this class.
   getLink: (tagName) =>
-    link =_.detect @links(), (link) -> tagName == link.tag
-    link.key
+    utils.getLink @links(), tagName
+
 exports.GitEntity = GitEntity
 

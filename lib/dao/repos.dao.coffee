@@ -7,11 +7,9 @@ class ReposDao extends Dao
     super "repositories"
 
   populateEntity: (meta, attributes) =>
-    # todo (anton) id is not correct at this point
-    owner = meta.links[0].key
-    if(meta.links[1])
-      forkedFrom = meta.links[1].key
-    new Repo(meta.key, owner, attributes.type, attributes.public, forkedFrom)
+    owner = @getLink meta.links, "owner"
+    forkedFrom = @getLink meta.links, "forked_from"
+    new Repo(attributes.name, owner, attributes.type, attributes.public, forkedFrom)
 
 exports.newInstance = -> new ReposDao()
 

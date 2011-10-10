@@ -21,6 +21,7 @@ class Repo extends GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: =>
     attributes =
+      name   : @name
       type   : @type
       public : @public
 

@@ -1,4 +1,5 @@
-riak      = require "riak-js"
+riak  = require "riak-js"
+utils = require "../objects/utils"
 
 # Dao
 # -----------
@@ -58,5 +59,7 @@ class Dao
   # Method for building GitEntity.
   populateEntity: (meta, attributes) =>
 
+  getLink: (links, tag) =>
+    utils.getLink links, tag
 exports.Dao = Dao
 
