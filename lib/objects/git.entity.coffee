@@ -16,7 +16,7 @@ class GitEntity
 
   # Method for getting `links` that connect this GitEntity with git objects, users or repositories.
   links: =>
-    throw new Error("Should be implemented in every subclass!")
+    []
 
 exports.GitEntity = GitEntity
 

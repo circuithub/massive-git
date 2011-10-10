@@ -8,7 +8,7 @@ class UsersDao extends Dao
 
   populateEntity: (meta, attributes) =>
     # todo (anton) parse links.
-    new User(meta.key, owner, attributes.email, attributes.date)
+    new User(meta.key, attributes.email, attributes.date)
 
-exports.newInstance = -> new ReposDao()
+exports.newInstance = -> new UsersDao()
 
