@@ -15,9 +15,12 @@ sha1 = (data) ->
 # repo - reference to the repo.
 class GitObject extends GitEntity
 
-  constructor: (@type, @repo = null) ->
+  # Constructor takes `type` of object and optionally `repo` id and internal `_id` of the object.
+  constructor: (@type, @repo = null, @_id) ->
 
   id: =>
+    if(@_id) # return @_id if we have it.
+      return @_id
     content = @content()
     header = "#" + @type + " " + content.length + "\0" # type(space)size(null byte)
     store = header + content

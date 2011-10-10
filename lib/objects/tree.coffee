@@ -11,8 +11,9 @@ stringFromEntry = (name, entry) ->
 # Tree is one of the 4 core Git Objects. Tree stores `entries` which are links to blobs and other trees.
 class Tree extends GitObject
 
-  constructor: (entries, @repo = null) ->
-    super "tree", @repo
+  # Constructor takes Tree entries and optionally `repo` id and commit's `id`.
+  constructor: (entries, @repo = null, @_id = null) ->
+    super "tree", @repo, @_id
     # Entries are ordered by name as in native Git implementation.
     @entries = _.sortBy entries, (entry) -> entry.name
 
