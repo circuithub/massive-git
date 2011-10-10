@@ -1,3 +1,5 @@
+_ = require "underscore"
+
 # GitEntity
 # -----------
 # Base abstract class for each git entity: user, repository, git objects (blobs, commits, trees, tags).
@@ -18,5 +20,10 @@ class GitEntity
   links: =>
     []
 
+  # Method for finding appropriate link `key` by tag name.
+  # todo (anton) maybe this is too big dependecy in this class.
+  getLink: (tagName) =>
+    link =_.detect @links(), (link) -> tagName == link.tag
+    link.key
 exports.GitEntity = GitEntity
 

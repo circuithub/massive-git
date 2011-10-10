@@ -10,10 +10,10 @@ GitEntity = require("./git.entity").GitEntity
 # `forkedFrom` - id of the repository from which this was cloned. Default to `null`.
 class Repo extends GitEntity
 
-  constructor: (@_id, @owner, @type, @public = true, @forkedFrom = null) ->
+  constructor: (@name, @owner, @type, @public = true, @forkedFrom = null) ->
 
   id: =>
-    @_id.replace /\//g, "-"
+    @owner + "-" + @name
 
   # Dao related methods.
   # ---------

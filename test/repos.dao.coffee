@@ -7,8 +7,8 @@ Repo     = require("../lib/objects/repo").Repo
 exports.testSaveRepo = ->
   # create new repo and save it
   step1 = (callback) ->
-    repo = new Repo("circuithub.com/anton/project1", "anton", "project")
-    assert.equal "circuithub.com-anton-project1", repo.id()
+    repo = new Repo("project1", "anton", "project")
+    assert.equal "anton-project1", repo.id()
     reposDao.save repo, (err, data) ->
       assert.isUndefined err
       callback err, repo
