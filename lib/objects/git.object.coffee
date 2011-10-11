@@ -41,8 +41,7 @@ class GitObject extends GitEntity
   links: =>
     links = []
     if(@repo)
-      repo = { bucket : "repositories", key : @repo, tag : "repository"}
-      links.push repo
+      links.push @buildLink "repositories", @repo, "repository"
     links
 
 exports.GitObject = GitObject

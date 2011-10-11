@@ -1,2 +1,5 @@
 class MassiveGit
+  addToIndex: =>
+
+  commits: =>
 

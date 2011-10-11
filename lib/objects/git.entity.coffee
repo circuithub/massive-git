@@ -25,5 +25,8 @@ class GitEntity
   getLink: (tagName) =>
     utils.getLink @links(), tagName
 
+  # Method for building link.
+  buildLink: (bucket, key, tag) => utils.buildLink bucket, key, tag
+
 exports.GitEntity = GitEntity
 

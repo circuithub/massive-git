@@ -7,3 +7,6 @@ exports.testGetLink = ->
   assert.equal "anton", utils.getLink links, "owner"
   assert.isNull utils.getLink links, "contributor"
 
+exports.testBuilLink = ->
+  assert.deepEqual { bucket : "users" , tag : "owner", key : "anton"}, utils.buildLink "users", "anton", "owner"
+

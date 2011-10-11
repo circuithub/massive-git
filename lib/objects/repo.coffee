@@ -28,11 +28,9 @@ class Repo extends GitEntity
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = []
-    owner = { bucket : "users", key : @owner, tag : "owner"}
-    links.push owner
+    links.push @buildLink "users", @owner, "owner"
     if(@forkedFrom)
-      forkedFrom = { bucket : "repositories", key : @forkedFrom, tag : "forked_from"}
-      links.push forkedFrom
+      links.push @buildLink "repositories", @forkedFrom, "forked_from"
     links
 
 exports.Repo = Repo

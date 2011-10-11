@@ -1,6 +1,6 @@
 GitObject = require("./git.object").GitObject
 
-# todo (anton) author and commiter should also store date.
+# todo (anton) author and commiter should also store date!!!!!!!!!!
 class Commit extends GitObject
 
   # Constructor takes mandatory `Commit` properties and optionally `repo` id and commit's `id`.
@@ -24,14 +24,10 @@ class Commit extends GitObject
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = super()
-    tree      = { bucket : "objects", key : @tree, tag : "tree" }
-    parent    = { bucket : "objects", key : @parent, tag : "parent" }
-    author    = { bucket : "users", key : @author, tag : "author" }
-    committer = { bucket : "users", key : @committer, tag : "committer" }
-    links.push tree
-    links.push parent
-    links.push author
-    links.push committer
+    links.push @buildLink "objects", @tree, "tree"
+    links.push @buildLink "objects", @parent, "parent"
+    links.push @buildLink  "users", @author, "author"
+    links.push @buildLink "users", @committer, "committer"
     links
 
 exports.Commit = Commit
