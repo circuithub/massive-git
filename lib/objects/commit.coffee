@@ -10,7 +10,7 @@ class Commit extends GitObject
   # todo (anton) author and commiter here should keep authore and commited date. Only in this way sha will be Git compatible
   content: =>
     parentToken = ""
-    parentToken += "parent" + char for char in @parent
+    parentToken += "parent" + char for char in @parent if @parent # todo (anton) check what to do if parent is null. In case of first commit
     "tree " + @tree + "\n" + parentToken + "author " + @author + "\ncommitter " + @committer + "\n\n" + @message
 
   # Dao related methods.
