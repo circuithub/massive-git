@@ -5,10 +5,13 @@ Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 reposDao   = require("../lib/dao/repos.dao").newInstance()
 commitsDao = require("../lib/dao/commits.dao").newInstance()
+blobsDao = require("../lib/dao/blobs.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 
 exports.testCommit = ->
+  blob1 = new Blob "test-content"
+  blob2 = new Blob "1111"
   # create repo
   step1 = (callback) ->
     repo = new Repo("part1", "anton", "part")
@@ -41,15 +44,48 @@ exports.testCommit = ->
       # todo (anton) why there is problem with missing link??? fix it!!!
       #assert.isUndefined commit.parent
       #assert.isNull commit.getLink "parent"
+      callback err, commit
+  # get repo and check it
+  step4 = (commit, callback) ->
+    reposDao.get "anton$part1", (err, repo) ->
+      assert.isUndefined err
+      console.log repo
+      assert.equal "part1", repo.name
+      assert.equal "anton", repo.owner
+      assert.equal "anton", repo.getLink "owner"
+      assert.equal "part", repo.type
+      assert.equal commit.id(), repo.commit
+      assert.equal commit.id(), repo.getLink "commit"
+      assert.isNull repo.forkedFrom
+      assert.isNull repo.getLink "forked_from"
+      assert.ok repo.public
       callback err, commit.tree
    # get tree and check it
-  step4 = (treeId, callback) ->
+  step5 = (treeId, callback) ->
     treesDao.get treeId, (err, tree) ->
       assert.isUndefined err
-      console.log tree
+      assert.equal "anton$part1", tree.repo
+      assert.equal "anton$part1", tree.getLink "repository"
+      assert.equal 2, tree.getLinks("blob").length
+      assert.equal blob1.id(), tree.getLinks("blob")[0]
+      assert.equal blob2.id(), tree.getLinks("blob")[1]
+      callback err, blob1, blob2
+  # get blob 1 and check it
+  step6 = (blob1, blob2, callback) ->
+    blobsDao.get blob1.id(), (err, blob) ->
+      assert.isUndefined err
+      assert.deepEqual blob1.attributes(), blob.attributes()
+      assert.deepEqual blob1.links(), blob.links()
+      callback err, blob2
+  # get blob 2 and check it
+  step7 = (blob2, callback) ->
+    blobsDao.get blob2.id(), (err, blob) ->
+      assert.isUndefined err
+      assert.deepEqual blob2.attributes(), blob.attributes()
+      assert.deepEqual blob2.links(), blob.links()
       callback err
-  # todo (anton) tree, repo and both blob should be checke.
-  async.waterfall [step1, step2, step3, step4], (err, results) ->
+  # todo (anton) tree, repo and both blob should be checked.
+  async.waterfall [step1, step2, step3, step4, step5, step6, step7], (err, results) ->
     # clear all temp data
     reposDao.deleteAll()
     commitsDao.deleteAll()

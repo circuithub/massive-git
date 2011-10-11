@@ -21,9 +21,13 @@ class GitEntity
   links: =>
     []
 
-  # Method for finding appropriate link `key` by tag name.
+  # Method for finding appropriate link `key` by `tag` name.
   getLink: (tagName) =>
     utils.getLink @links(), tagName
+
+  # Method for finding all appropriate links `key` by `tag` name.
+  getLinks: (tagName) =>
+    utils.getLinks @links(), tagName
 
   # Method for building link.
   buildLink: (bucket, key, tag) => utils.buildLink bucket, key, tag

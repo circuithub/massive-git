@@ -9,7 +9,8 @@ class ReposDao extends Dao
   populateEntity: (meta, attributes) =>
     owner = @getLink meta.links, "owner"
     forkedFrom = @getLink meta.links, "forked_from"
-    new Repo(attributes.name, owner, attributes.type, attributes.public, forkedFrom)
+    commit = @getLink meta.links, "commit"
+    new Repo(attributes.name, owner, attributes.type, attributes.public, commit, forkedFrom)
 
 exports.newInstance = -> new ReposDao()
 

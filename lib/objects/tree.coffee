@@ -25,9 +25,11 @@ class Tree extends GitObject
   # Dao related methods.
   # ---------
 
-  # Method for getting plain `attributes` of the GitObject.
+ # Method for getting plain `attributes` of the GitObject.
   attributes: =>
     attributes = super()
+    # todo (anton) we need to store entities also here. Since they cannot be fully repopulated from links (mode and name of entry).
+    # However for now it's not clear do we need these 'full' entities...
     attributes.entries = @entries
     attributes
 
@@ -35,6 +37,7 @@ class Tree extends GitObject
   links: =>
     links = super()
     # todo (anton) should we keep entries just as links? I guest it will be better way to go.
+    links.push @buildLink "objects", entry.id, entry.type  for entry in @entries
     links
 
 exports.Tree = Tree
