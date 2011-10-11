@@ -2,13 +2,16 @@ assert = require "assert"
 Commit = require("../lib/objects/commit").Commit
 
 exports.testCreateCommit = ->
-  commit = new Commit("tree-id", "parent-id", "anton", "andrew", "initial commit", "anton$project1")
+  date = new Date().getTime()
+  commit = new Commit("tree-id", "parent-id", "anton", date, "andrew", date, "initial commit", "anton$project1")
   assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", commit.id()
   assert.equal "commit", commit.type
   assert.equal "tree-id", commit.tree
   assert.equal "parent-id", commit.parent
   assert.equal "anton", commit.author
+  assert.equal date, commit.authoredDate
   assert.equal "andrew", commit.committer
+  assert.equal date, commit.commitedDate
   assert.equal "initial commit", commit.message
   assert.equal "anton$project1", commit.repo
   # test dao related methods

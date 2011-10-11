@@ -4,7 +4,7 @@ GitObject = require("./git.object").GitObject
 class Commit extends GitObject
 
   # Constructor takes mandatory `Commit` properties and optionally `repo` id and commit's `id`.
-  constructor: (@tree, @parent, @author, @committer, @message, @repo = null, @_id = null) ->
+  constructor: (@tree, @parent, @author, @authoredDate, @committer, @commitedDate, @message, @repo = null, @_id = null) ->
     super "commit", @repo, @_id
 
   content: =>
@@ -19,6 +19,8 @@ class Commit extends GitObject
   attributes: =>
     attributes = super()
     attributes.message = @message
+    attributes.authoredDate = @authoredDate
+    attributes.commitedDate = @commitedDate
     attributes
 
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.

@@ -9,7 +9,8 @@ class CommitsDao extends ObjectsDao
     author = @getLink meta.links, "author"
     committer = @getLink meta.links, "committer"
     repository = @getLink meta.links, "repository"
-    new Commit(tree, parent, author, committer, attributes.message, repository, meta.key)
+    console.log "attr", attributes
+    new Commit(tree, parent, author, attributes.authoredDate, committer, attributes.commitedDate ,attributes.message, repository, meta.key)
 
 exports.newInstance = -> new CommitsDao()
 

@@ -5,9 +5,11 @@ Commit     = require("../lib/objects/commit").Commit
 
 
 exports.testSaveCommit = ->
+  authoredDate = new Date().getTime()
+  commitedDate = new Date().getTime()
   # create new commit and save it
   step1 = (callback) ->
-    commit = new Commit("tree-id", "parent-id", "anton", "andrew", "initial commit", "anton$project1")
+    commit = new Commit("tree-id", "parent-id", "anton", authoredDate, "andrew", commitedDate, "initial commit", "anton$project1")
     assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", commit.id()
     commitsDao.save commit, (err, data) ->
       assert.isUndefined err
@@ -25,6 +27,8 @@ exports.testSaveCommit = ->
       assert.equal "anton", commitFromDao.author
       assert.equal "andrew", commitFromDao.committer
       assert.equal "initial commit", commitFromDao.message
+      assert.equal authoredDate, commitFromDao.authoredDate
+      assert.equal commitedDate, commitFromDao.commitedDate
       assert.deepEqual commit.links(), commitFromDao.links()
       assert.deepEqual commit.attributes(), commitFromDao.attributes()
       callback err
