@@ -13,7 +13,7 @@ class Repo extends GitEntity
   constructor: (@name, @owner, @type, @public = true, @forkedFrom = null) ->
 
   id: =>
-    @owner + "-" + @name
+    @owner + "$" + @name
 
   # Dao related methods.
   # ---------

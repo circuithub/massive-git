@@ -7,7 +7,7 @@ Blob     = require("../lib/objects/blob").Blob
 exports.testSaveBlob = ->
   # create new blob and save it
   step1 = (callback) ->
-    blob = new Blob("test-content", "circuithub.com/anton/project1")
+    blob = new Blob("test-content", "anton$project1")
     assert.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3", blob.id()
     blobsDao.save blob, (err, data) ->
       assert.isUndefined err
