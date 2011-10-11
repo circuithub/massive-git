@@ -1,6 +1,8 @@
 class MassiveGit
 
-  fetchRepo: (id, callback) =>
+  fetchRepo: (repo, callback) =>
+
+  fetchRepoById: (id, callback) =>
 
   addToIndex: =>
 

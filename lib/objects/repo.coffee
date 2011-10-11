@@ -7,10 +7,11 @@ GitEntity = require("./git.entity").GitEntity
 # `owner` - repository's owner.
 # `type` - type of the repository. Metainformation.
 # `public` - flag that indicated whether repo is public or private. Default to `true`.
+# `commit` - last commit for this repository. Can be `null` if repository wasn't commited previously.
 # `forkedFrom` - id of the repository from which this was cloned. Default to `null`.
 class Repo extends GitEntity
 
-  constructor: (@name, @owner, @type, @public = true, @forkedFrom = null) ->
+  constructor: (@name, @owner, @type, @public = true, @commit, @forkedFrom = null) ->
 
   id: =>
     @owner + "$" + @name
@@ -31,6 +32,8 @@ class Repo extends GitEntity
     links.push @buildLink "users", @owner, "owner"
     if(@forkedFrom)
       links.push @buildLink "repositories", @forkedFrom, "forked_from"
+    if(@commit)
+      links.push @buildLink "objects", @commit, "commit"
     links
 
 exports.Repo = Repo

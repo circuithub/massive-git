@@ -7,6 +7,7 @@ class Commit extends GitObject
   constructor: (@tree, @parent, @author, @authoredDate, @committer, @commitedDate, @message, @repo = null, @_id = null) ->
     super "commit", @repo, @_id
 
+  # todo (anton) author and commiter here should keep authore and commited date. Only in this way sha will be Git compatible
   content: =>
     parentToken = ""
     parentToken += "parent" + char for char in @parent
