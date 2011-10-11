@@ -7,7 +7,7 @@ User     = require("../lib/objects/user").User
 exports.testSaveUser = ->
   # create new user and save it
   step1 = (callback) ->
-    user = new User("anton", "anton@circuithub.com", new Date().getTime())
+    user = new User("anton", "anton@circuithub.com", "encoded_password", new Date().getTime())
     assert.equal "anton", user.id()
     usersDao.save user, (err, data) ->
       assert.isUndefined err
@@ -18,6 +18,7 @@ exports.testSaveUser = ->
       assert.isUndefined err
       assert.equal user.id(), userFromDao.id()
       assert.equal user.email, userFromDao.email
+      assert.equal user.password, userFromDao.password
       assert.equal user.date, userFromDao.date
       assert.deepEqual user.links(), userFromDao.links()
       assert.deepEqual user.attributes(), userFromDao.attributes()

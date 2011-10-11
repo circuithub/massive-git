@@ -1,9 +1,8 @@
 _         = require "underscore"
 GitObject = require("./git.object").GitObject
 
-stringFromEntry = (name, id, type) ->
-  # todo (anton) we can hardcode `mode` right now
-  "644" + " " + type + " " + id + "\t" + name + "\n"
+stringFromEntry = (id, name, type, mode) ->
+  mode + " " + type + " " + id + "\t" + name + "\n"
 
 # Tree
 # ---------
@@ -20,7 +19,7 @@ class Tree extends GitObject
 
   content: =>
     rows = ""
-    rows += stringFromEntry entry.name, entry.id, entry.type for entry in @entries
+    rows += stringFromEntry entry.id, entry.name, entry.type, entry.mode for entry in @entries
     rows
 
   # Dao related methods.

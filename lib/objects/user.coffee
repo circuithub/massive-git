@@ -5,7 +5,7 @@ GitEntity = require("./git.entity").GitEntity
 # Class represent information about user in the system.
 # User has `id` (which is username), `email` and registration `date`.
 # todo (anton) Maybe go Grit way: have also simplified Actor entity?? Not sure now.
-class User extends GitEntity
+User = exports.User = class User extends GitEntity
 
   constructor: (@_id, @email, @password, @date) ->
 
@@ -15,8 +15,9 @@ class User extends GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: =>
     attributes =
-      email : @email
-      date  : @date
+      email    : @email
+      password : @password
+      date     : @date
 
 exports.User = User
 

@@ -61,5 +61,6 @@ class Dao
 
   getLink: (links, tag) =>
     utils.getLink links, tag
+
 exports.Dao = Dao
 

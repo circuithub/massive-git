@@ -50,7 +50,6 @@ exports.testCreateForkedRepo = ->
   assert.equal "forked_from", forkedFromLink.tag
   assert.equal "andrew$project1", repo.getLink "forked_from"
 
-
 exports.testOldRepo = ->
   repo = new Repo("project1", "anton", "project", false, "4ca68e7f293e0b7445beda64f0f8fe854682a0ac")
   assert.equal "anton$project1", repo.id()

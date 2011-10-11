@@ -1,9 +1,9 @@
 assert   = require "assert"
-async    = require "async"
-treesDao = require("../lib/dao/trees.dao").newInstance()
-Blob     = require("../lib/objects/blob").Blob
-Tree     = require("../lib/objects/tree").Tree
-
+async     = require "async"
+treesDao  = require("../lib/dao/trees.dao").newInstance()
+Blob      = require("../lib/objects/blob").Blob
+Tree      = require("../lib/objects/tree").Tree
+TreeEntry = require("../lib/objects/tree.entry").TreeEntry
 
 exports.testSavePlainTree = ->
   # create new tree and save it
@@ -11,10 +11,10 @@ exports.testSavePlainTree = ->
     blob1 = new Blob("test-content", "anton$project1")
     blob2 = new Blob("1111", "anton$project1")
     entries = []
-    entries.push { name : "symbol.json", id : blob2.id(), type : "blob"}
-    entries.push { name : "datasheet.json", id : blob1.id(), type : "blob"}
+    entries.push  new TreeEntry("symbol.json", blob2).attributes()
+    entries.push new TreeEntry("symbol.json", blob2).attributes()
     tree = new Tree(entries, "anton$project1")
-    assert.equal "c5c119808287f1f63db40077b8b7a88c97cfcfeb", tree.id()
+    assert.equal "9e67555764a6d2006c0f2af265656bad4cd1c5f9", tree.id()
     treesDao.save tree, (err, data) ->
       assert.isUndefined err
       callback err, tree
