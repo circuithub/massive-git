@@ -10,9 +10,10 @@ blobsDao   = require("./dao/blobs.dao").newInstance()
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
-  createRepo: (name, author, type, callback) ->
+  initRepo: (name, author, type, callback) ->
     repo = new Repo(name, author, type)
-    repository.save repo, (err, ok) ->
+    reposDao.save repo, (err, ok) ->
+      callback err, ok
       #usersDao
       # add link from new repo to user.
 

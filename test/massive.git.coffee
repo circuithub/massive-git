@@ -14,15 +14,12 @@ exports.testCommit = ->
   blob2 = new Blob "1111"
   # create repo
   step1 = (callback) ->
-    repo = new Repo("part1", "anton", "part")
-    assert.equal "anton$part1", repo.id()
-    reposDao.save repo, (err, data) ->
+    MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
       assert.isUndefined err
+      assert.equal "anton$part1", repo.id()
       callback err, repo
   # commit two files
   step2 = (repo, callback) ->
-    blob1 = new Blob "test-content"
-    blob2 = new Blob "1111"
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
     MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, (err, commitId) ->
       assert.isUndefined err
