@@ -21,6 +21,12 @@ class GitEntity
   links: =>
     []
 
+  # Serialize entity to `JSON`.
+  toJSON: =>
+    json = @attributes()
+    json.id = @id()
+    json
+
   # Method for finding appropriate link `key` by `tag` name.
   getLink: (tagName) =>
     utils.getLink @links(), tagName

@@ -36,6 +36,7 @@ class ReposDao extends Dao
          callback err
        else
          repos = (@populateEntity doc.meta, doc.attributes for doc in docs)
+         console.log "REPOS!!!!!!!!!!", repos
          callback undefined, repos
 
 exports.newInstance = -> new ReposDao()
