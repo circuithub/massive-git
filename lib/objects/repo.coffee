@@ -3,7 +3,7 @@ GitEntity = require("./git.entity").GitEntity
 # Repo
 # ---------
 # Class representing repository.
-# `id` - unique repository id. URL can be used as unique repository identifier.
+# `id` - unique repository id. Id calculated from `owner`, `type` and `name` of the repository.
 # `owner` - repository's owner.
 # `type` - type of the repository. Metainformation.
 # `public` - flag that indicated whether repo is public or private. Default to `true`.
@@ -14,7 +14,7 @@ class Repo extends GitEntity
   constructor: (@name, @owner, @type, @public = true, @commit, @forkedFrom = null) ->
 
   id: =>
-    @owner + "$" + @name
+    @owner + "$" + @type + "$"+ @name
 
   # Dao related methods.
   # ---------

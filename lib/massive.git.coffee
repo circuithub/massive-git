@@ -17,6 +17,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       #usersDao
       # add link from new repo to user.
 
+  repos: (user, type, callback) ->
+    reposDao.findAll user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     plainEntries = []
