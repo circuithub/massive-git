@@ -7,10 +7,10 @@ class ReposDao extends Dao
     super "repositories"
 
   populateEntity: (meta, attributes) =>
-    owner = @getLink meta.links, "owner"
+    author = @getLink meta.links, "author"
     forkedFrom = @getLink meta.links, "forked_from"
     commit = @getLink meta.links, "commit"
-    new Repo(attributes.name, owner, attributes.type, attributes.public, commit, forkedFrom)
+    new Repo(attributes.name, author, attributes.type, attributes.public, commit, forkedFrom)
 
 #["and", [["starts_with", user]], [["starts_with", user]]] })
 # todo (anton) filtering by type somehow doesn't work. Check it.

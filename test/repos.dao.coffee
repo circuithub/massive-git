@@ -17,7 +17,7 @@ exports.testSaveRepo = ->
     reposDao.get repo.id(), (err, repoFromDao) ->
       assert.isUndefined err
       assert.equal repo.id(), repoFromDao.id()
-      assert.equal repo.owner, repoFromDao.owner
+      assert.equal repo.author, repoFromDao.author
       assert.equal repo.public, repoFromDao.public
       assert.equal repo.forkedFrom, repoFromDao.forkedFrom
       assert.deepEqual repo.links(), repoFromDao.links()

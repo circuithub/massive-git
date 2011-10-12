@@ -4,17 +4,17 @@ GitEntity = require("./git.entity").GitEntity
 # ---------
 # Class representing repository.
 # `id` - unique repository id. Id calculated from `owner`, `type` and `name` of the repository.
-# `owner` - repository's owner.
+# `author` - repository's author.
 # `type` - type of the repository. Metainformation.
 # `public` - flag that indicated whether repo is public or private. Default to `true`.
 # `commit` - last commit for this repository. Can be `null` if repository wasn't commited previously.
 # `forkedFrom` - id of the repository from which this was cloned. Default to `null`.
 class Repo extends GitEntity
 
-  constructor: (@name, @owner, @type, @public = true, @commit, @forkedFrom = null) ->
+  constructor: (@name, @author, @type, @public = true, @commit, @forkedFrom = null) ->
 
   id: =>
-    @owner + "$" + @type + "$"+ @name
+    @author + "$" + @type + "$"+ @name
 
   # Dao related methods.
   # ---------
@@ -29,7 +29,7 @@ class Repo extends GitEntity
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = []
-    links.push @buildLink "users", @owner, "owner"
+    links.push @buildLink "users", @author, "author"
     if(@forkedFrom)
       links.push @buildLink "repositories", @forkedFrom, "forked_from"
     if(@commit)

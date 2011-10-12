@@ -49,8 +49,8 @@ exports.testCommit = ->
       assert.isUndefined err
       console.log repo
       assert.equal "part1", repo.name
-      assert.equal "anton", repo.owner
-      assert.equal "anton", repo.getLink "owner"
+      assert.equal "anton", repo.author
+      assert.equal "anton", repo.getLink "author"
       assert.equal "part", repo.type
       assert.equal commit.id(), repo.commit
       assert.equal commit.id(), repo.getLink "commit"
