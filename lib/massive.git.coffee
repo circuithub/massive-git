@@ -57,32 +57,36 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         repo.commit = commitId
         reposDao.save repo, callback
 
-  fetchRepoRootEntries: (repo, callback) =>
-    commitId = repo.commit
+  head: (repoId, callback) =>
+    reposDao.get repoId, (err, repo) ->
+      if(err)
+        callback err
+      else
+        callback undefined, repo.commit
 
-  fetchRepoRootEntriesById: (id, callback) =>
+  fetchRepoRootEntriesById: (repoId, callback) =>
+    @head repoId, (err, commitId) =>
+      if(err)
+        callback err
+      else
+        @fetchRootEntriesForCommit commitId, callback
 
   fetchRootEntriesForCommit: (commitId, callback) =>
     commitsDao.get commitId, (err, commit) ->
       treeId = commit.tree
-      fetchTree = (callback) ->
+      fetchTree = (stepCallback) ->
         treesDao.get treeId, (err, tree) ->
-          console.log "tree entries", tree.entries
-          callback err, tree
-      fetchTreeBlobs = (tree, callback) ->
+          stepCallback err, tree
+      fetchTreeBlobs = (tree, stepCallback) ->
         treesDao.getBlobs tree.id(), (err, blobs) ->
-          console.log "tree blobs", blobsDao
-          callback err, tree, blobs
-      async.series [fetchTree, fetchTreeBlobs], (err, results) ->
-        if(err)
-          callback err
-        else
-          console.log "results>>>" results
-          entries = results[0].entries
-          blobs   = results[1]
-          #blobsMap = ( for blob in blobs)
-          #for entry in entries
-
+          entries = tree.entries
+          treeEntries = []
+          for blob in blobs
+            blobId = blob.id()
+            name = entry.name for entry in entries when entry.id == blobId
+            treeEntries.push new TreeEntry name, blob
+          stepCallback err, treeEntries
+      async.waterfall [fetchTree, fetchTreeBlobs], callback
 
 
   addToIndex: =>

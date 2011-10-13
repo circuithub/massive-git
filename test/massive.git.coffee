@@ -25,8 +25,22 @@ exports.testCommit = ->
     MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, (err, commitId) ->
       assert.isUndefined err
       callback err, commitId
-  # get commit and check it
+  # get entries from commit
   step3 = (commitId, callback) ->
+      MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
+        assert.isUndefined err
+        assert.equal 2, entries.length
+        blob1Copy = (entry.entry for entry in entries when entry.name == "datasheet.json")[0]
+        blob2Copy = (entry.entry for entry in entries when entry.name == "symbol.json")[0]
+        assert.equal blob1.id(), blob1Copy.id()
+        assert.deepEqual blob1.attributes(), blob1Copy.attributes()
+        assert.deepEqual blob1.links(), blob1Copy.links()
+        assert.equal blob2.id(), blob2Copy.id()
+        assert.deepEqual blob2.attributes(), blob2Copy.attributes()
+        assert.deepEqual blob2.links(), blob2Copy.links()
+        callback undefined, commitId
+  # get commit and check it
+  step4 = (commitId, callback) ->
     commitsDao.get commitId, (err, commit) ->
       assert.isUndefined err
       assert.equal "anton", commit.author
@@ -44,7 +58,7 @@ exports.testCommit = ->
       #assert.isNull commit.getLink "parent"
       callback err, commit
   # get repo and check it
-  step4 = (commit, callback) ->
+  step5 = (commit, callback) ->
     reposDao.get "anton$part$part1", (err, repo) ->
       assert.isUndefined err
       console.log repo
@@ -59,12 +73,12 @@ exports.testCommit = ->
       assert.ok repo.public
       callback err, commit.tree
   # gte blobs from tree
-  step5 = (treeId, callback) ->
+  step6 = (treeId, callback) ->
     treesDao.getBlobs treeId, (err, blobs) ->
       console.log "DONE", err, blobs
       callback err, treeId
   # get tree and check it
-  step6 = (treeId, callback) ->
+  step7 = (treeId, callback) ->
     treesDao.get treeId, (err, tree) ->
       assert.isUndefined err
       assert.equal "anton$part$part1", tree.repo
@@ -74,20 +88,20 @@ exports.testCommit = ->
       assert.equal blob2.id(), tree.getLinks("blob")[1]
       callback err, blob1, blob2
   # get blob 1 and check it
-  step7 = (blob1, blob2, callback) ->
+  step8 = (blob1, blob2, callback) ->
     blobsDao.get blob1.id(), (err, blob) ->
       assert.isUndefined err
       assert.deepEqual blob1.attributes(), blob.attributes()
       assert.deepEqual blob1.links(), blob.links()
       callback err, blob2
   # get blob 2 and check it
-  step8 = (blob2, callback) ->
+  step9 = (blob2, callback) ->
     blobsDao.get blob2.id(), (err, blob) ->
       assert.isUndefined err
       assert.deepEqual blob2.attributes(), blob.attributes()
       assert.deepEqual blob2.links(), blob.links()
       callback err
-  async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8], (err, results) ->
+  async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8, step9], (err, results) ->
     # clear all temp data
     reposDao.deleteAll()
     commitsDao.deleteAll()
