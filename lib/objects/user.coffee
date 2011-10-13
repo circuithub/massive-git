@@ -7,7 +7,7 @@ GitEntity = require("./git.entity").GitEntity
 # todo (anton) Maybe go Grit way: have also simplified Actor entity?? Not sure now.
 User = exports.User = class User extends GitEntity
 
-  constructor: (@_id, @email, @password, @date) ->
+  constructor: (@_id, @email) ->
 
   # Dao related methods.
   # ---------
@@ -16,8 +16,6 @@ User = exports.User = class User extends GitEntity
   attributes: =>
     attributes =
       email    : @email
-      password : @password
-      date     : @date
 
 exports.User = User
 

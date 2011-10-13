@@ -10,5 +10,19 @@ class UsersDao extends Dao
     # todo (anton) parse links.
     new User(meta.key, attributes.email, attributes.password, attributes.date)
 
+  addRepo: (user, repoId, callback) =>
+
+  removeRepo: (user, repoId, callback) =>
+
+
+  forkRepo: (user, repoId, callback) =>
+
+  unforkRepo: (user, repoId, callback) =>
+
+
+  watchRepo: (user, repoId, callback) =>
+
+  unwatchRepo: (user, repoId, callback) =>
+
 exports.newInstance = -> new UsersDao()
 

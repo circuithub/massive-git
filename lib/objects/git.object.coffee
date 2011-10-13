@@ -44,5 +44,8 @@ class GitObject extends GitEntity
       links.push @buildLink "repositories", @repo, "repository"
     links
 
+  # Get repository for this object.
+  getRepository: => @getLink "repository"
+
 exports.GitObject = GitObject
 

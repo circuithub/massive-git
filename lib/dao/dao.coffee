@@ -46,14 +46,11 @@ class Dao
     @db.exists @bucket, id, callback
 
   # Get all links from entity to some `bucket` under specified `tag`.
-  getLinks: (id, linkBucket, tag, callback) =>
+  getLinks: (id, linkBucket, tag, map, callback) =>
     @db
-      .add({ bucket : @bucket, key_filters : [["matches", id]] })
+      .add({ bucket : @bucket, key_filters : [["eq", id]] })
       .link({ bucket : linkBucket, tag : tag })
-      .map (value, keyData) ->
-        data = JSON.parse(value.values[0].data)
-        data.id = value.key
-        [data]
+      .map(map)
       .run(callback)
 
   # Method for building GitEntity.

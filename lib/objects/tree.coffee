@@ -36,7 +36,6 @@ class Tree extends GitObject
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = super()
-    # todo (anton) should we keep entries just as links? I guest it will be better way to go.
     links.push @buildLink "objects", entry.id, entry.type  for entry in @entries
     links
 

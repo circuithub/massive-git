@@ -15,7 +15,13 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     reposDao.save repo, (err, ok) ->
       callback err, ok
       #usersDao
-      # add link from new repo to user.
+      # todo (anton) add link from new repo to user.
+
+  deleteRepo: (repoId, callback) ->
+  # todo(anton) remove link from new repo to user.
+    reposDao.delete repoId, callback
+
+
 
   repos: (user, type, callback) ->
     reposDao.findAll user, type, callback

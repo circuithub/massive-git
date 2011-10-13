@@ -12,9 +12,13 @@ exports.testSavePlainTree = ->
     blob2 = new Blob("1111", "anton$project1")
     entries = []
     entries.push  new TreeEntry("symbol.json", blob2).attributes()
-    entries.push new TreeEntry("symbol.json", blob2).attributes()
+    entries.push new TreeEntry("datasheet.json", blob1).attributes()
     tree = new Tree(entries, "anton$project1")
-    assert.equal "9e67555764a6d2006c0f2af265656bad4cd1c5f9", tree.id()
+    assert.equal "7a8b327d8ec3e00838b350a59887c4ae6c183928", tree.id()
+    assert.equal 3, tree.links().length
+    assert.equal 2, tree.getLinks("blob").length
+    assert.equal blob1.id(), tree.getLinks("blob")[0]
+    assert.equal blob2.id(), tree.getLinks("blob")[1]
     treesDao.save tree, (err, data) ->
       assert.isUndefined err
       callback err, tree
@@ -28,7 +32,7 @@ exports.testSavePlainTree = ->
       assert.equal tree.repo, treeFromDao.repo
       assert.deepEqual tree.links(), treeFromDao.links()
       assert.deepEqual tree.attributes(), treeFromDao.attributes()
-      callback err
+      callback err, tree
   async.waterfall [step1, step2], (err, results) ->
     # clear all temp data
     treesDao.deleteAll()

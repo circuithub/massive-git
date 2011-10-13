@@ -58,8 +58,13 @@ exports.testCommit = ->
       assert.isNull repo.getLink "forked_from"
       assert.ok repo.public
       callback err, commit.tree
-   # get tree and check it
+  # gte blobs from tree
   step5 = (treeId, callback) ->
+    treesDao.getBlobs treeId, (err, blobs) ->
+      console.log "DONE", err, blobs
+      callback err, treeId
+  # get tree and check it
+  step6 = (treeId, callback) ->
     treesDao.get treeId, (err, tree) ->
       assert.isUndefined err
       assert.equal "anton$part$part1", tree.repo
@@ -69,20 +74,20 @@ exports.testCommit = ->
       assert.equal blob2.id(), tree.getLinks("blob")[1]
       callback err, blob1, blob2
   # get blob 1 and check it
-  step6 = (blob1, blob2, callback) ->
+  step7 = (blob1, blob2, callback) ->
     blobsDao.get blob1.id(), (err, blob) ->
       assert.isUndefined err
       assert.deepEqual blob1.attributes(), blob.attributes()
       assert.deepEqual blob1.links(), blob.links()
       callback err, blob2
   # get blob 2 and check it
-  step7 = (blob2, callback) ->
+  step8 = (blob2, callback) ->
     blobsDao.get blob2.id(), (err, blob) ->
       assert.isUndefined err
       assert.deepEqual blob2.attributes(), blob.attributes()
       assert.deepEqual blob2.links(), blob.links()
       callback err
-  async.waterfall [step1, step2, step3, step4, step5, step6, step7], (err, results) ->
+  async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8], (err, results) ->
     # clear all temp data
     reposDao.deleteAll()
     commitsDao.deleteAll()
