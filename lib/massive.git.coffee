@@ -1,4 +1,5 @@
 async      = require "async"
+User       = require("./objects/user").User
 Repo       = require("./objects/repo").Repo
 Tree       = require("./objects/tree").Tree
 TreeEntry  = require("./objects/tree.entry").TreeEntry
@@ -11,21 +12,33 @@ blobsDao   = require("./dao/blobs.dao").newInstance()
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
+  newUser: (username, email, callback) ->
+    user = new User username, email
+    usersDao.save user, callback
+
   initRepo: (name, author, type, callback) ->
     repo = new Repo(name, author, type)
     reposDao.save repo, (err, ok) ->
-      callback err, ok
-      #usersDao
-      # todo (anton) add link from new repo to user.
+      if(err)
+        callback err
+      else
+        usersDao.addRepo author, repo.id(), type, (err, ok) ->
+          if(err)
+            callback err
+          else
+            callback undefined, repo
 
   deleteRepo: (repoId, callback) ->
-  # todo(anton) remove link from new repo to user.
-    reposDao.delete repoId, callback
-
+    reposDao.delete repoId, (err, ok) ->
+      if(err)
+        callback err
+      else
+        # todo(anton) remove link from new repo to user.
+        callback undefined
 
 
   repos: (user, type, callback) ->
-    reposDao.findAll user, type, callback
+    usersDao.findAllRepos user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     plainEntries = []

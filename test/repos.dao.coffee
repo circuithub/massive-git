@@ -8,7 +8,7 @@ exports.testSaveRepo = ->
   # create new repo and save it
   step1 = (callback) ->
     repo = new Repo("project1", "anton", "project")
-    assert.equal "anton$project$project1", repo.id()
+    assert.equal "anton$project1", repo.id()
     reposDao.save repo, (err, data) ->
       assert.isUndefined err
       callback err, repo

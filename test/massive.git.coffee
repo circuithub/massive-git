@@ -6,8 +6,9 @@ Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 reposDao   = require("../lib/dao/repos.dao").newInstance()
 commitsDao = require("../lib/dao/commits.dao").newInstance()
-blobsDao = require("../lib/dao/blobs.dao").newInstance()
+blobsDao   = require("../lib/dao/blobs.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
+usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 
 exports.testCommit = ->
@@ -17,7 +18,7 @@ exports.testCommit = ->
   step1 = (callback) ->
     MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
       assert.isUndefined err
-      assert.equal "anton$part$part1", repo.id()
+      assert.equal "anton$part1", repo.id()
       callback err, repo
   # commit two files
   step2 = (repo, callback) ->
@@ -48,8 +49,8 @@ exports.testCommit = ->
       assert.equal "anton", commit.committer
       assert.equal "anton", commit.getLink "committer"
       assert.equal "first commit", commit.message
-      assert.equal "anton$part$part1", commit.repo
-      assert.equal "anton$part$part1", commit.getLink "repository"
+      assert.equal "anton$part1", commit.repo
+      assert.equal "anton$part1", commit.getLink "repository"
       assert.isDefined commit.authoredDate
       assert.isDefined commit.commitedDate
       assert.isDefined commit.tree
@@ -59,7 +60,7 @@ exports.testCommit = ->
       callback err, commit
   # get repo and check it
   step5 = (commit, callback) ->
-    reposDao.get "anton$part$part1", (err, repo) ->
+    reposDao.get "anton$part1", (err, repo) ->
       assert.isUndefined err
       console.log repo
       assert.equal "part1", repo.name
@@ -81,8 +82,8 @@ exports.testCommit = ->
   step7 = (treeId, callback) ->
     treesDao.get treeId, (err, tree) ->
       assert.isUndefined err
-      assert.equal "anton$part$part1", tree.repo
-      assert.equal "anton$part$part1", tree.getLink "repository"
+      assert.equal "anton$part1", tree.repo
+      assert.equal "anton$part1", tree.getLink "repository"
       assert.equal 2, tree.getLinks("blob").length
       assert.equal blob1.id(), tree.getLinks("blob")[0]
       assert.equal blob2.id(), tree.getLinks("blob")[1]
@@ -113,25 +114,25 @@ exports.testFindRepos = ->
   step0a = (callback) ->
     MassiveGit.initRepo "project1", "anton", "project", (err, repo) ->
       assert.isUndefined err
-      assert.equal "anton$project$project1", repo.id()
+      assert.equal "anton$project1", repo.id()
       callback err
   # create repo with different user
   step0b = (callback) ->
     MassiveGit.initRepo "part1", "andrew", "part", (err, repo) ->
       assert.isUndefined err
-      assert.equal "andrew$part$part1", repo.id()
+      assert.equal "andrew$part1", repo.id()
       callback err
   # create first repo
   step1 = (callback) ->
     MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
       assert.isUndefined err
-      assert.equal "anton$part$part1", repo.id()
+      assert.equal "anton$part1", repo.id()
       callback err, repo
   # create second repo
   step2 = (repo1, callback) ->
     MassiveGit.initRepo "part2", "anton", "part", (err, repo) ->
       assert.isUndefined err
-      assert.equal "anton$part$part2", repo.id()
+      assert.equal "anton$part2", repo.id()
       callback err, repo1, repo
   # find repos
   step3 = (repo1, repo2, callback) ->
@@ -148,4 +149,38 @@ exports.testFindRepos = ->
   async.waterfall [step0a, step0b, step1, step2, step3], (err, results) ->
     # clear all temp data
     reposDao.deleteAll()
+
+exports.getUserRepos = ->
+  # create user
+  step1 = (callback) ->
+    MassiveGit.newUser "anton", "anton@circuithub.com", (err, user) ->
+      assert.isUndefined err
+      callback err, user
+  # create first repo
+  step2 = (user, callback) ->
+    MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
+      assert.isUndefined err
+      assert.equal "anton$part1", repo.id()
+      callback err, repo
+  # create repo with different type
+  step3 = (firstRepo, callback) ->
+    MassiveGit.initRepo "project1", "anton", "project", (err, repo) ->
+      assert.isUndefined err
+      assert.equal "anton$project1", repo.id()
+      callback err, firstRepo
+  # create second repo
+  step4 = (repo1, callback) ->
+    MassiveGit.initRepo "part2", "anton", "part", (err, repo) ->
+      assert.isUndefined err
+      assert.equal "anton$part2", repo.id()
+      callback err, repo1, repo
+  # find repos
+  step5 = (repo1, repo2, callback) ->
+    MassiveGit.repos "anton", "part", (err, repos) ->
+      assert.equal 2, repos.length
+
+  async.waterfall [step1, step2, step3, step4, step5], (err, results) ->
+    # clear all temp data
+    reposDao.deleteAll()
+    usersDao.deleteAll()
 

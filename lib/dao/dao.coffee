@@ -46,7 +46,21 @@ class Dao
     @db.exists @bucket, id, callback
 
   # Get all links from entity to some `bucket` under specified `tag`.
-  getLinks: (id, linkBucket, tag, map, callback) =>
+  getLinks: (id, linkBucket, tag, callback) =>
+    map = (value) ->
+      row = value.values[0]
+      entity = {}
+      entity.attributes = JSON.parse(row.data)
+      metadata = row.metadata
+      userMeta = metadata["X-Riak-Meta"]
+      entity.meta = {}
+      entity.meta.key = value.key
+      linksArray = metadata["Links"]
+      links = []
+      for link in linksArray
+        links.push {bucket : link[0], key : link[1], tag : link[2] }
+      entity.meta.links = links
+      [entity]
     @db
       .add({ bucket : @bucket, key_filters : [["eq", id]] })
       .link({ bucket : linkBucket, tag : tag })
