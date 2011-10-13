@@ -29,7 +29,6 @@ class TreesDao extends ObjectsDao
          callback err
        else
          blobs = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs)
-         console.log "BLOBS>>>>", blobs
          callback undefined, blobs
 
 exports.newInstance = -> new TreesDao()

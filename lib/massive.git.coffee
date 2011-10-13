@@ -1,6 +1,7 @@
 async      = require "async"
 Repo       = require("./objects/repo").Repo
 Tree       = require("./objects/tree").Tree
+TreeEntry  = require("./objects/tree.entry").TreeEntry
 Commit     = require("./objects/commit").Commit
 reposDao   = require("./dao/repos.dao").newInstance()
 usersDao   = require("./dao/users.dao").newInstance()
@@ -56,14 +57,33 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         repo.commit = commitId
         reposDao.save repo, callback
 
-  fetchRepo: (repo, callback) =>
+  fetchRepoRootEntries: (repo, callback) =>
     commitId = repo.commit
+
+  fetchRepoRootEntriesById: (id, callback) =>
+
+  fetchRootEntriesForCommit: (commitId, callback) =>
     commitsDao.get commitId, (err, commit) ->
       treeId = commit.tree
-      treesDao.get treeId, (err, tree) ->
-        console.log "tree entries", tree.entries
+      fetchTree = (callback) ->
+        treesDao.get treeId, (err, tree) ->
+          console.log "tree entries", tree.entries
+          callback err, tree
+      fetchTreeBlobs = (tree, callback) ->
+        treesDao.getBlobs tree.id(), (err, blobs) ->
+          console.log "tree blobs", blobsDao
+          callback err, tree, blobs
+      async.series [fetchTree, fetchTreeBlobs], (err, results) ->
+        if(err)
+          callback err
+        else
+          console.log "results>>>" results
+          entries = results[0].entries
+          blobs   = results[1]
+          #blobsMap = ( for blob in blobs)
+          #for entry in entries
 
-  fetchRepoById: (id, callback) =>
+
 
   addToIndex: =>
 
