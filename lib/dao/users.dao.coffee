@@ -28,7 +28,13 @@ class UsersDao extends Dao
         user.addLink "repositories", repoId, type
         @save user, callback
 
-  removeRepo: (user, repoId, callback) =>
+  removeRepo: (user, repoId, type, callback) =>
+    @get user, (err, user) =>
+      if(err)
+        callback err
+      else
+        user.removeLink "repositories", repoId, type
+        @save user, callback
 
 
   watchRepo: (user, repoId, type, callback) =>

@@ -28,13 +28,16 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, repo
 
-  deleteRepo: (repoId, callback) ->
+  deleteRepo: (repoId, author, type, callback) ->
     reposDao.delete repoId, (err, ok) ->
       if(err)
         callback err
       else
-        # todo(anton) remove link from new repo to user.
-        callback undefined
+        usersDao.removeRepo author, repoId, type, (err, ok) ->
+          if(err)
+            callback err
+          else
+            callback undefined, ok
 
 
   repos: (user, type, callback) ->

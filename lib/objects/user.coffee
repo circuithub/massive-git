@@ -1,3 +1,4 @@
+_         = require "underscore"
 GitEntity = require("./git.entity").GitEntity
 
 # User
@@ -10,6 +11,9 @@ User = exports.User = class User extends GitEntity
 
   addLink: (bucket, key, tag) ->
     @_links.push @buildLink bucket, key, tag
+
+  removeLink: (bucket, key, tag) ->
+   @_links = _.without(@_links, @buildLink(bucket, key, tag));
 
   # Dao related methods.
   # ---------
