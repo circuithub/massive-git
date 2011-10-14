@@ -11,13 +11,15 @@ class UsersDao extends Dao
     new User(meta.key, attributes.email, meta.links)
 
   findAllRepos: (user, type, callback) =>
+    console.log "getting repositories", user,type
     @getLinks user, "repositories", type, (err, docs) =>
+      console.log "getting repositories", err,docs
       if(err)
          callback err
-       else
-         console.log "getting repositories", docs
-         repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
-         callback undefined, repos
+      else
+        console.log "getting repositories", docs
+        repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
+        callback undefined, repos
 
 
   addRepo: (user, repoId, type, callback) =>
