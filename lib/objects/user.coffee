@@ -13,7 +13,7 @@ User = exports.User = class User extends GitEntity
     @_links.push @buildLink bucket, key, tag
 
   removeLink: (bucket, key, tag) ->
-   @_links = _.without(@_links, @buildLink(bucket, key, tag));
+   @_links = _.select @_links, (link) -> link.bucket == bucket and link.key == key and link.tag == tag
 
   # Dao related methods.
   # ---------

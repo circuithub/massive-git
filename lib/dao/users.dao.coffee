@@ -16,7 +16,7 @@ class UsersDao extends Dao
          callback err
        else
          console.log "getting repositories", docs
-         repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs)
+         repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
          callback undefined, repos
 
 
