@@ -12,7 +12,6 @@ class UsersDao extends Dao
 
   findAllRepos: (user, type, callback) =>
     @getLinks user, "repositories", type, (err, docs) =>
-      console.log "GET ALL REPOS>>", err, docs
       if(err)
          callback err
        else

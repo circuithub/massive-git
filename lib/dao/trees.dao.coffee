@@ -9,22 +9,7 @@ class TreesDao extends ObjectsDao
     new Tree(attributes.entries, repository, meta.key)
 
   getBlobs: (treeId, callback) =>
-    map = (value) ->
-      row = value.values[0]
-      entity = {}
-      entity.attributes = JSON.parse(row.data)
-      metadata = row.metadata
-      userMeta = metadata["X-Riak-Meta"]
-      entity.meta = {}
-      entity.meta.key = value.key
-      linksArray = metadata["Links"]
-      links =[]
-      for link in linksArray
-        links.push {bucket : link[0], key : link[1], tag : link[2] }
-      entity.meta.links = links
-      [entity]
-
-    @getLinks treeId, @bucket, "blob", map, (err, docs) =>
+    @getLinks treeId, @bucket, "blob",(err, docs) =>
       if(err)
          callback err
        else

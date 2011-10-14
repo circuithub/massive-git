@@ -28,18 +28,18 @@ exports.testCommit = ->
       callback err, commitId
   # get entries from commit
   step3 = (commitId, callback) ->
-      MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
-        assert.isUndefined err
-        assert.equal 2, entries.length
-        blob1Copy = (entry.entry for entry in entries when entry.name == "datasheet.json")[0]
-        blob2Copy = (entry.entry for entry in entries when entry.name == "symbol.json")[0]
-        assert.equal blob1.id(), blob1Copy.id()
-        assert.deepEqual blob1.attributes(), blob1Copy.attributes()
-        assert.deepEqual blob1.links(), blob1Copy.links()
-        assert.equal blob2.id(), blob2Copy.id()
-        assert.deepEqual blob2.attributes(), blob2Copy.attributes()
-        assert.deepEqual blob2.links(), blob2Copy.links()
-        callback undefined, commitId
+    MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
+      assert.isUndefined err
+      assert.equal 2, entries.length
+      blob1Copy = (entry.entry for entry in entries when entry.name == "datasheet.json")[0]
+      blob2Copy = (entry.entry for entry in entries when entry.name == "symbol.json")[0]
+      assert.equal blob1.id(), blob1Copy.id()
+      assert.deepEqual blob1.attributes(), blob1Copy.attributes()
+      assert.deepEqual blob1.links(), blob1Copy.links()
+      assert.equal blob2.id(), blob2Copy.id()
+      assert.deepEqual blob2.attributes(), blob2Copy.attributes()
+      assert.deepEqual blob2.links(), blob2Copy.links()
+      callback undefined, commitId
   # get commit and check it
   step4 = (commitId, callback) ->
     commitsDao.get commitId, (err, commit) ->
@@ -62,7 +62,6 @@ exports.testCommit = ->
   step5 = (commit, callback) ->
     reposDao.get "anton$part1", (err, repo) ->
       assert.isUndefined err
-      console.log repo
       assert.equal "part1", repo.name
       assert.equal "anton", repo.author
       assert.equal "anton", repo.getLink "author"
@@ -76,7 +75,17 @@ exports.testCommit = ->
   # gte blobs from tree
   step6 = (treeId, callback) ->
     treesDao.getBlobs treeId, (err, blobs) ->
-      console.log "DONE", err, blobs
+      assert.isUndefined err
+      assert.equal 2, blobs.length
+      blob1Copy = (blob for blob in blobs when blob.id() == blob1.id())[0]
+      blob2Copy = (blob for blob in blobs when blob.id() == blob2.id())[0]
+      assert.equal blob1.id(), blob1Copy.id()
+      assert.deepEqual blob1.attributes(), blob1Copy.attributes()
+      assert.deepEqual blob1.links(), blob1Copy.links()
+      assert.equal blob2.id(), blob2Copy.id()
+      assert.deepEqual blob2.attributes(), blob2Copy.attributes()
+      assert.deepEqual blob2.links(), blob2Copy.links()
+
       callback err, treeId
   # get tree and check it
   step7 = (treeId, callback) ->
@@ -150,7 +159,7 @@ exports.testFindRepos = ->
     # clear all temp data
     reposDao.deleteAll()
 
-exports.getUserRepos = ->
+exports.testGetUserRepos = ->
   # create user
   step1 = (callback) ->
     MassiveGit.newUser "anton", "anton@circuithub.com", (err, user) ->
@@ -178,6 +187,12 @@ exports.getUserRepos = ->
   step5 = (repo1, repo2, callback) ->
     MassiveGit.repos "anton", "part", (err, repos) ->
       assert.equal 2, repos.length
+      repo1Copy = _.detect repos, (iterator) -> iterator.id() == repo1.id()
+      repo2Copy = _.detect repos, (iterator) -> iterator.id() == repo2.id()
+      assert.deepEqual repo1.id(), repo1Copy.id()
+      assert.deepEqual repo1.attributes(), repo1Copy.attributes()
+      assert.deepEqual repo2.id(), repo2Copy.id()
+      assert.deepEqual repo2.attributes(), repo2Copy.attributes()
 
   async.waterfall [step1, step2, step3, step4, step5], (err, results) ->
     # clear all temp data
