@@ -61,7 +61,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
     tasks.push async.apply commitsDao.save, commit
     tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
-    # todo (anton) for some reason when we use parallel my riak server can be stopped. Investigate this.
+    # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.
     async.series tasks, (err, results) ->
       callback err, commit.id()
 
@@ -87,13 +87,16 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @fetchRootEntriesForCommit commitId, callback
 
-  fetchRootEntriesForCommit: (commitId, callback) =>
+  headTree: (commitId, callback) =>
     commitsDao.get commitId, (err, commit) ->
       treeId = commit.tree
-      fetchTree = (stepCallback) ->
-        treesDao.get treeId, (err, tree) ->
-          stepCallback err, tree
-      fetchTreeBlobs = (tree, stepCallback) ->
+      treesDao.get treeId, callback
+
+  fetchRootEntriesForCommit: (commitId, callback) =>
+    @headTree commitId,(err, tree) ->
+      if(err)
+        callback err
+      else
         treesDao.getBlobs tree.id(), (err, blobs) ->
           entries = tree.entries
           treeEntries = []
@@ -101,8 +104,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             blobId = blob.id()
             name = entry.name for entry in entries when entry.id == blobId
             treeEntries.push new TreeEntry name, blob
-          stepCallback err, treeEntries
-      async.waterfall [fetchTree, fetchTreeBlobs], callback
+          callback err, treeEntries
+
 
 
   addToIndex: =>
