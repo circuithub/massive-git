@@ -108,7 +108,30 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
 
-  addToIndex: =>
+  commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
+    plainEntries = []
+    date = new Date().getTime()
+    tasks = []
+    for entry in entries
+      plainEntries.push entry.attributes()
+      # todo (anton) trees can be added later
+      if(entry.entry.type == "blob")
+        blob = entry.entry
+        blob.repo = repoId
+        # todo (anton) we can use dao.exists() before saving each blob.
+        task = async.apply blobsDao.save, blob
+        tasks.push task
+    root = new Tree(plainEntries, repoId)
+    tasks.push async.apply treesDao.save, root
+    commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
+    tasks.push async.apply commitsDao.save, commit
+    tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
+    # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.
+    async.series tasks, (err, results) ->
+      callback err, commit.id()
+
+
+  addToIndex:(entries, repoId, author, message = "update", callback) =>
 
   commits: (repo)=>
 
