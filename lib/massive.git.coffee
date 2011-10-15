@@ -44,18 +44,10 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     usersDao.findAllRepos user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
-    plainEntries = []
+    preparedEntries = @_prepareEntries(entries)
+    plainEntries = preparedEntries.treeEntries
+    tasks = preparedEntries.tasks
     date = new Date().getTime()
-    tasks = []
-    for entry in entries
-      plainEntries.push entry.attributes()
-      # todo (anton) trees can be added later
-      if(entry.entry.type == "blob")
-        blob = entry.entry
-        blob.repo = repoId
-        # todo (anton) we can use dao.exists() before saving each blob.
-        task = async.apply blobsDao.save, blob
-        tasks.push task
     root = new Tree(plainEntries, repoId)
     tasks.push async.apply treesDao.save, root
     commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
@@ -72,6 +64,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         repo.commit = commitId
         reposDao.save repo, callback
+  fetchRepoRootEntriesById: (repoId, callback) =>
+    @head repoId, (err, commitId) =>
+      if(err)
+        callback err
+      else
+        @fetchRootEntriesForCommit commitId, callback
 
   head: (repoId, callback) =>
     reposDao.get repoId, (err, repo) ->
@@ -80,17 +78,25 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         callback undefined, repo.commit
 
-  fetchRepoRootEntriesById: (repoId, callback) =>
-    @head repoId, (err, commitId) =>
+  # Callback accepts 3 parameters: error, tree and commit id.
+  headTree: (repoId, callback) =>
+    @head repoId, (err, commit) =>
       if(err)
         callback err
       else
-        @fetchRootEntriesForCommit commitId, callback
+        @headTreeFromCommit commit.id, callback
 
-  headTree: (commitId, callback) =>
+  # Callback accepts 3 parameters: error, tree and commit id.
+  headTreeFromCommit: (commitId, callback) =>
     commitsDao.get commitId, (err, commit) ->
       treeId = commit.tree
-      treesDao.get treeId, callback
+      treesDao.get treeId, (err, tree) ->
+        if(err)
+          callback err
+        else
+          callback undefined, tree,commitId
+
+
 
   fetchRootEntriesForCommit: (commitId, callback) =>
     @headTree commitId,(err, tree) ->
@@ -107,10 +113,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           callback err, treeEntries
 
 
-
-  commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
+  _prepareEntries: (entries) =>
     plainEntries = []
-    date = new Date().getTime()
     tasks = []
     for entry in entries
       plainEntries.push entry.attributes()
@@ -121,17 +125,17 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         # todo (anton) we can use dao.exists() before saving each blob.
         task = async.apply blobsDao.save, blob
         tasks.push task
-    root = new Tree(plainEntries, repoId)
-    tasks.push async.apply treesDao.save, root
-    commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
-    tasks.push async.apply commitsDao.save, commit
-    tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
-    # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.
-    async.series tasks, (err, results) ->
-      callback err, commit.id()
-
+    { tasks : tasks, treeEntries : treeEntries }
 
   addToIndex:(entries, repoId, author, message = "update", callback) =>
+    @headTree repoId, (err, tree, commitId) =>
+      # todo (anton) here we need  merge new and old entries
+      preparedEntries = @_prepareEntries(tree.entries)
+      plainEntries = preparedEntries.treeEntries
+      tasks = preparedEntries.tasks
+      date = new Date().getTime()
+      root = new Tree(plainEntries, repoId)
+
 
   commits: (repo)=>
 
