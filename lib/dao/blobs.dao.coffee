@@ -6,5 +6,5 @@ class BlobsDao extends ObjectsDao
   populateEntity: (meta, attributes) =>
     new Blob(attributes.data, @getRepository(meta.links), meta.key)
 
-exports.newInstance = -> new BlobsDao()
+exports.newInstance = (log) -> new BlobsDao(log)
 

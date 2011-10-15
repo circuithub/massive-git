@@ -3,8 +3,8 @@ Repo = require("../objects/repo").Repo
 
 class ReposDao extends Dao
 
-  constructor: ->
-    super "repositories"
+  constructor: (log)->
+    super "repositories", log
 
   populateEntity: (meta, attributes) =>
     author = @getLink meta.links, "author"
@@ -13,5 +13,5 @@ class ReposDao extends Dao
     new Repo(attributes.name, author, attributes.type, attributes.public, commit, forkedFrom)
 
 
-exports.newInstance = -> new ReposDao()
+exports.newInstance = (log) -> new ReposDao(log)
 

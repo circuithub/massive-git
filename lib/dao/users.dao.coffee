@@ -4,8 +4,8 @@ User     = require("../objects/user").User
 
 class UsersDao extends Dao
 
-  constructor: ->
-    super "users"
+  constructor: (log) ->
+    super "users", log
 
   populateEntity: (meta, attributes) =>
     new User(meta.key, attributes.email, meta.links)
@@ -47,5 +47,5 @@ class UsersDao extends Dao
 
   unfollowUser: (user, userToUnfollow, callback) =>
 
-exports.newInstance = -> new UsersDao()
+exports.newInstance = (log) -> new UsersDao(log)
 

@@ -12,5 +12,5 @@ class CommitsDao extends ObjectsDao
     console.log "attr", attributes
     new Commit(tree, parent, author, attributes.authoredDate, committer, attributes.commitedDate ,attributes.message, repository, meta.key)
 
-exports.newInstance = -> new CommitsDao()
+exports.newInstance = (log) -> new CommitsDao(log)
 

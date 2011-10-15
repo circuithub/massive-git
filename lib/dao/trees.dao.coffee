@@ -16,5 +16,5 @@ class TreesDao extends ObjectsDao
          blobs = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs)
          callback undefined, blobs
 
-exports.newInstance = -> new TreesDao()
+exports.newInstance = (log) -> new TreesDao(log)
 

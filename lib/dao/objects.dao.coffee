@@ -2,8 +2,8 @@ Dao = require("./dao").Dao
 
 class ObjectsDao extends Dao
 
-  constructor: ->
-    super "objects"
+  constructor: (log) ->
+    super "objects", log
 
   populateEntity: (meta, attributes) =>
     super meta, attributes
