@@ -1,4 +1,6 @@
 async      = require "async"
+_          = require "underscore"
+utils      = require("./objects/utils")
 User       = require("./objects/user").User
 Repo       = require("./objects/repo").Repo
 Tree       = require("./objects/tree").Tree
@@ -39,16 +41,32 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, ok
 
-
   repos: (user, type, callback) ->
     usersDao.findAllRepos user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
-    preparedEntries = @_prepareEntries(entries)
-    plainEntries = preparedEntries.treeEntries
+    preparedEntries = @_prepareEntries entries, repoId
     tasks = preparedEntries.tasks
+    treeEntries = preparedEntries.treeEntries
+    @_prepareTreeAndCommit treeEntries, repoId, parentCommit, author, message, tasks, callback
+
+  addToIndex: (entries, repoId, author, message = "update", callback) =>
+    @headTree repoId, (err, tree, commitId) =>
+      preparedEntries =  @_prepareEntries entries, repoId
+      plainEntries = preparedEntries.treeEntries
+      tasks = preparedEntries.tasks
+      date = new Date().getTime()
+      mergedEntries = tree.entries
+      console.log "Entries", plainEntries, tree, tree.attributes(), tree.links()
+      for plainEntry in plainEntries
+        mergedEntries = _.reject mergedEntries, (entry) -> entry.id == plainEntry.id
+      utils.mergeArrays mergedEntries, plainEntries
+      console.log "merged entries", mergedEntries
+      @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
+
+  _prepareTreeAndCommit: (treeEntries, repoId, parentCommit, author, message, tasks, callback) =>
     date = new Date().getTime()
-    root = new Tree(plainEntries, repoId)
+    root = new Tree(treeEntries, repoId)
     tasks.push async.apply treesDao.save, root
     commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
     tasks.push async.apply commitsDao.save, commit
@@ -57,6 +75,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     async.series tasks, (err, results) ->
       callback err, commit.id()
 
+
   _updateRepoCommitRef: (repoId, commitId, callback) =>
     reposDao.get repoId, (err, repo) ->
       if(err)
@@ -64,6 +83,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         repo.commit = commitId
         reposDao.save repo, callback
+
   fetchRepoRootEntriesById: (repoId, callback) =>
     @head repoId, (err, commitId) =>
       if(err)
@@ -80,11 +100,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   # Callback accepts 3 parameters: error, tree and commit id.
   headTree: (repoId, callback) =>
-    @head repoId, (err, commit) =>
+    @head repoId, (err, commitId) =>
       if(err)
         callback err
       else
-        @headTreeFromCommit commit.id, callback
+        @headTreeFromCommit commitId, callback
 
   # Callback accepts 3 parameters: error, tree and commit id.
   headTreeFromCommit: (commitId, callback) =>
@@ -99,7 +119,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   fetchRootEntriesForCommit: (commitId, callback) =>
-    @headTree commitId,(err, tree) ->
+    @headTreeFromCommit commitId,(err, tree) ->
       if(err)
         callback err
       else
@@ -113,7 +133,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           callback err, treeEntries
 
 
-  _prepareEntries: (entries) =>
+  _prepareEntries: (entries, repoId) =>
     plainEntries = []
     tasks = []
     for entry in entries
@@ -125,17 +145,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         # todo (anton) we can use dao.exists() before saving each blob.
         task = async.apply blobsDao.save, blob
         tasks.push task
-    { tasks : tasks, treeEntries : treeEntries }
-
-  addToIndex:(entries, repoId, author, message = "update", callback) =>
-    @headTree repoId, (err, tree, commitId) =>
-      # todo (anton) here we need  merge new and old entries
-      preparedEntries = @_prepareEntries(tree.entries)
-      plainEntries = preparedEntries.treeEntries
-      tasks = preparedEntries.tasks
-      date = new Date().getTime()
-      root = new Tree(plainEntries, repoId)
-
+    { tasks : tasks, treeEntries : plainEntries }
 
   commits: (repo)=>
 
