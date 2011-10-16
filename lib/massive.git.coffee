@@ -20,6 +20,17 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   initRepo: (name, author, type, callback) ->
     repo = new Repo(name, author, type)
+    @_saveRepo repo, callback
+
+  forkRepo: (repoId, name, author, callback) ->
+    reposDao.get repoId, (err, repo) ->
+      if(err)
+        callback err
+      else
+        forkedRepo = repo.fork name, author
+        @_saveRepo repo, callback
+
+  _saveRepo: (repo, callback) ->
     reposDao.save repo, (err, ok) ->
       if(err)
         callback err
@@ -29,6 +40,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             callback err
           else
             callback undefined, repo
+
 
   deleteRepo: (repoId, author, type, callback) ->
     reposDao.delete repoId, (err, ok) ->

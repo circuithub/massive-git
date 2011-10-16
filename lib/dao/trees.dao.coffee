@@ -1,5 +1,5 @@
 Tree       = require("../objects/tree").Tree
-blobsDao = require("./blobs.dao").newInstance()
+blobsDao   = require("./blobs.dao").newInstance()
 ObjectsDao = require("./objects.dao").ObjectsDao
 
 class TreesDao extends ObjectsDao
@@ -9,7 +9,7 @@ class TreesDao extends ObjectsDao
     new Tree(attributes.entries, repository, meta.key)
 
   getBlobs: (treeId, callback) =>
-    @getLinks treeId, @bucket, "blob",(err, docs) =>
+    @getLinks treeId, @bucket, "blob", (err, docs) =>
       if(err)
          callback err
        else

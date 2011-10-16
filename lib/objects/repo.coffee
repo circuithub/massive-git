@@ -16,6 +16,9 @@ class Repo extends GitEntity
   id: =>
     @author + "$"+ @name
 
+  # Create `forked` copy of the repo.
+  fork: (name, author) -> new Repo(name, author, @type, @public, @commit, @id())
+
   # Dao related methods.
   # ---------
 
