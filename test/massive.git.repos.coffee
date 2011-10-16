@@ -92,7 +92,6 @@ exports.testGetUserRepos = ->
     reposDao.deleteAll()
     usersDao.deleteAll()
 
-
 exports.testDeleteRepo = ->
   # create user
   step1 = (callback) ->

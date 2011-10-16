@@ -44,6 +44,10 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   repos: (user, type, callback) ->
     usersDao.findAllRepos user, type, callback
 
+  reposEntries: (user, type, callback) ->
+    usersDao.fetchAllRepos user, type, callback
+
+
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     preparedEntries = @_prepareEntries entries, repoId
     tasks = preparedEntries.tasks
@@ -67,8 +71,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   _prepareTreeAndCommit: (treeEntries, repoId, parentCommit, author, message, tasks, callback) =>
     date = new Date().getTime()
     root = new Tree(treeEntries, repoId)
-    tasks.push async.apply treesDao.save, root
     commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
+    tasks.push async.apply treesDao.save, root
     tasks.push async.apply commitsDao.save, commit
     tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
     # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.

@@ -46,7 +46,9 @@ class Dao
     @db.exists @bucket, id, callback
 
   # Get all links from entity to some `bucket` under specified `tag`.
-  getLinks: (id, linkBucket, tag, callback) =>
+  walk: (id, spec, callback) =>
+    linkPhases = spec.map (unit) ->
+      bucket: unit[0] or '_', tag: unit[1] or '_', keep: unit[2]?
     map = (value) ->
       row = value.values[0]
       entity = {}
@@ -56,14 +58,15 @@ class Dao
       entity.meta = {}
       entity.meta.key = value.key
       linksArray = metadata["Links"]
+      # todo (anton) these 3 lines can be refactored into 1 using for comprehension
       links = []
       for link in linksArray
-        links.push {bucket : link[0], key : link[1], tag : link[2] }
+        links.push { bucket : link[0], key : link[1], tag : link[2] }
       entity.meta.links = links
       [entity]
     @db
       .add({ bucket : @bucket, key_filters : [["eq", id]] })
-      .link({ bucket : linkBucket, tag : tag })
+      .link(linkPhases)
       .map(map)
       .run(callback)
 

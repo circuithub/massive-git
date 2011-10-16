@@ -1,5 +1,7 @@
+_        = require "underscore"
 Dao      = require("./dao").Dao
 reposDao = require("./repos.dao").newInstance()
+blobsDao = require("./blobs.dao").newInstance()
 User     = require("../objects/user").User
 
 class UsersDao extends Dao
@@ -11,15 +13,25 @@ class UsersDao extends Dao
     new User(meta.key, attributes.email, meta.links)
 
   findAllRepos: (user, type, callback) =>
-    @getLinks user, "repositories", type, (err, docs) =>
-      console.log "getting repositories", err,docs
+    @walk user, [["repositories", type]], (err, docs) =>
       if(err)
          callback err
       else
-        console.log "getting repositories", docs
+        console.log "retrieved repos", docs if @log
         repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
         callback undefined, repos
 
+  # return map:
+  fetchAllRepos: (user, type, callback) =>
+    @walk user, [["repositories", type],["objects", "commit"],["objects", "tree"],["objects", "blob"]], (err, docs) =>
+      if(err)
+         callback err
+      else
+        console.log "fetched repos", docs if @log
+        reposEnrties = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
+        groupedEntries = _.groupBy reposEnrties, (entry) -> entry.repo
+        console.log "grouped repos", groupedEntries if @log
+        callback undefined, groupedEntries
 
   addRepo: (user, repoId, type, callback) =>
     @get user, (err, user) =>

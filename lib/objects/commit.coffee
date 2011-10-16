@@ -29,7 +29,7 @@ class Commit extends GitObject
     links = super()
     links.push @buildLink "objects", @tree, "tree"
     links.push @buildLink "objects", @parent, "parent"
-    links.push @buildLink  "users", @author, "author"
+    links.push @buildLink "users", @author, "author"
     links.push @buildLink "users", @committer, "committer"
     links
 
