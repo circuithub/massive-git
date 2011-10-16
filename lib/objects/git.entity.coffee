@@ -4,7 +4,7 @@ utils = require "./utils"
 # -----------
 # Base abstract class for each git entity: user, repository, git objects (blobs, commits, trees, tags).
 # Each entity has `id`, `attributes` and `links` to other `entities`.
-class GitEntity
+GitEntity = exports.GitEntity = class GitEntity
 
   # Id of the entity.
   id: =>
@@ -37,6 +37,4 @@ class GitEntity
 
   # Method for building link.
   buildLink: (bucket, key, tag) => utils.buildLink bucket, key, tag
-
-exports.GitEntity = GitEntity
 

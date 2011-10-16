@@ -13,7 +13,7 @@ sha1 = (data) ->
 # type - type of the object: blob, commit, tree or tag.
 # content - raw content of the object.
 # repo - reference to the repo.
-class GitObject extends GitEntity
+GitObject = exports.GitObject = class GitObject extends GitEntity
 
   # Constructor takes `type` of object and optionally `repo` id and internal `_id` of the object.
   constructor: (@type, @repo = null, @_id) ->
@@ -46,6 +46,4 @@ class GitObject extends GitEntity
 
   # Get repository for this object.
   getRepository: => @getLink "repository"
-
-exports.GitObject = GitObject
 
