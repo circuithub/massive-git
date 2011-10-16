@@ -14,23 +14,23 @@ blobsDao   = require("./dao/blobs.dao").newInstance()
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
-  newUser: (username, email, callback) ->
+  newUser: (username, email, callback) =>
     user = new User username, email
     usersDao.save user, callback
 
-  initRepo: (name, author, type, callback) ->
+  initRepo: (name, author, type, callback) =>
     repo = new Repo(name, author, type)
     @_saveRepo repo, callback
 
-  forkRepo: (repoId, name, author, callback) ->
-    reposDao.get repoId, (err, repo) ->
+  forkRepo: (repoId, name, author, callback) =>
+    reposDao.get repoId, (err, repo) =>
       if(err)
         callback err
       else
         forkedRepo = repo.fork name, author
         @_saveRepo repo, callback
 
-  _saveRepo: (repo, callback) ->
+  _saveRepo: (repo, callback) =>
     reposDao.save repo, (err, ok) ->
       if(err)
         callback err
@@ -42,7 +42,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             callback undefined, repo
 
 
-  deleteRepo: (repoId, author, type, callback) ->
+  deleteRepo: (repoId, author, type, callback) =>
     reposDao.delete repoId, (err, ok) ->
       if(err)
         callback err
@@ -53,10 +53,10 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, ok
 
-  repos: (user, type, callback) ->
+  repos: (user, type, callback) =>
     usersDao.findAllRepos user, type, callback
 
-  reposEntries: (user, type, callback) ->
+  reposEntries: (user, type, callback) =>
     usersDao.fetchAllRepos user, type, callback
 
 
