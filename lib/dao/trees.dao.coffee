@@ -9,7 +9,7 @@ class TreesDao extends ObjectsDao
     new Tree(attributes.entries, repository, meta.key)
 
   getBlobs: (treeId, callback) =>
-    @getLinks treeId, @bucket, "blob", (err, docs) =>
+    @walk treeId, [[@bucket, "blob"]], (err, docs) =>
       if(err)
          callback err
        else
