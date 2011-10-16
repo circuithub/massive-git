@@ -35,7 +35,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(err)
         callback err
       else
-        usersDao.addRepo author, repo.id(), type, (err, ok) ->
+        usersDao.addRepo repo.author, repo.id(), type, (err, ok) ->
           if(err)
             callback err
           else
