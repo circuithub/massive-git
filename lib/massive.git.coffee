@@ -28,7 +28,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         callback err
       else
         forkedRepo = repo.fork name, author
-        @_saveRepo repo, callback
+        @_saveRepo forkedRepo, callback
 
   _saveRepo: (repo, callback) =>
     reposDao.save repo, (err, ok) ->
