@@ -7,7 +7,7 @@ utils = require "../objects/utils"
 class Dao
 
   constructor: (@bucket, @log = true) ->
-    @db = riak.getClient({ debug : true })
+    @db = riak.getClient({debug: @log})
 
   # Get entity by `id`. Callback takes `error` and `entity` object.
   get: (id, callback) =>
@@ -21,7 +21,7 @@ class Dao
   # Save entity.
   save: (entity, callback) =>
    console.log "saving entity with id =", entity.id(), "into bucket =", @bucket if @log
-   meta = { links : entity.links() }
+   meta = {links: entity.links()}
    @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
@@ -58,14 +58,11 @@ class Dao
       entity.meta = {}
       entity.meta.key = value.key
       linksArray = metadata["Links"]
-      # todo (anton) these 3 lines can be refactored into 1 using for comprehension
-      links = []
-      for link in linksArray
-        links.push { bucket : link[0], key : link[1], tag : link[2] }
+      links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
       entity.meta.links = links
       [entity]
     @db
-      .add({ bucket : @bucket, key_filters : [["eq", id]] })
+      .add({bucket: @bucket, key_filters: [["eq", id]]})
       .link(linkPhases)
       .map(map)
       .run(callback)

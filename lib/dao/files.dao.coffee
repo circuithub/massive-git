@@ -10,11 +10,11 @@ utils = require "../objects/utils"
 class FilesDao
 
   constructor: (@log = false) ->
-    @db = riak.getClient({ debug : true })
+    @db = riak.getClient({debug: @log})
 
 
   saveFile: (buffer, key) =>
-    @db.saveLarge key, data, {author:"x"},(err, data) =>
+    @db.saveLarge key, data, {author: "x"},(err, data) =>
       console.log "done",err, data
       @db.getLarge key, (err, buffer, meta) ->
         console.log "read", err, meta
