@@ -1,4 +1,3 @@
-fs       = require "fs"
 riak     = require "riak-js"
 utils    = require "../objects/utils"
 FileBlob = require("../objects/file.blob").FileBlob
