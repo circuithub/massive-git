@@ -23,7 +23,7 @@ class UsersDao extends Dao
 
   # return map:
   fetchAllRepos: (user, type, callback) =>
-    @walk user, [["repositories", type, true],["objects", "commit", 1],["objects", "tree"],["objects", "blob"]], (err, docs) =>
+    @walk user, [["repositories", type, true],["objects", "commit", true],["objects", "tree", true],["objects", "blob"]], (err, docs) =>
       if(err)
          callback err
       else

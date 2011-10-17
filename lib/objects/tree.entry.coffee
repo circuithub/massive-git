@@ -8,7 +8,8 @@ TreeEntry = exports.TreeEntry = class TreeEntry
 
   # Constructor takes `data` and optionally `repo` id and blob's `id`.
   # todo (anton) we can hardcode `mode` right now
-  constructor: (@name, @entry, @mode = 100644) ->
+  # isFile flag is internal flag to indicate that we are dealing with FileBlob.
+  constructor: (@name, @entry, @mode = 100644, @isFile = false) ->
 
   attributes: =>
     id   : @entry.id()
