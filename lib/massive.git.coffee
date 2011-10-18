@@ -133,8 +133,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         else
           callback undefined, tree,commitId
 
-
-
   fetchRootEntriesForCommit: (commitId, callback) =>
     @headTreeFromCommit commitId,(err, tree) ->
       if(err)
@@ -170,4 +168,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     {tasks: tasks, treeEntries: plainEntries}
 
   commits: (repo)=>
+
+  blob: (id, callback) => blobsDao.get id, callback
 
