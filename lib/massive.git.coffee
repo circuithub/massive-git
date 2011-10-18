@@ -11,7 +11,6 @@ usersDao     = require("./dao/users.dao").newInstance()
 commitsDao   = require("./dao/commits.dao").newInstance()
 treesDao     = require("./dao/trees.dao").newInstance()
 blobsDao     = require("./dao/blobs.dao").newInstance()
-fileBlobsDao = require("./dao/file.blobs.dao").newInstance()
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
@@ -157,13 +156,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(entry.entry.type == "blob")
         blob = entry.entry
         blob.repo = repoId
-        # if this is `real` file we should save it to luwak
-        if(entry.isFile)
-          # todo (anton) we can use dao.exists() before saving each blob.
-          task = async.apply fileblobsDao.save, blob
-        else
-          # todo (anton) we can use dao.exists() before saving each blob.
-          task = async.apply blobsDao.save, blob
+        # todo (anton) we can use dao.exists() before saving each blob.
+        task = async.apply blobsDao.save, blob
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 
