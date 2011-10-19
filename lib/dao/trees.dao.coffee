@@ -4,6 +4,9 @@ ObjectsDao = require("./objects.dao").ObjectsDao
 
 class TreesDao extends ObjectsDao
 
+  constructor: (log)->
+    super log
+
   populateEntity: (meta, attributes) =>
     repository = @getLink meta.links, "repository"
     new Tree(attributes.entries, repository, meta.key)

@@ -74,9 +74,9 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       date = new Date().getTime()
       mergedEntries = tree.entries
       console.log "Entries for commit", newEntries, mergedEntries
-      newEntriesIds =  (entry.id for entry in newEntries)
+      newEntriesNames = (entry.name for entry in newEntries)
       console.log "Entries ids>>", newEntriesIds
-      mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesIds, entry.id
+      mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
       utils.mergeArrays mergedEntries, newEntries
       console.log "merged entries", mergedEntries
       @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
