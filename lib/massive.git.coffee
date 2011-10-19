@@ -69,14 +69,15 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   addToIndex: (entries, repoId, author, message = "update", callback) =>
     @headTree repoId, (err, tree, commitId) =>
       preparedEntries =  @_prepareEntries entries, repoId
-      plainEntries = preparedEntries.treeEntries
+      newEntries = preparedEntries.treeEntries
       tasks = preparedEntries.tasks
       date = new Date().getTime()
       mergedEntries = tree.entries
-      console.log "Entries", plainEntries, tree, tree.attributes(), tree.links()
-      for plainEntry in plainEntries
-        mergedEntries = _.reject mergedEntries, (entry) -> entry.id == plainEntry.id
-      utils.mergeArrays mergedEntries, plainEntries
+      console.log "Entries for commit", newEntries, mergedEntries
+      newEntriesIds =  (entry.id for entry in newEntries)
+      console.log "Entries ids>>", newEntriesIds
+      mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesIds, entry.id
+      utils.mergeArrays mergedEntries, newEntries
       console.log "merged entries", mergedEntries
       @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
 
