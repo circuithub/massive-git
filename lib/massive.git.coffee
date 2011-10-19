@@ -75,7 +75,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       mergedEntries = tree.entries
       console.log "Entries for commit", newEntries, mergedEntries
       newEntriesNames = (entry.name for entry in newEntries)
-      console.log "Entries ids>>", newEntriesIds
+      console.log "Entries names>>", newEntriesNames
       mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
       utils.mergeArrays mergedEntries, newEntries
       console.log "merged entries", mergedEntries
