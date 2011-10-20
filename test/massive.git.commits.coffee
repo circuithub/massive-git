@@ -4,10 +4,7 @@ _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
-reposDao   = require("../lib/dao/repos.dao").newInstance()
-commitsDao = require("../lib/dao/commits.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
-usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
@@ -35,7 +32,7 @@ exports.testCommit = ->
       callback undefined, commitId
   # get commit and check it
   step4 = (commitId, callback) ->
-    commitsDao.get commitId, (err, commit) ->
+    MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "anton"
       commit.should.have.property "committer", "anton"
@@ -49,7 +46,7 @@ exports.testCommit = ->
       callback err, commit
   # get repo and check it
   step5 = (commit, callback) ->
-    reposDao.get "anton$part1", (err, repo) ->
+    MassiveGit.getRepo "anton$part1", (err, repo) ->
       should.not.exist err
       repo.should.have.property "name", "part1"
       repo.should.have.property "author", "anton"

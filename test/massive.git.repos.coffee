@@ -90,8 +90,7 @@ exports.testGetUserRepos = ->
 
   async.waterfall [step1, step2, step3, step4, step5], (err, results) ->
     # clear all temp data
-    reposDao.deleteAll()
-    usersDao.deleteAll()
+    helper.deleteAll()
 
 exports.testDeleteRepo = ->
   # create user with two repos

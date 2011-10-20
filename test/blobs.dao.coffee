@@ -3,7 +3,6 @@ async    = require "async"
 blobsDao = require("../lib/dao/blobs.dao").newInstance()
 Blob     = require("../lib/objects/blob").Blob
 
-
 exports.testSaveBlob = ->
   # create new blob and save it
   step1 = (callback) ->
