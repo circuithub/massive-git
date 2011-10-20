@@ -15,7 +15,6 @@ BlobsDao     = require "./dao/blobs.dao"
 MassiveGit = exports.MassiveGit = class MassiveGit
 
   constructor: (@log = false) ->
-    console.log "Initing"
     @reposDao = ReposDao.newInstance()
     @usersDao = UsersDao.newInstance()
     @commitsDao = CommitsDao.newInstance()
@@ -33,6 +32,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   forkRepo: (repoId, name, author, callback) =>
     @reposDao.get repoId, (err, repo) =>
       if(err)
+        err.message = "Repo wasn't found"
         callback err
       else
         forkedRepo = repo.fork name, author
@@ -41,10 +41,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   _saveRepo: (repo, callback) =>
     @reposDao.save repo, (err, ok) =>
       if(err)
+        err.message = "Repo wasn't found"
         callback err
       else
         @usersDao.addRepo repo.author, repo.id(), repo.type, (err, ok) ->
           if(err)
+            err.message = "User wasn't found"
             callback err
           else
             callback undefined, repo
@@ -53,10 +55,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   deleteRepo: (repoId, author, type, callback) =>
     @reposDao.delete repoId, (err, ok) =>
       if(err)
+        err.message = "Repo wasn't found"
         callback err
       else
         @usersDao.removeRepo author, repoId, type, (err, ok) ->
           if(err)
+            err.message = "User wasn't found"
             callback err
           else
             callback undefined, ok
@@ -76,18 +80,22 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   addToIndex: (entries, repoId, author, message = "update", callback) =>
     @headTree repoId, (err, tree, commitId) =>
-      preparedEntries =  @_prepareEntries entries, repoId
-      newEntries = preparedEntries.treeEntries
-      tasks = preparedEntries.tasks
-      date = new Date().getTime()
-      mergedEntries = tree.entries
-      console.log "Entries for commit", newEntries, mergedEntries
-      newEntriesNames = (entry.name for entry in newEntries)
-      console.log "Entries names>>", newEntriesNames
-      mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
-      utils.mergeArrays mergedEntries, newEntries
-      console.log "merged entries", mergedEntries
-      @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
+      if(err)
+        err.message = "Tree wasn't found"
+        callback err
+      else
+        preparedEntries =  @_prepareEntries entries, repoId
+        newEntries = preparedEntries.treeEntries
+        tasks = preparedEntries.tasks
+        date = new Date().getTime()
+        mergedEntries = tree.entries
+        console.log "Entries for commit", newEntries, mergedEntries
+        newEntriesNames = (entry.name for entry in newEntries)
+        console.log "Entries names>>", newEntriesNames
+        mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
+        utils.mergeArrays mergedEntries, newEntries
+        console.log "merged entries", mergedEntries
+        @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
 
   _prepareTreeAndCommit: (treeEntries, repoId, parentCommit, author, message, tasks, callback) =>
     date = new Date().getTime()
@@ -102,7 +110,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   _updateRepoCommitRef: (repoId, commitId, callback) =>
-    @reposDao.get repoId, (err, repo) =>
+    @repo repoId, (err, repo) =>
       if(err)
         callback err
       else
@@ -117,7 +125,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @fetchRootEntriesForCommit commitId, callback
 
   head: (repoId, callback) =>
-    @reposDao.get repoId, (err, repo) ->
+   @repo repoId repoId, (err, repo) ->
       if(err)
         callback err
       else
@@ -147,13 +155,16 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         callback err
       else
         @treesDao.getBlobs tree.id(), (err, blobs) ->
-          entries = tree.entries
-          treeEntries = []
-          for blob in blobs
-            blobId = blob.id()
-            name = entry.name for entry in entries when entry.id == blobId
-            treeEntries.push new TreeEntry name, blob
-          callback err, treeEntries
+          if(err)
+            err.message = "Cannot retrive blobs"
+          else
+            entries = tree.entries
+            treeEntries = []
+            for blob in blobs
+              blobId = blob.id()
+              name = entry.name for entry in entries when entry.id == blobId
+              treeEntries.push new TreeEntry name, blob
+            callback err, treeEntries
 
 
   _prepareEntries: (entries, repoId) =>
@@ -173,4 +184,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   commits: (repo)=>
 
   blob: (id, callback) => blobsDao.get id, callback
+
+  repo: (id, callback) =>
+    @reposDao.get id, (err, repo) ->
+      if(err)
+        err.message = "Repo wasn't found"
+        callback err
+      else
+        callback undefined, repo
 

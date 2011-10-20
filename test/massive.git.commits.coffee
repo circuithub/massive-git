@@ -161,7 +161,6 @@ exports.testCommitUpdate = ->
       commit.authoredDate.should.exist
       commit.commitedDate.should.exist
       commit.tree.should.exist
-
       callback err, commit
   # get blobs from tree
   step9 = (commit, callback) ->
@@ -169,7 +168,6 @@ exports.testCommitUpdate = ->
       should.not.exist err
       blobs.should.have.length 2
       callback err, commit
-
   async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8, step9], (err, results) ->
     # clear all temp data
     helper.deleteAll()
