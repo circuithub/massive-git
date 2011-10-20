@@ -17,10 +17,7 @@ exports.testSaveUser = ->
   step2 = (user, callback) ->
     usersDao.get user.id(), (err, userFromDao) ->
       should.not.exist err
-      userFromDao.id().should.equal user.id()
-      userFromDao.email.should.equal user.email
-      should.deepEqual user.links(), userFromDao.links()
-      should.deepEqual user.attributes(), userFromDao.attributes()
+      userFromDao.equals(user).should.be.ok
       callback err
   async.waterfall [step1, step2], (err, results) ->
     # clear all temp data
