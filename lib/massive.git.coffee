@@ -6,24 +6,32 @@ Repo         = require("./objects/repo").Repo
 Tree         = require("./objects/tree").Tree
 TreeEntry    = require("./objects/tree.entry").TreeEntry
 Commit       = require("./objects/commit").Commit
-reposDao     = require("./dao/repos.dao").newInstance()
-usersDao     = require("./dao/users.dao").newInstance()
-commitsDao   = require("./dao/commits.dao").newInstance()
-treesDao     = require("./dao/trees.dao").newInstance()
-blobsDao     = require("./dao/blobs.dao").newInstance()
+ReposDao     = require "./dao/repos.dao"
+UsersDao     = require "./dao/users.dao"
+CommitsDao   = require "./dao/commits.dao"
+TreesDao     = require "./dao/trees.dao"
+BlobsDao     = require "./dao/blobs.dao"
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
+  constructor: (@log = false) ->
+    console.log "Initing"
+    @reposDao = ReposDao.newInstance()
+    @usersDao = UsersDao.newInstance()
+    @commitsDao = CommitsDao.newInstance()
+    @treesDao = TreesDao.newInstance()
+    @blobsDao = BlobsDao.newInstance()
+
   newUser: (username, email, callback) =>
     user = new User username, email
-    usersDao.save user, callback
+    @usersDao.save user, callback
 
   initRepo: (name, author, type, callback) =>
     repo = new Repo(name, author, type)
     @_saveRepo repo, callback
 
   forkRepo: (repoId, name, author, callback) =>
-    reposDao.get repoId, (err, repo) =>
+    @reposDao.get repoId, (err, repo) =>
       if(err)
         callback err
       else
@@ -31,11 +39,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @_saveRepo forkedRepo, callback
 
   _saveRepo: (repo, callback) =>
-    reposDao.save repo, (err, ok) ->
+    @reposDao.save repo, (err, ok) =>
       if(err)
         callback err
       else
-        usersDao.addRepo repo.author, repo.id(), repo.type, (err, ok) ->
+        @usersDao.addRepo repo.author, repo.id(), repo.type, (err, ok) ->
           if(err)
             callback err
           else
@@ -43,21 +51,21 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   deleteRepo: (repoId, author, type, callback) =>
-    reposDao.delete repoId, (err, ok) ->
+    @reposDao.delete repoId, (err, ok) =>
       if(err)
         callback err
       else
-        usersDao.removeRepo author, repoId, type, (err, ok) ->
+        @usersDao.removeRepo author, repoId, type, (err, ok) ->
           if(err)
             callback err
           else
             callback undefined, ok
 
   repos: (user, type, callback) =>
-    usersDao.findAllRepos user, type, callback
+    @usersDao.findAllRepos user, type, callback
 
   reposEntries: (user, type, callback) =>
-    usersDao.fetchAllRepos user, type, callback
+    @usersDao.fetchAllRepos user, type, callback
 
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
@@ -85,8 +93,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     date = new Date().getTime()
     root = new Tree(treeEntries, repoId)
     commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
-    tasks.push async.apply treesDao.save, root
-    tasks.push async.apply commitsDao.save, commit
+    tasks.push async.apply @treesDao.save, root
+    tasks.push async.apply @commitsDao.save, commit
     tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
     # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.
     async.series tasks, (err, results) ->
@@ -94,12 +102,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   _updateRepoCommitRef: (repoId, commitId, callback) =>
-    reposDao.get repoId, (err, repo) ->
+    @reposDao.get repoId, (err, repo) =>
       if(err)
         callback err
       else
         repo.commit = commitId
-        reposDao.save repo, callback
+        @reposDao.save repo, callback
 
   fetchRepoRootEntriesById: (repoId, callback) =>
     @head repoId, (err, commitId) =>
@@ -109,7 +117,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @fetchRootEntriesForCommit commitId, callback
 
   head: (repoId, callback) =>
-    reposDao.get repoId, (err, repo) ->
+    @reposDao.get repoId, (err, repo) ->
       if(err)
         callback err
       else
@@ -125,9 +133,9 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   # Callback accepts 3 parameters: error, tree and commit id.
   headTreeFromCommit: (commitId, callback) =>
-    commitsDao.get commitId, (err, commit) ->
+    @commitsDao.get commitId, (err, commit) ->
       treeId = commit.tree
-      treesDao.get treeId, (err, tree) ->
+      @treesDao.get treeId, (err, tree) ->
         if(err)
           callback err
         else
@@ -138,7 +146,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(err)
         callback err
       else
-        treesDao.getBlobs tree.id(), (err, blobs) ->
+        @treesDao.getBlobs tree.id(), (err, blobs) ->
           entries = tree.entries
           treeEntries = []
           for blob in blobs
@@ -158,7 +166,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         blob = entry.entry
         blob.repo = repoId
         # todo (anton) we can use dao.exists() before saving each blob.
-        task = async.apply blobsDao.save, blob
+        task = async.apply @blobsDao.save, blob
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 

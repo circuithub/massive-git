@@ -6,7 +6,6 @@ Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 reposDao   = require("../lib/dao/repos.dao").newInstance()
 commitsDao = require("../lib/dao/commits.dao").newInstance()
-blobsDao   = require("../lib/dao/blobs.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
 usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
@@ -81,13 +80,13 @@ exports.testCommit = ->
       callback err, blob1, blob2
   # get blob 1 and check it
   step8 = (blob1, blob2, callback) ->
-    blobsDao.get blob1.id(), (err, blob) ->
+    MassiveGit.blob blob1.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob1).should.be.ok
       callback err, blob2
   # get blob 2 and check it
   step9 = (blob2, callback) ->
-    blobsDao.get blob2.id(), (err, blob) ->
+    MassiveGit.blob blob2.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob2).should.be.ok
       callback err
@@ -121,7 +120,7 @@ exports.testCommitUpdate = ->
     commitsDao.get commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "anton"
-      commit.should.have.property "commiter", "anton"
+      commit.should.have.property "committer", "anton"
       commit.should.have.property "message", "first commit"
       commit.should.have.property "repo", "anton$part1"
       commit.authoredDate.should.exist
@@ -156,7 +155,7 @@ exports.testCommitUpdate = ->
     commitsDao.get commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "andrew"
-      commit.should.have.property "commiter", "andrew"
+      commit.should.have.property "committer", "andrew"
       commit.should.have.property "message", "update"
       commit.should.have.property "repo", "anton$part1"
       commit.authoredDate.should.exist

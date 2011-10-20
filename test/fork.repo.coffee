@@ -22,10 +22,10 @@ exports.testForkRepoWithSameUser = ->
       should.not.exist err
       forkedRepo.forkedFrom.should.equal repo.id()
       forkedRepo.id().should.equal "anton$new-project-name"
-      forked.repo.should.have.property "name", "new-project-name"
-      forked.repo.should.have.property "public", "anton"
-      forked.public.should.be.ok
-      forkedRepo.commit.should.be.equal repo.commit
+      forkedRepo.should.have.property "name", "new-project-name"
+      forkedRepo.should.have.property "author", "anton"
+      forkedRepo.public.should.be.ok
+      should.not.exist forkedRepo.commit
   async.waterfall [step1, step2], (err, results) ->
     helper.deleteAll()
 
@@ -36,13 +36,15 @@ exports.testForkRepoWithAnotherUser = ->
   # fork repo
   step2 = (repo, callback) ->
     MassiveGit.forkRepo repo.id(), "new-project-name", "andrew", (err, forkedRepo) ->
+      console.log "xx", err
       should.not.exist err
       forkedRepo.forkedFrom.should.equal repo.id()
       forkedRepo.id().should.equal "andrew$new-project-name"
-      forked.repo.should.have.property "name", "new-project-name"
-      forked.repo.should.have.property "public", "andrew"
-      forked.public.should.be.ok
+      forkedRepo.should.have.property "name", "new-project-name"
+      forkedRepo.should.have.property "author", "andrew"
+      forkedRepo.public.should.be.ok
       forkedRepo.commit.should.be.equal repo.commit
+
   async.waterfall [step1, step2], (err, results) ->
     helper.deleteAll()
 

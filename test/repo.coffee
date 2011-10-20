@@ -47,3 +47,13 @@ exports.testOldRepo = ->
   repo.getLink("author").should.equal "anton"
   repo.getLink("commit").should.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
 
+exports.testForkRepo = ->
+  repo = new Repo("project1", "anton", "project", false, null, "andrew$project1")
+  forked = repo.fork("new-project-name", "peter")
+  forked.id().should.equal "peter$new-project-name"
+  forked.should.have.property "name", "new-project-name"
+  forked.should.have.property "author", "peter"
+  forked.public.should.be.not.ok
+  should.not.exist forked.commit
+  forked.should.have.property "forkedFrom", "anton$project1"
+
