@@ -1,3 +1,4 @@
+_     = require "underscore"
 utils = require "./utils"
 
 # GitEntity
@@ -7,34 +8,26 @@ utils = require "./utils"
 GitEntity = exports.GitEntity = class GitEntity
 
   # Id of the entity.
-  id: =>
-    @_id
+  id: => @_id
 
   # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.
-  attributes: =>
-    throw new Error("Should be implemented in every subclass!")
+  attributes: => throw new Error("Should be implemented in every subclass!")
 
   # Method for getting `links` that connect this GitEntity with git objects, users or repositories.
-  links: =>
-    []
-
-  # Serialize entity to `JSON`.
-  toJSON: =>
-    json = @attributes()
-    json.id = @id()
-    json
+  links: => []
 
   # Method for finding appropriate link `key` by `tag` name.
-  getLink: (tagName) =>
-    utils.getLink @links(), tagName
+  getLink: (tagName) => utils.getLink @links(), tagName
 
   # Method for finding all appropriate links `key` by `tag` name.
-  getLinks: (tagName) =>
-    utils.getLinks @links(), tagName
+  getLinks: (tagName) => utils.getLinks @links(), tagName
 
   # Method for building link.
   buildLink: (bucket, key, tag) => utils.buildLink bucket, key, tag
+
+  # Method that check whether two `GitEntities` are the same.
+  equals: (gitEntity) => @id() == gitEntity.id() and _.isEqual(@links(), gitEntity.links()) and _.isEqual(@attributes(), gitEntity.attributes())
 
