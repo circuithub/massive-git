@@ -1,4 +1,4 @@
-assert     = require "assert"
+should     = require "should"
 async      = require "async"
 _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
@@ -10,33 +10,39 @@ blobsDao   = require("../lib/dao/blobs.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
 usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
+helper     = require "./fixture/helper"
 
-exports.testForkRepo = ->
-  # create user
-  step0 = (callback) ->
-    MassiveGit.newUser "anton", "anton@circuithub.com", (err, user) ->
-      assert.isUndefined err
-      callback err, user
-  # create repo
-  step1 = (user, callback) ->
-    MassiveGit.initRepo "project1", "anton", "project", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$project1", repo.id()
-      callback err, repo
+exports.testForkRepoWithSameUser = ->
+  # create user with repo
+  step1 = (callback) ->
+    helper.createUserWithRepo "anton", "project1", "project", callback
+  # fork repo
   step2 = (repo, callback) ->
     MassiveGit.forkRepo repo.id(), "new-project-name", "anton", (err, forkedRepo) ->
-      console.log "forked repo", err, forkedRepo
-      assert.isUndefined err
-      assert.equal "anton$new-project-name", forkedRepo.id()
-      assert.equal repo.id(), forkedRepo.forkedFrom
-      assert.equal "new-project-name", forkedRepo.name
-      assert.equal "anton", forkedRepo.author
-      assert.equal  repo.public, forkedRepo.public
-      assert.equal  repo.commit, forkedRepo.commit
-  async.waterfall [step0, step1, step2], (err, results) ->
-    # clear all temp data
-    reposDao.deleteAll()
+      should.not.exist err
+      forkedRepo.forkedFrom.should.equal repo.id()
+      forkedRepo.id().should.equal "anton$new-project-name"
+      forked.repo.should.have.property "name", "new-project-name"
+      forked.repo.should.have.property "public", "anton"
+      forked.public.should.be.ok
+      forkedRepo.commit.should.be.equal repo.commit
+  async.waterfall [step1, step2], (err, results) ->
+    helper.deleteAll()
 
-
-# todo (anton) create test for forking repo to another user
+exports.testForkRepoWithAnotherUser = ->
+  # create user with repo
+  step1 = (callback) ->
+    helper.createUserWithRepo "anton", "project1", "project", callback
+  # fork repo
+  step2 = (repo, callback) ->
+    MassiveGit.forkRepo repo.id(), "new-project-name", "andrew", (err, forkedRepo) ->
+      should.not.exist err
+      forkedRepo.forkedFrom.should.equal repo.id()
+      forkedRepo.id().should.equal "andrew$new-project-name"
+      forked.repo.should.have.property "name", "new-project-name"
+      forked.repo.should.have.property "public", "andrew"
+      forked.public.should.be.ok
+      forkedRepo.commit.should.be.equal repo.commit
+  async.waterfall [step1, step2], (err, results) ->
+    helper.deleteAll()
 
