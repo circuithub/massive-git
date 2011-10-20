@@ -1,14 +1,5 @@
 should     = require "should"
 async      = require "async"
-_          = require "underscore"
-Repo       = require("../lib/objects/repo").Repo
-Blob       = require("../lib/objects/blob").Blob
-TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
-reposDao   = require("../lib/dao/repos.dao").newInstance()
-commitsDao = require("../lib/dao/commits.dao").newInstance()
-blobsDao   = require("../lib/dao/blobs.dao").newInstance()
-treesDao   = require("../lib/dao/trees.dao").newInstance()
-usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
