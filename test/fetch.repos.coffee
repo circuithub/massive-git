@@ -37,8 +37,8 @@ exports.testCommit = ->
       console.log "DONEE>>", err, entries
   async.waterfall [step0, step1, step2, step3], (err, results) ->
     # clear all temp data
-    #usersDao.deleteAll()
-    #reposDao.deleteAll()
-    #commitsDao.deleteAll()
-    #treesDao.deleteAll()
+    usersDao.deleteAll()
+    reposDao.deleteAll()
+    commitsDao.deleteAll()
+    treesDao.deleteAll()
 
