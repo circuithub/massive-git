@@ -184,33 +184,45 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   commits: (repo) =>
 
-  getBlob: (id, callback) =>
-    @blobsDao.get id, (err, blob) ->
-      if(err)
-        err.message = "Blob wasn't found"
-        callback err
-      else
-        callback undefined, repo
-
   getRepo: (id, callback) =>
-    @reposDao.get id, (err, repo) ->
-      if(err)
-        err.message = "Repo wasn't found"
-        callback err
-      else
-        callback undefined, repo
+    if(!id)
+      callback {statusCode: 400, message: "Invalid parameters"}
+    else
+      @reposDao.get id, (err, repo) ->
+        if(err)
+          err.message = "Repo wasn't found"
+          callback err
+        else
+          callback undefined, repo
+
+  getBlob: (id, callback) =>
+    if(!id)
+      callback {statusCode: 400, message: "Invalid parameters"}
+    else
+      @blobsDao.get id, (err, blob) ->
+        if(err)
+          err.message = "Blob wasn't found"
+          callback err
+        else
+          callback undefined, blob
 
   getCommit: (id, callback) =>
-    @commitsDao.get id, (err, commit) ->
-      if(err)
-        err.message = "Commit wasn't found"
-      else
-        callback undefined, commit
+    if(!id)
+      callback {statusCode: 400, message: "Invalid parameters"}
+    else
+      @commitsDao.get id, (err, commit) ->
+        if(err)
+          err.message = "Commit wasn't found"
+        else
+          callback undefined, commit
 
   getTree: (id, callback) =>
-    @treesDao.get id, (err, commit) ->
-      if(err)
-        err.message = "Tree wasn't found"
-      else
-        callback undefined, commit
+    if(!id)
+      callback {statusCode: 400, message: "Invalid parameters"}
+    else
+      @treesDao.get id, (err, commit) ->
+        if(err)
+          err.message = "Tree wasn't found"
+        else
+          callback undefined, commit
 
