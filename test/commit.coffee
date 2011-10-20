@@ -1,45 +1,56 @@
+should = require "should"
 assert = require "assert"
 Commit = require("../lib/objects/commit").Commit
 
-exports.testCreateCommit = ->
-  date = new Date().getTime()
-  commit = new Commit("tree-id", "parent-id", "anton", date, "andrew", date, "initial commit", "anton$project1")
-  assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", commit.id()
-  assert.equal "commit", commit.type
-  assert.equal "tree-id", commit.tree
-  assert.equal "parent-id", commit.parent
-  assert.equal "anton", commit.author
-  assert.equal date, commit.authoredDate
-  assert.equal "andrew", commit.committer
-  assert.equal date, commit.commitedDate
-  assert.equal "initial commit", commit.message
-  assert.equal "anton$project1", commit.repo
-  # test dao related methods
-  assert.equal "commit", commit.attributes().type
-  assert.equal 5, commit.links().length
+# test commit object
+authoredDate = new Date().getTime()
+commitedDate = new Date().getTime()
+commit = new Commit("tree-id", "parent-id", "anton", authoredDate, "andrew", commitedDate, "initial commit", "anton$project1")
+
+
+exports.testCommitProperties = ->
+  commit.id().should.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
+  commit.should.have.property "type", "commit"
+  commit.should.have.property "tree", "tree-id"
+  commit.should.have.property "parent", "parent-id"
+  commit.should.have.property "author", "anton"
+  commit.should.have.property "authoredDate", authoredDate
+  commit.should.have.property "committer", "andrew"
+  commit.should.have.property "commitedDate", commitedDate
+  commit.should.have.property "message", "initial commit"
+  commit.should.have.property "repo", "anton$project1"
+  commit.attributes().should.have.property "type", "commit"
+
+exports.testCommitLinks = ->
+  commit.links().should.have.lengthOf(5)
+  # repo link
   repoLink = commit.links()[0]
-  assert.equal "repositories", repoLink.bucket
-  assert.equal "anton$project1", repoLink.key
-  assert.equal "repository", repoLink.tag
-  assert.equal "anton$project1", commit.getLink "repository"
+  repoLink.should.have.property "bucket", "repositories"
+  repoLink.should.have.property "key", "anton$project1"
+  repoLink.should.have.property "tag", "repository"
+  commit.getLink("repository").should.equal "anton$project1"
+  # tree link
   treeLink = commit.links()[1]
-  assert.equal "objects", treeLink.bucket
-  assert.equal "tree-id", treeLink.key
-  assert.equal "tree", treeLink.tag
-  assert.equal "tree-id", commit.getLink "tree"
+  treeLink.should.have.property "bucket", "objects"
+  treeLink.should.have.property "key", "tree-id"
+  treeLink.should.have.property "tag", "tree"
+  commit.getLink("tree").should.equal "tree-id"
+  # parent link
   parentLink = commit.links()[2]
-  assert.equal "objects", parentLink.bucket
-  assert.equal "parent-id", parentLink.key
-  assert.equal "parent", parentLink.tag
-  assert.equal "parent-id", commit.getLink "parent"
+  parentLink.should.have.property "bucket", "objects"
+  parentLink.should.have.property "key", "parent-id"
+  parentLink.should.have.property "tag", "parent"
+  commit.getLink("parent").should.equal "parent-id",
+  # author link
   authorLink = commit.links()[3]
-  assert.equal "users", authorLink.bucket
-  assert.equal "anton", authorLink.key
-  assert.equal "author", authorLink.tag
-  assert.equal "anton", commit.getLink "author"
+  authorLink.should.have.property "bucket", "users"
+  authorLink.should.have.property "key", "anton"
+  authorLink.should.have.property "tag", "author"
+  commit.getLink("author").should.equal "anton"
+  # committer link
   committerLink = commit.links()[4]
-  assert.equal "users", committerLink.bucket
-  assert.equal "andrew", committerLink.key
-  assert.equal "committer", committerLink.tag
-  assert.equal "andrew", commit.getLink "committer"
+  committerLink.should.have.property "bucket", "users"
+  committerLink.should.have.property "key", "andrew"
+  committerLink.should.have.property "tag", "committer"
+  commit.getLink("committer").should.equal "andrew"
 

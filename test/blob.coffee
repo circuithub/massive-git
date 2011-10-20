@@ -1,19 +1,22 @@
-assert = require "assert"
-Blob = require("../lib/objects/blob").Blob
+should = require "should"
+Blob   = require("../lib/objects/blob").Blob
 
-exports.testCreateBlob = ->
-  blob = new Blob("test-content", "anton$project1")
-  assert.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3", blob.id()
-  assert.equal "blob", blob.type
-  assert.equal "anton$project1", blob.repo
-  assert.equal "test-content", blob.data
-  assert.equal blob.content(), blob.data
-  # test dao related methods
-  assert.equal "blob", blob.attributes().type
-  assert.equal 1, blob.links().length
+# test blob object
+blob = new Blob("test-content", "anton$project1")
+
+exports.testBlobProperties = ->
+  blob.id().should.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3"
+  blob.should.have.property "type", "blob"
+  blob.should.have.property "repo", "anton$project1"
+  blob.should.have.property "data", "test-content"
+  blob.content().should.equal blob.data
+  blob.attributes().should.have.property "type", "blob"
+
+exports.testBlobLinks = ->
+  blob.links().should.have.lengthOf(1)
   repoLink = blob.links()[0]
-  assert.equal "repositories", repoLink.bucket
-  assert.equal "anton$project1", repoLink.key
-  assert.equal "repository", repoLink.tag
-  assert.equal "anton$project1", blob.getLink "repository"
+  repoLink.should.have.property "bucket", "repositories"
+  repoLink.should.have.property "key", "anton$project1"
+  repoLink.should.have.property "tag", "repository"
+  blob.getLink("repository").should.equal "anton$project1"
 

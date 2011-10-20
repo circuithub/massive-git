@@ -1,17 +1,23 @@
-assert = require "assert"
+should = require "should"
 utils  = require "../lib/objects/utils"
 
 exports.testGetLink = ->
-  links = [{ bucket : "users" , tag : "owner", key : "anton"}, { bucket : "users" , tag : "modifier", key : "andrew"}]
-  assert.equal "andrew", utils.getLink links, "modifier"
-  assert.equal "anton", utils.getLink links, "owner"
-  assert.isNull utils.getLink links, "contributor"
+  links = [{bucket: "users", tag: "owner", key: "anton"}, {bucket: "users", tag: "modifier", key: "andrew"}]
+  should.equal utils.getLink(links, "modifier"), "andrew"
+  should.equal utils.getLink(links, "owner"), "anton"
+  should.not.exist utils.getLink links, "contributor"
+
 
 exports.testGetLinks = ->
-  links = [{ bucket : "users" , tag : "modifier", key : "peter"},{ bucket : "users" , tag : "owner", key : "anton"}, { bucket : "users" , tag : "modifier", key : "andrew"}]
-  assert.deepEqual ["peter","andrew"], utils.getLinks links, "modifier"
-  assert.deepEqual [], utils.getLinks links, "contributor"
+  links = [{bucket: "users", tag: "modifier", key: "peter"},{bucket: "users", tag: "owner", key: "anton"}, {bucket: "users", tag: "modifier", key: "andrew"}]
+  utils.getLinks(links, "modifier").should.have.length(2)
+  utils.getLinks(links, "modifier").should.contain "peter"
+  utils.getLinks(links, "modifier").should.contain "andrew"
+  utils.getLinks(links, "contributor").should.be.empty
 
 exports.testBuilLink = ->
-  assert.deepEqual { bucket : "users" , tag : "owner", key : "anton"}, utils.buildLink "users", "anton", "owner"
+  link = utils.buildLink "users", "anton", "owner"
+  link.should.have.property("bucket", "users")
+  link.should.have.property("key", "anton")
+  link.should.have.property("tag", "owner")
 
