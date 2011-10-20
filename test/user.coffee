@@ -1,10 +1,9 @@
-assert = require "assert"
+should = require "should"
 User = require("../lib/objects/user").User
 
-exports.testCreateUser = ->
+exports.testUserProperties = ->
   user = new User("anton", "anton@circuithub.com")
-  assert.equal "anton", user.id()
-  assert.equal "anton@circuithub.com", user.email
-  # test dao related methods
-  assert.equal "anton@circuithub.com", user.attributes().email
+  user.id().should.equal "anton"
+  user.should.have.property "email", "anton@circuithub.com"
+  user.attributes().should.have.property "email", "anton@circuithub.com"
 

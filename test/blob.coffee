@@ -13,7 +13,7 @@ exports.testBlobProperties = ->
   blob.attributes().should.have.property "type", "blob"
 
 exports.testBlobLinks = ->
-  blob.links().should.have.lengthOf(1)
+  blob.links().should.have.length(1)
   repoLink = blob.links()[0]
   repoLink.should.have.property "bucket", "repositories"
   repoLink.should.have.property "key", "anton$project1"

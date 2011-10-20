@@ -22,7 +22,7 @@ exports.testCommitProperties = ->
   commit.attributes().should.have.property "type", "commit"
 
 exports.testCommitLinks = ->
-  commit.links().should.have.lengthOf(5)
+  commit.links().should.have.length(5)
   # repo link
   repoLink = commit.links()[0]
   repoLink.should.have.property "bucket", "repositories"

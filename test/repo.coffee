@@ -1,75 +1,49 @@
-assert = require "assert"
-Repo = require("../lib/objects/repo").Repo
+should = require "should"
+Repo   = require("../lib/objects/repo").Repo
 
 exports.testCreateRepo = ->
   repo = new Repo("project1", "anton", "project")
-  assert.equal "anton$project1", repo.id()
-  assert.equal "project", repo.type
-  assert.equal "anton", repo.author
-  assert.equal "project1", repo.name
-  assert.ok repo.public
-  assert.isNull repo.forkedFrom
-  # test dao related methods
-  assert.equal "project", repo.attributes().type
-  assert.ok repo.attributes().public
-  assert.equal 1, repo.links().length
-  authorLink = repo.links()[0]
-  assert.equal "users", authorLink.bucket
-  assert.equal "anton", authorLink.key
-  assert.equal "author", authorLink.tag
+  repo.id().should.equal "anton$project1"
+  repo.should.have.property "type", "project"
+  repo.should.have.property "author", "anton"
+  repo.should.have.property "name", "project1"
+  repo.public.should.be.ok
+  should.not.exist repo.forkedFrom
+  repo.attributes().should.have.property "type", "project"
+  repo.attributes().public.should.be.ok
+  repo.links().should.have.length(1)
+  repo.getLink("author").should.equal "anton"
 
 exports.testCreatePrivateRepo = ->
   repo = new Repo("project1", "anton", "project", false)
-  assert.equal "anton$project1", repo.id()
-  assert.equal "project", repo.type
-  assert.equal "anton", repo.author
-  assert.equal "project1", repo.name
-  assert.ok !repo.public
-  assert.isNull repo.forkedFrom
+  repo.id().should.equal "anton$project1"
+  repo.should.have.property "type", "project"
+  repo.should.have.property "author", "anton"
+  repo.should.have.property "name", "project1"
+  repo.public.should.be.not.ok
+  should.not.exist repo.forkedFrom
 
 exports.testCreateForkedRepo = ->
   repo = new Repo("project1", "anton", "project", false, null, "andrew$project1")
-  assert.equal "anton$project1", repo.id()
-  assert.equal "project", repo.type
-  assert.equal "anton", repo.author
-  assert.equal "project1", repo.name
-  assert.ok !repo.public
-  assert.equal "andrew$project1", repo.forkedFrom
-  # test dao related methods
-  assert.equal "project", repo.attributes().type
-  assert.ok !repo.attributes().public
-  assert.equal 2, repo.links().length
-  authorLink = repo.links()[0]
-  assert.equal "users", authorLink.bucket
-  assert.equal "anton", authorLink.key
-  assert.equal "author", authorLink.tag
-  assert.equal "anton", repo.getLink "author"
-  forkedFromLink = repo.links()[1]
-  assert.equal "repositories", forkedFromLink.bucket
-  assert.equal "andrew$project1", forkedFromLink.key
-  assert.equal "forked_from", forkedFromLink.tag
-  assert.equal "andrew$project1", repo.getLink "forked_from"
+  repo.id().should.equal "anton$project1"
+  repo.should.have.property "type", "project"
+  repo.should.have.property "author", "anton"
+  repo.should.have.property "name", "project1"
+  repo.public.should.be.not.ok
+  repo.should.have.property "forkedFrom", "andrew$project1"
+  repo.links().should.have.length(2)
+  repo.getLink("author").should.equal "anton"
+  repo.getLink("forked_from").should.equal "andrew$project1"
 
 exports.testOldRepo = ->
   repo = new Repo("project1", "anton", "project", false, "4ca68e7f293e0b7445beda64f0f8fe854682a0ac")
-  assert.equal "anton$project1", repo.id()
-  assert.equal "project", repo.type
-  assert.equal "anton", repo.author
-  assert.equal "project1", repo.name
-  assert.ok !repo.public
-  assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", repo.commit
-  # test dao related methods
-  assert.equal "project", repo.attributes().type
-  assert.ok !repo.attributes().public
-  assert.equal 2, repo.links().length
-  authorLink = repo.links()[0]
-  assert.equal "users", authorLink.bucket
-  assert.equal "anton", authorLink.key
-  assert.equal "author", authorLink.tag
-  assert.equal "anton", repo.getLink "author"
-  commitLink = repo.links()[1]
-  assert.equal "objects", commitLink.bucket
-  assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", commitLink.key
-  assert.equal "commit", commitLink.tag
-  assert.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac", repo.getLink "commit"
+  repo.id().should.equal "anton$project1"
+  repo.should.have.property "type", "project"
+  repo.should.have.property "author", "anton"
+  repo.should.have.property "name", "project1"
+  repo.public.should.be.not.ok
+  repo.should.have.property "commit", "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
+  repo.links().should.have.length(2)
+  repo.getLink("author").should.equal "anton"
+  repo.getLink("commit").should.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
 
