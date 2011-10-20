@@ -71,7 +71,7 @@ exports.testCommit = ->
       callback err, treeId
   # get tree and check it
   step7 = (treeId, callback) ->
-    treesDao.get treeId, (err, tree) ->
+    MassiveGit.getTree treeId, (err, tree) ->
       should.not.exist err
       tree.should.have.property "repo", "anton$part1"
       tree.getLinks("blob").should.have.length 2
@@ -80,13 +80,13 @@ exports.testCommit = ->
       callback err, blob1, blob2
   # get blob 1 and check it
   step8 = (blob1, blob2, callback) ->
-    MassiveGit.blob blob1.id(), (err, blob) ->
+    MassiveGit.getBlob blob1.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob1).should.be.ok
       callback err, blob2
   # get blob 2 and check it
   step9 = (blob2, callback) ->
-    MassiveGit.blob blob2.id(), (err, blob) ->
+    MassiveGit.getBlob blob2.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob2).should.be.ok
       callback err
@@ -117,7 +117,7 @@ exports.testCommitUpdate = ->
       callback undefined, commitId
   # get commit and check it
   step4 = (commitId, callback) ->
-    commitsDao.get commitId, (err, commit) ->
+    MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "anton"
       commit.should.have.property "committer", "anton"
@@ -133,12 +133,12 @@ exports.testCommitUpdate = ->
     treesDao.getBlobs commit.tree, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 1
-      blob1Copy = (blob for blob in blobs when blob.id() == blob1.id())[0]
+      blob1Copy = blobs[0]
       blob1Copy.equals(blob1).should.be.ok
       callback err, commit
   # get tree and check it
   step6 = (commit, callback) ->
-    treesDao.get commit.tree, (err, tree) ->
+    MassiveGit.getTree commit.tree, (err, tree) ->
       should.not.exist err
       tree.should.have.property "repo", "anton$part1"
       tree.getLinks("blob").should.have.length 1
@@ -152,7 +152,7 @@ exports.testCommitUpdate = ->
       callback err, commitId
   # get commit and check it
   step8 = (commitId, callback) ->
-    commitsDao.get commitId, (err, commit) ->
+    MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "andrew"
       commit.should.have.property "committer", "andrew"

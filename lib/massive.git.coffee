@@ -30,9 +30,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     @_saveRepo repo, callback
 
   forkRepo: (repoId, name, author, callback) =>
-    @reposDao.get repoId, (err, repo) =>
+    @getRepo repoId, (err, repo) =>
       if(err)
-        err.message = "Repo wasn't found"
         callback err
       else
         forkedRepo = repo.fork name, author
@@ -81,7 +80,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   addToIndex: (entries, repoId, author, message = "update", callback) =>
     @headTree repoId, (err, tree, commitId) =>
       if(err)
-        err.message = "Tree wasn't found"
         callback err
       else
         preparedEntries =  @_prepareEntries entries, repoId
@@ -110,7 +108,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   _updateRepoCommitRef: (repoId, commitId, callback) =>
-    @repo repoId, (err, repo) =>
+    @getRepo repoId, (err, repo) =>
       if(err)
         callback err
       else
@@ -125,7 +123,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @fetchRootEntriesForCommit commitId, callback
 
   head: (repoId, callback) =>
-   @repo repoId repoId, (err, repo) ->
+   @getRepo repoId, (err, repo) ->
       if(err)
         callback err
       else
@@ -141,16 +139,19 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   # Callback accepts 3 parameters: error, tree and commit id.
   headTreeFromCommit: (commitId, callback) =>
-    @commitsDao.get commitId, (err, commit) ->
-      treeId = commit.tree
-      @treesDao.get treeId, (err, tree) ->
-        if(err)
-          callback err
-        else
-          callback undefined, tree,commitId
+    @getCommit commitId, (err, commit) =>
+      if(err)
+        callback err
+      else
+        treeId = commit.tree
+        @getTree treeId, (err, tree) ->
+          if(err)
+            callback err
+          else
+            callback undefined, tree,commitId
 
   fetchRootEntriesForCommit: (commitId, callback) =>
-    @headTreeFromCommit commitId,(err, tree) ->
+    @headTreeFromCommit commitId,(err, tree) =>
       if(err)
         callback err
       else
@@ -181,15 +182,35 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 
-  commits: (repo)=>
+  commits: (repo) =>
 
-  blob: (id, callback) => blobsDao.get id, callback
+  getBlob: (id, callback) =>
+    @blobsDao.get id, (err, blob) ->
+      if(err)
+        err.message = "Blob wasn't found"
+        callback err
+      else
+        callback undefined, repo
 
-  repo: (id, callback) =>
+  getRepo: (id, callback) =>
     @reposDao.get id, (err, repo) ->
       if(err)
         err.message = "Repo wasn't found"
         callback err
       else
         callback undefined, repo
+
+  getCommit: (id, callback) =>
+    @commitsDao.get id, (err, commit) ->
+      if(err)
+        err.message = "Commit wasn't found"
+      else
+        callback undefined, commit
+
+  getTree: (id, callback) =>
+    @treesDao.get id, (err, commit) ->
+      if(err)
+        err.message = "Tree wasn't found"
+      else
+        callback undefined, commit
 

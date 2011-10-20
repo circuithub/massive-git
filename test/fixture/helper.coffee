@@ -11,7 +11,6 @@ helper = exports
 
 helper.createUser = (username, callback) ->
   MassiveGit.newUser username, "some-email@circuithub.com", (err, user) ->
-    console.log "sad", err, user
     should.not.exist err
     callback err, user
 
