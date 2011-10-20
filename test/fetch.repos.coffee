@@ -23,7 +23,6 @@ exports.testCommit = ->
   step3 = (commitId, callback) ->
     MassiveGit.reposEntries "anton", "part", (err, entries) ->
       should.not.exist err
-      console.log "DONEE>>", err, entries
   async.waterfall [step1, step2, step3], (err, results) ->
     helper.deleteAll()
 

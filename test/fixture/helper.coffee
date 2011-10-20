@@ -14,10 +14,11 @@ helper.createUser = (username, callback) ->
     should.not.exist err
     callback err, user
 
+
+
 helper.createUserWithRepo = (username, reponame, repotype, mainCallback) ->
   # create user
   step1 = (callback) ->
-    console.log username, helper.createUser
     helper.createUser username, callback
   # create repo
   step2 = (user, callback) ->
@@ -26,6 +27,27 @@ helper.createUserWithRepo = (username, reponame, repotype, mainCallback) ->
       repo.id().should.equal username + "$" + reponame
       callback err, repo
   async.waterfall [step1, step2], (err, results) ->
+    mainCallback err, results
+
+
+helper.createUserWithRepos = (username, firstReponame, firstRepotype, secondReponame, secondRepotype, mainCallback) ->
+  # create user
+  step1 = (callback) ->
+    helper.createUser username, callback
+  # create first repo
+  step2 = (user, callback) ->
+    MassiveGit.initRepo firstReponame, username, firstRepotype, (err, repo) ->
+      should.not.exist err
+      repo.id().should.equal username + "$" + firstReponame
+      callback err, repo
+  # create second
+  step3 = (firstRepo, callback) ->
+    MassiveGit.initRepo secondReponame, username, secondRepotype, (err, repo) ->
+      should.not.exist err
+      repo.id().should.equal username + "$" + secondReponame
+      callback err, [firstRepo, repo]
+
+  async.waterfall [step1, step2, step3], (err, results) ->
     mainCallback err, results
 
 
