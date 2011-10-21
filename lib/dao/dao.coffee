@@ -41,8 +41,8 @@ class Dao
           console.log "removing entity from bucket", @bucket, "with id =", object.meta.key if @log
           @db.remove @bucket, object.meta.key
 
-  # Checks if such key exists in database.
-  exists : (id, callback) =>
+  # Checks if such key exists in database. Callback takes 2 parameters: `err` and `exists` boolean parameter
+  exists: (id, callback) =>
     @db.exists @bucket, id, callback
 
   # Get all links from entity to some `bucket` under specified `tag`.

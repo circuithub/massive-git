@@ -27,7 +27,18 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   initRepo: (name, author, type, callback) =>
     repo = new Repo(name, author, type)
-    @_saveRepo repo, callback
+    # todo (anton) add test!!!
+    @reposDao.exists repo.id(), (err, exists) =>
+      if(err)
+        err.message = "Internal error"
+        callback err
+      if(exists)
+        err =
+          statusCode: 403
+          message: "Repo already exist"
+        callback err
+      else
+        @_saveRepo repo, callback
 
   forkRepo: (repoId, name, author, callback) =>
     @getRepo repoId, (err, repo) =>
@@ -69,7 +80,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   reposEntries: (user, type, callback) =>
     @usersDao.fetchAllRepos user, type, callback
-
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     preparedEntries = @_prepareEntries entries, repoId
