@@ -66,17 +66,17 @@ class Dao
 
   # Default map functions
   _map = (value) ->
-      row = value.values[0]
-      entity = {}
-      entity.attributes = JSON.parse(row.data)
-      metadata = row.metadata
-      userMeta = metadata["X-Riak-Meta"]
-      entity.meta = {}
-      entity.meta.key = value.key
-      linksArray = metadata["Links"]
-      links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
-      entity.meta.links = links
-      [entity]
+    row = value.values[0]
+    entity = {}
+    entity.attributes = JSON.parse(row.data)
+    metadata = row.metadata
+    userMeta = metadata["X-Riak-Meta"]
+    entity.meta = {}
+    entity.meta.key = value.key
+    linksArray = metadata["Links"]
+    links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
+    entity.meta.links = links
+    [entity]
 
 
 exports.Dao = Dao

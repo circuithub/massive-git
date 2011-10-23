@@ -12,13 +12,12 @@ treesDao   = require("../lib/dao/trees.dao").newInstance()
 usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
+
 exports.testFindRepos = ->
   # create repo with different type
   step0a = (callback) ->
-    MassiveGit.initRepo "project1", "anton", "project", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$project1", repo.id()
-      callback err
+    randomProjectName = "project" + Math.floor(1000 * Math.random())
+    MassiveGit.initRepo randomProjectName, "anton", "project", callback
   # create repo with different user
   step0b = (callback) ->
     MassiveGit.initRepo "part1", "andrew", "part", (err, repo) ->
@@ -27,6 +26,7 @@ exports.testFindRepos = ->
       callback err
   # create first repo
   step1 = (callback) ->
+    randomPartName = "part" + Math.floor(1000 * Math.random())
     MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
       assert.isUndefined err
       assert.equal "anton$part1", repo.id()

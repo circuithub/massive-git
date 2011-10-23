@@ -14,8 +14,6 @@ helper.createUser = (username, callback) ->
     should.not.exist err
     callback err, user
 
-
-
 helper.createUserWithRepo = (username, reponame, repotype, mainCallback) ->
   # create user
   step1 = (callback) ->
@@ -27,10 +25,9 @@ helper.createUserWithRepo = (username, reponame, repotype, mainCallback) ->
         callback err
       else
         repo.id().should.equal username + "$" + reponame
-        callback err, repo
+        callback undefined, repo
   async.waterfall [step1, step2], (err, results) ->
     mainCallback err, results
-
 
 helper.createUserWithRepos = (username, firstReponame, firstRepotype, secondReponame, secondRepotype, mainCallback) ->
   # create user

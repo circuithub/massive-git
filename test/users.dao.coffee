@@ -15,6 +15,7 @@ exports.testSaveUser = ->
       callback err, user
   # get user from db by id and compare with initial
   step2 = (user, callback) ->
+    console.log "user"
     usersDao.get user.id(), (err, userFromDao) ->
       should.not.exist err
       userFromDao.equals(user).should.be.ok
