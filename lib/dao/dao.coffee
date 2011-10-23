@@ -65,7 +65,7 @@ class Dao
     utils.getLink links, tag
 
   # Default map functions
-  _map = (value) ->
+  _map: (value) ->
     row = value.values[0]
     entity = {}
     entity.attributes = JSON.parse(row.data)

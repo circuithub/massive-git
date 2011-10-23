@@ -17,8 +17,9 @@ exports.testCommit = ->
   # get plain repos
   step2 = (repo, callback) ->
     MassiveGit.repos "anton", "part", (err, entries) ->
+      console.log "Entries", entries
       should.not.exist err
-      callback commitId
+      callback {}
   async.waterfall [step1, step2], (err, results) ->
     helper.deleteAll()
 
