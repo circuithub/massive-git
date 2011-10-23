@@ -17,9 +17,7 @@ exports.testCommit = ->
   # commit two files
   step2 = (repo, callback) ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
-    MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, (err, commitId) ->
-      should.not.exist err
-      callback err, commitId
+    MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, callback
   # get entries from commit
   step3 = (commitId, callback) ->
     MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
@@ -101,9 +99,7 @@ exports.testCommitUpdate = ->
   # commit 1 file
   step2 = (repo, callback) ->
     entries = [new TreeEntry("datasheet.json", blob1)]
-    MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, (err, commitId) ->
-      should.not.exist err
-      callback err, commitId
+    MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, callback
   # get entries from commit
   step3 = (commitId, callback) ->
     MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->

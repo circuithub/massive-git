@@ -14,32 +14,27 @@ MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
 exports.testFindRepos = ->
+  randomPart1Name = "part1" + Math.floor(1000 * Math.random())
   # create repo with different type
   step0a = (callback) ->
     randomProjectName = "project" + Math.floor(1000 * Math.random())
     MassiveGit.initRepo randomProjectName, "anton", "project", callback
   # create repo with different user
-  step0b = (callback) ->
-    MassiveGit.initRepo "part1", "andrew", "part", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "andrew$part1", repo.id()
-      callback err
+  step0b = (p1, callback) ->
+    MassiveGit.initRepo randomPart1Name, "andrew", "part", callback
   # create first repo
-  step1 = (callback) ->
-    randomPartName = "part" + Math.floor(1000 * Math.random())
-    MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$part1", repo.id()
-      callback err, repo
+  step1 = (p2, callback) ->
+    MassiveGit.initRepo randomPart1Name, "anton", "part", callback
   # create second repo
   step2 = (repo1, callback) ->
-    MassiveGit.initRepo "part2", "anton", "part", (err, repo) ->
+    randomPart2Name = "part2" + Math.floor(1000 * Math.random())
+    MassiveGit.initRepo randomPart2Name, "anton", "part", (err, repo) ->
       assert.isUndefined err
-      assert.equal "anton$part2", repo.id()
       callback err, repo1, repo
   # find repos
   step3 = (repo1, repo2, callback) ->
     MassiveGit.repos "anton", "part", (err, repos) ->
+      should.not.exist err
       assert.equal 2, repos.length
       repo1Copy = _.detect repos, (iterator) -> iterator.id() == repo1.id()
       repo2Copy = _.detect repos, (iterator) -> iterator.id() == repo2.id()
