@@ -49,7 +49,23 @@ class Dao
   walk: (id, spec, callback) =>
     linkPhases = spec.map (unit) ->
       bucket: unit[0] or '_', tag: unit[1] or '_', keep: unit[2]?
-    map = (value) ->
+    @db
+      .add({bucket: @bucket, key_filters: [["eq", id]]})
+      .link(linkPhases)
+      .map(@_map)
+      .run(callback)
+
+  links: (id, spec, callback) =>
+    @db.links @bucket, id, spec, callback
+
+  # Method for building GitEntity.
+  populateEntity: (meta, attributes) =>
+
+  getLink: (links, tag) =>
+    utils.getLink links, tag
+
+  # Default map functions
+  _map = (value) ->
       row = value.values[0]
       entity = {}
       entity.attributes = JSON.parse(row.data)
@@ -61,20 +77,7 @@ class Dao
       links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
       entity.meta.links = links
       [entity]
-    @db
-      .add({bucket: @bucket, key_filters: [["eq", id]]})
-      .link(linkPhases)
-      .map(map)
-      .run(callback)
 
-  links: (id, spec, callback) =>
-    @db.links @bucket, id, spec, callback
-
-  # Method for building GitEntity.
-  populateEntity: (meta, attributes) =>
-
-  getLink: (links, tag) =>
-    utils.getLink links, tag
 
 exports.Dao = Dao
 

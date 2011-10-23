@@ -15,7 +15,8 @@ class UsersDao extends Dao
     new User(meta.key, attributes.email, meta.links)
 
   findAllRepos: (user, type, callback) =>
-    @walk user, [["repositories", type]], (err, docs) =>
+   db.add({ bucket: "repositories", key_filters: [["starts_with", user]] }).map(@@_map)
+   .run (err, docs) =>
       if(err)
          callback err
       else
