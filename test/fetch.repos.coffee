@@ -12,7 +12,7 @@ exports.testCommit = ->
   blob2 = new Blob "1111"
   # create user with repo
   step1 = (callback) ->
-    helper.createUserWithRepo "anton", "part1", "part", callback
+    helper.createUserWithRepo "anton", "part18", "part", callback
   # commit two files
   step2 = (repo, callback) ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
@@ -23,6 +23,7 @@ exports.testCommit = ->
   step3 = (commitId, callback) ->
     MassiveGit.reposEntries "anton", "part", (err, entries) ->
       should.not.exist err
+      console.log entries
   async.waterfall [step1, step2, step3], (err, results) ->
     helper.deleteAll()
 

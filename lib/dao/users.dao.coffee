@@ -1,8 +1,10 @@
-_        = require "underscore"
-Dao      = require("./dao").Dao
-reposDao = require("./repos.dao").newInstance()
-blobsDao = require("./blobs.dao").newInstance()
-User     = require("../objects/user").User
+_          = require "underscore"
+Dao        = require("./dao").Dao
+reposDao   = require("./repos.dao").newInstance()
+blobsDao   = require("./blobs.dao").newInstance()
+commitsDao = require("./commits.dao").newInstance()
+treesDao   = require("./trees.dao").newInstance()
+User       = require("../objects/user").User
 
 class UsersDao extends Dao
 
@@ -23,15 +25,25 @@ class UsersDao extends Dao
 
   # return map:
   fetchAllRepos: (user, type, callback) =>
-    @walk user, [["repositories", type, true],["objects", "commit", true],["objects", "tree", true],["objects", "blob"]], (err, docs) =>
+    @links user, [["repositories", type, 1],["objects", "commit", 1],["objects", "tree", 1],["objects", "blob", 1]], (err, docs) =>
       if(err)
          callback err
       else
-        console.log "fetched repos", docs if @log
-        reposEnrties = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
-        groupedEntries = _.groupBy reposEnrties, (entry) -> entry.repo
-        console.log "grouped repos", groupedEntries if @log
-        callback undefined, groupedEntries
+        repos = []
+        blobs = []
+        commits = []
+        trees = []
+        for doc in docs
+          data = doc.data
+          if doc.meta.bucket == "repositories"
+            repos.push reposDao.populateEntity doc.meta, data
+          else if doc.meta.bucket == "objects"
+            switch data.type
+              when "blob" then blobs.push blobsDao.populateEntity(doc.meta, data)
+              when "tree" then trees.push treesDao.populateEntity(doc.meta, data)
+              when "commit" then commits.push commitsDao.populateEntity(doc.meta, data)
+
+        callback undefined, {repos: repos, commits: commits, trees: trees, blobs: blobs}
 
   addRepo: (user, repoId, type, callback) =>
     @get user, (err, user) =>

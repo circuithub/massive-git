@@ -30,11 +30,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     # todo (anton) add test!!!
     @reposDao.exists repo.id(), (err, exists) =>
       if(err)
+        err.statusCode = 400
         err.message = "Internal error"
         callback err
       if(exists)
         err =
-          statusCode: 403
+          statusCode: 422
           message: "Repo already exist"
         callback err
       else
@@ -196,10 +197,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getRepo: (id, callback) =>
     if(!id)
-      callback {statusCode: 400, message: "Invalid parameters"}
+      callback {statusCode: 422, message: "Invalid parameters"}
     else
       @reposDao.get id, (err, repo) ->
         if(err)
+          err.statusCode = 400
           err.message = "Repo wasn't found"
           callback err
         else
@@ -207,7 +209,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getBlob: (id, callback) =>
     if(!id)
-      callback {statusCode: 400, message: "Invalid parameters"}
+      callback {statusCode: 422, message: "Invalid parameters"}
     else
       @blobsDao.get id, (err, blob) ->
         if(err)
@@ -218,7 +220,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getCommit: (id, callback) =>
     if(!id)
-      callback {statusCode: 400, message: "Invalid parameters"}
+      callback {statusCode: 422, message: "Invalid parameters"}
     else
       @commitsDao.get id, (err, commit) ->
         if(err)
@@ -228,7 +230,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getTree: (id, callback) =>
     if(!id)
-      callback {statusCode: 400, message: "Invalid parameters"}
+      callback {statusCode: 422, message: "Invalid parameters"}
     else
       @treesDao.get id, (err, commit) ->
         if(err)

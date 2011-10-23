@@ -67,6 +67,9 @@ class Dao
       .map(map)
       .run(callback)
 
+  links: (id, spec, callback) =>
+    @db.links @bucket, id, spec, callback
+
   # Method for building GitEntity.
   populateEntity: (meta, attributes) =>
 
