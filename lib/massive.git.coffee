@@ -201,7 +201,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @historyForCommit commitId, callback
 
   historyForCommit: (commitId, callback) =>
-    commitsDao.getParents commitId, callback
+    @commitsDao.getParents commitId, callback
 
   getRepo: (id, callback) =>
     if(!id)
