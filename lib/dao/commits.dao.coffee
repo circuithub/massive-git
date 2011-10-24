@@ -7,15 +7,15 @@ class CommitsDao extends ObjectsDao
     super log
 
   populateEntity: (meta, attributes) =>
-    tree = @getLink meta.links, "tree"
-    parent = @getLink meta.links, "parent"
-    author = @getLink meta.links, "author"
-    committer = @getLink meta.links, "committer"
-    repository = @getLink meta.links, "repository"
-    authoredDate = attributes.authoredDate
-    commitedDate = attributes.commitedDate
-    new Commit(tree, parent, author, authoredDate, committer, commitedDate, attributes.message, repository, meta.key)
-
+    if attributes?
+      tree = @getLink meta.links, "tree"
+      parent = @getLink meta.links, "parent"
+      author = @getLink meta.links, "author"
+      committer = @getLink meta.links, "committer"
+      repository = @getLink meta.links, "repository"
+      authoredDate = attributes.authoredDate
+      commitedDate = attributes.commitedDate
+      new Commit(tree, parent, author, authoredDate, committer, commitedDate, attributes.message, repository, meta.key)
 
   getParents: (commitId, callback) =>
     @links commitId, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
@@ -26,7 +26,8 @@ class CommitsDao extends ObjectsDao
         commits = []
         for doc in docs
           data = doc.data
-          commits.push @populateEntity(doc.meta, data)
+          commit = @populateEntity(doc.meta, data)
+          commits.push commit if commit?
         callback undefined, commits
 
 exports.newInstance = (log) -> new CommitsDao(log)
