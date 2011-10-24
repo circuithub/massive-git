@@ -18,6 +18,16 @@ class CommitsDao extends ObjectsDao
 
 
   getParents: (commitId, callback) =>
+    @links user, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
+      if(err)
+        callback err
+      else
+        console.log "Commits", docs
+        commits = []
+        for doc in docs
+          data = doc.data
+          commits.push @populateEntity(doc.meta, data)
+        callback undefined, commits
 
 exports.newInstance = (log) -> new CommitsDao(log)
 

@@ -28,7 +28,7 @@ class UsersDao extends Dao
   fetchAllRepos: (user, type, callback) =>
     @links user, [["repositories", type, 1],["objects", "commit", 1],["objects", "tree", 1],["objects", "blob", 1]], (err, docs) =>
       if(err)
-         callback err
+        callback err
       else
         repos = []
         blobs = []

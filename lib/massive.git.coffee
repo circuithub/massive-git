@@ -193,7 +193,15 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 
-  commits: (repo) =>
+  historyForRepo: (repoId, callback) =>
+    @head repoId, (err, commitId) =>
+      if(err)
+        callback err
+      else
+        @historyForCommit commitId, callback
+
+  historyForCommit: (commitId, callback) =>
+    commitsDao.getParents commitId, callback
 
   getRepo: (id, callback) =>
     if(!id)
