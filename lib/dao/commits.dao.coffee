@@ -18,7 +18,7 @@ class CommitsDao extends ObjectsDao
 
 
   getParents: (commitId, callback) =>
-    @links user, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
+    @links commitId, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
       if(err)
         callback err
       else
