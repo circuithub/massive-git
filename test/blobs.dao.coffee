@@ -18,8 +18,7 @@ exports.testSaveBlob = ->
       should.not.exist err
       blobFromDao.equals(blob).should.be.ok
       callback err
-  testCase = new TestCase [step1, step2], (err, results) ->
-    # clear all temp data
-    blobsDao.deleteAll()
+  testCase = new TestCase [step1, step2]
+  testCase.tearDown = ->  blobsDao.deleteAll()
   testCase.run()
 

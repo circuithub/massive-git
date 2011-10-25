@@ -20,8 +20,7 @@ exports.testSaveUser = ->
       should.not.exist err
       userFromDao.equals(user).should.be.ok
       callback err
-  testCase = new TestCase [step1, step2], (err, results) ->
-    # clear all temp data
-    usersDao.deleteAll()
+  testCase = new TestCase [step1, step2]
+  testCase.tearDown = -> usersDao.deleteAll()
   testCase.run()
 

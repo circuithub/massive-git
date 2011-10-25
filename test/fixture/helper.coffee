@@ -21,13 +21,13 @@ helper.createUserWithRepo = (username, reponame, repotype, mainCallback) ->
   # create repo
   step2 = (user, callback) ->
     MassiveGit.initRepo reponame, username, repotype, (err, repo) ->
+      console.log "Inited repo", err, repo
       if(err)
         callback err
       else
         repo.id().should.equal username + "$" + reponame
         callback undefined, repo
-  async.waterfall [step1, step2], (err, results) ->
-    mainCallback err, results
+  [step1, step2]
 
 helper.createUserWithRepos = (username, firstReponame, firstRepotype, secondReponame, secondRepotype, mainCallback) ->
   # create user

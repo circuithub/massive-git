@@ -1,12 +1,17 @@
 async    = require "async"
+should   = require "should"
 TestCase = exports.TestCase = class TestCase
 
-  constructor: (steps, @cleanup) ->
+  constructor: (steps) ->
     @steps = steps
 
   run: =>
     try
-      async.waterfall @steps, @cleanup
+      async.waterfall @steps, (err, results) =>
+        @tearDown()
+        should.not.exist err
     catch err
-      @cleanup err
+      @tearDown()
+
+  tearDown: ->
 

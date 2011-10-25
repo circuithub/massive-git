@@ -1,6 +1,6 @@
 assert     = require "assert"
 should     = require "should"
-async      = require "async"
+DbTestCase = require("./base/db.test.case").DbTestCase
 _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
@@ -44,9 +44,9 @@ exports.testFindRepos = ->
       assert.deepEqual repo2.id(), repo2Copy.id()
       assert.deepEqual repo2.attributes(), repo2Copy.attributes()
       assert.deepEqual repo2.links(), repo2Copy.links()
-  async.waterfall [step0a, step0b, step1, step2, step3], (err, results) ->
-    # clear all temp data
-    reposDao.deleteAll()
+
+  testCase = new DbTestCase [step0a, step0b, step1, step2, step3]
+  testCase.run()
 
 exports.testGetUserRepos = ->
   # create user
@@ -83,9 +83,9 @@ exports.testGetUserRepos = ->
       assert.deepEqual repo2.id(), repo2Copy.id()
       assert.deepEqual repo2.attributes(), repo2Copy.attributes()
 
-  async.waterfall [step1, step2, step3, step4, step5], (err, results) ->
-    # clear all temp data
-    helper.deleteAll()
+  testCase = new DbTestCase [step1, step2, step3, step4, step5]
+  testCase.run()
+
 
 exports.testDeleteRepo = ->
   # create user with two repos
@@ -114,7 +114,7 @@ exports.testDeleteRepo = ->
       repos.should.have.length 1
       repo2Copy = repos[0]
       repo2Copy.equals(repo2).should.be.ok
-  async.waterfall [step1, step2, step3, step4], (err, results) ->
-    # clear all temp data
-    helper.deleteAll()
+
+  testCase = new DbTestCase [step1, step2, step3, step4]
+  testCase.run()
 

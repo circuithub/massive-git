@@ -27,8 +27,7 @@ exports.testSavePlainTree = ->
       treeFromDao.equals(tree).should.be.ok
       callback err, tree
 
-  testCase = new TestCase [step1, step2], (err, results) ->
-    # clear all temp data
-    treesDao.deleteAll()
+  testCase = new TestCase [step1, step2]
+  testCase.tearDown = -> treesDao.deleteAll()
   testCase.run()
 

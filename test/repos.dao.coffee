@@ -17,8 +17,7 @@ exports.testSaveRepo = ->
       should.not.exist err
       repoFromDao.equals(repo).should.be.ok
       callback err
-  testCase = new TestCase [step1, step2], (err, results) ->
-    # clear all temp data
-    reposDao.deleteAll()
+  testCase = new TestCase [step1, step2]
+  testCase.tearDown = -> reposDao.deleteAll()
   testCase.run()
 

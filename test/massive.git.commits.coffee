@@ -1,5 +1,5 @@
 should     = require "should"
-async      = require "async"
+DbTestCase = require("./base/db.test.case").DbTestCase
 _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
@@ -11,17 +11,18 @@ helper     = require "./fixture/helper"
 exports.testCommit = ->
   blob1 = new Blob "test-content"
   blob2 = new Blob "1111"
+  randomPart1Name = "part1" + Math.floor(1000 * Math.random())
   # create user with repo
-  step1 = (callback) ->
-    helper.createUserWithRepo "anton", "part1", "part", callback
+  [step1, step2] = helper.createUserWithRepo("anton", randomPart1Name, "part")
   # commit two files
-  step2 = (repo, callback) ->
+  step3 = (repo, callback) ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
     MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, callback
   # get entries from commit
-  step3 = (commitId, callback) ->
+  step4 = (commitId, callback) ->
     MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
       should.not.exist err
+      console.log "fetching entries for commit", commitId, entries
       entries.should.have.length 2
       blob1Copy = (entry.entry for entry in entries when entry.name == "datasheet.json")[0]
       blob2Copy = (entry.entry for entry in entries when entry.name == "symbol.json")[0]
@@ -29,7 +30,7 @@ exports.testCommit = ->
       blob2Copy.equals(blob2).should.be.ok
       callback undefined, commitId
   # get commit and check it
-  step4 = (commitId, callback) ->
+  step5 = (commitId, callback) ->
     MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "anton"
@@ -43,8 +44,8 @@ exports.testCommit = ->
       should.not.exist commit.getLink "parent"
       callback err, commit
   # get repo and check it
-  step5 = (commit, callback) ->
-    MassiveGit.getRepo "anton$part1", (err, repo) ->
+  step6 = (commit, callback) ->
+    MassiveGit.getRepo "anton$" + randomPart1Name, (err, repo) ->
       should.not.exist err
       repo.should.have.property "name", "part1"
       repo.should.have.property "author", "anton"
@@ -55,7 +56,7 @@ exports.testCommit = ->
       repo.public.should.be.ok
       callback err, commit.tree
   # get blobs from tree
-  step6 = (treeId, callback) ->
+  step7 = (treeId, callback) ->
     treesDao.getBlobs treeId, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 2
@@ -65,7 +66,7 @@ exports.testCommit = ->
       blob2Copy.equals(blob2).should.be.ok
       callback err, treeId
   # get tree and check it
-  step7 = (treeId, callback) ->
+  step8 = (treeId, callback) ->
     MassiveGit.getTree treeId, (err, tree) ->
       should.not.exist err
       tree.should.have.property "repo", "anton$part1"
@@ -74,20 +75,20 @@ exports.testCommit = ->
       tree.getLinks("blob")[1].should.equal blob2.id()
       callback err, blob1, blob2
   # get blob 1 and check it
-  step8 = (blob1, blob2, callback) ->
+  step9 = (blob1, blob2, callback) ->
     MassiveGit.getBlob blob1.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob1).should.be.ok
       callback err, blob2
   # get blob 2 and check it
-  step9 = (blob2, callback) ->
+  step10 = (blob2, callback) ->
     MassiveGit.getBlob blob2.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob2).should.be.ok
       callback err
-  async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8, step9], (err, results) ->
-    # clear all temp data
-    helper.deleteAll()
+
+  testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9, step10]
+  testCase.run()
 
 
 exports.testCommitUpdate = ->
@@ -161,7 +162,7 @@ exports.testCommitUpdate = ->
       should.not.exist err
       blobs.should.have.length 2
       callback err, commit
-  async.waterfall [step1, step2, step3, step4, step5, step6, step7, step8, step9], (err, results) ->
-    # clear all temp data
-    helper.deleteAll()
+
+  testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9]
+  testCase.run()
 
