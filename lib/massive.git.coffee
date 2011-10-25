@@ -4,6 +4,7 @@ utils        = require("./objects/utils")
 User         = require("./objects/user").User
 Repo         = require("./objects/repo").Repo
 Tree         = require("./objects/tree").Tree
+Blob         = require("./objects/blob").Blob
 TreeEntry    = require("./objects/tree.entry").TreeEntry
 Commit       = require("./objects/commit").Commit
 
@@ -266,7 +267,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   # create new tree entry.
   createTreeEntry: (name, data) =>
     blob = @createBlob data
-    new TreeEntry(name, data)
+    new TreeEntry(name, blob)
 
   # Create new with provided data.
   createBlob: (data) -> new Blob data
