@@ -1,5 +1,5 @@
 should   = require "should"
-async    = require "async"
+TestCase = require("./base/test.case").TestCase
 usersDao = require("../lib/dao/users.dao").newInstance()
 User     = require("../lib/objects/user").User
 
@@ -20,7 +20,8 @@ exports.testSaveUser = ->
       should.not.exist err
       userFromDao.equals(user).should.be.ok
       callback err
-  async.waterfall [step1, step2], (err, results) ->
+  testCase = new TestCase [step1, step2], (err, results) ->
     # clear all temp data
     usersDao.deleteAll()
+  testCase.run()
 

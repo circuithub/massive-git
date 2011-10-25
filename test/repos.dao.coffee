@@ -1,5 +1,5 @@
 should   = require "should"
-async    = require "async"
+TestCase = require("./base/test.case").TestCase
 reposDao = require("../lib/dao/repos.dao").newInstance()
 Repo     = require("../lib/objects/repo").Repo
 
@@ -17,7 +17,8 @@ exports.testSaveRepo = ->
       should.not.exist err
       repoFromDao.equals(repo).should.be.ok
       callback err
-  async.waterfall [step1, step2], (err, results) ->
+  testCase = new TestCase [step1, step2], (err, results) ->
     # clear all temp data
     reposDao.deleteAll()
+  testCase.run()
 

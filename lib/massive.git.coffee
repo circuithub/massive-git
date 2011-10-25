@@ -6,6 +6,7 @@ Repo         = require("./objects/repo").Repo
 Tree         = require("./objects/tree").Tree
 TreeEntry    = require("./objects/tree.entry").TreeEntry
 Commit       = require("./objects/commit").Commit
+
 ReposDao     = require "./dao/repos.dao"
 UsersDao     = require "./dao/users.dao"
 CommitsDao   = require "./dao/commits.dao"
@@ -221,6 +222,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @blobsDao.get id, (err, blob) ->
         if(err)
+          err.statusCode = 400
           err.message = "Blob wasn't found"
           callback err
         else
@@ -232,6 +234,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @commitsDao.get id, (err, commit) ->
         if(err)
+          err.statusCode = 400
           err.message = "Commit wasn't found"
         else
           callback undefined, commit
@@ -242,6 +245,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @treesDao.get id, (err, commit) ->
         if(err)
+          err.statusCode = 400
           err.message = "Tree wasn't found"
         else
           callback undefined, commit

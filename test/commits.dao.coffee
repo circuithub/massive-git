@@ -1,5 +1,5 @@
 should     = require "should"
-async      = require "async"
+TestCase = require("./base/test.case").TestCase
 commitsDao = require("../lib/dao/commits.dao").newInstance()
 Commit     = require("../lib/objects/commit").Commit
 
@@ -21,7 +21,8 @@ exports.testSaveCommit = ->
       should.not.exist err
       commitFromDao.equals(commit).should.be.ok
       callback err
-  async.waterfall [step1, step2], (err, results) ->
+  testCase = new TestCase [step1, step2], (err, results) ->
     # clear all temp data
     commitsDao.deleteAll()
+  testCase.run()
 

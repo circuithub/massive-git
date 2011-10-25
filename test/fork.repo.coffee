@@ -1,5 +1,5 @@
 should     = require "should"
-async      = require "async"
+DbTestCase = require("./base/db.test.case").DbTestCase
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
@@ -17,8 +17,8 @@ exports.testForkRepoWithSameUser = ->
       forkedRepo.should.have.property "author", "anton"
       forkedRepo.public.should.be.ok
       should.not.exist forkedRepo.commit
-  async.waterfall [step1, step2], (err, results) ->
-    helper.deleteAll()
+  testCase = new DbTestCase [step1, step2]
+  testCase.run()
 
 exports.testForkRepoWithAnotherUser = ->
   # create user
@@ -38,6 +38,6 @@ exports.testForkRepoWithAnotherUser = ->
       forkedRepo.public.should.be.ok
       should.not.exist forkedRepo.commit
 
-  async.waterfall [step1, step2, step3], (err, results) ->
-    helper.deleteAll()
+  testCase = new DbTestCase [step1, step2, step3]
+  testCase.run()
 

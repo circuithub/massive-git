@@ -1,5 +1,5 @@
 should     = require "should"
-async      = require "async"
+DbTestCase = require("./base/db.test.case").DbTestCase
 _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
@@ -20,6 +20,6 @@ exports.testCommit = ->
       console.log "Entries", entries
       should.not.exist err
       callback {}
-  async.waterfall [step1, step2], (err, results) ->
-    helper.deleteAll()
+  testCase = new DbTestCase [step1, step2]
+  testCase.run()
 

@@ -1,5 +1,5 @@
 should    = require "should"
-async     = require "async"
+TestCase = require("./base/test.case").TestCase
 treesDao  = require("../lib/dao/trees.dao").newInstance()
 Blob      = require("../lib/objects/blob").Blob
 Tree      = require("../lib/objects/tree").Tree
@@ -26,7 +26,9 @@ exports.testSavePlainTree = ->
       should.not.exist err
       treeFromDao.equals(tree).should.be.ok
       callback err, tree
-  async.waterfall [step1, step2], (err, results) ->
+
+  testCase = new TestCase [step1, step2], (err, results) ->
     # clear all temp data
     treesDao.deleteAll()
+  testCase.run()
 
