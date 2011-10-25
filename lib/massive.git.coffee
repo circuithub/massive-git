@@ -151,7 +151,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(err)
         callback err
       else
-        @headTreeFromCommit commitId, callback
+        @getHeadTreeFromCommit commitId, callback
 
   # Callback accepts 3 parameters: error, tree and commit id.
   getHeadTreeFromCommit: (commitId, callback) =>
@@ -265,9 +265,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   # Factory method to deal with Git Objects
   # --------------
   # create new tree entry.
-  createTreeEntry: (name, data) =>
-    blob = @createBlob data
-    new TreeEntry(name, blob)
+  createTreeEntry: (name, data) => new TreeEntry name, @createBlob(data)
 
   # Create new with provided data.
   createBlob: (data) -> new Blob data
