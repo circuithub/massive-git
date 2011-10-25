@@ -27,20 +27,25 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     @usersDao.save user, callback
 
   initRepo: (name, author, type, callback) =>
-    repo = new Repo(name, author, type)
-    # todo (anton) add test!!!
-    @reposDao.exists repo.id(), (err, exists) =>
-      if(err)
-        err.statusCode = 400
-        err.message = "Internal error"
-        callback err
-      if(exists)
-        err =
-          statusCode: 422
-          message: "Repo already exist"
-        callback err
-      else
-        @_saveRepo repo, callback
+    if !name? or !author?
+      err =
+        message: "Invalid parameters"
+        statusCode: 422
+      callback err
+    else
+      repo = new Repo(name, author, type)
+      @reposDao.exists repo.id(), (err, exists) =>
+        if(err)
+          err.statusCode = 400
+          err.message = "Internal error"
+          callback err
+        if(exists)
+          err =
+            statusCode: 422
+            message: "Repo already exists"
+          callback err
+        else
+          @_saveRepo repo, callback
 
   forkRepo: (repoId, name, author, callback) =>
     @getRepo repoId, (err, repo) =>
