@@ -133,19 +133,25 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         repo.commit = commitId
         @reposDao.save repo, callback
 
+  # Callback takes 3 parameters: err, entries and repo instance.
   fetchRepoRootEntriesById: (repoId, callback) =>
-    @getHead repoId, (err, commitId) =>
+    @getHead repoId, (err, commitId, repo) =>
       if(err)
         callback err
       else
-        @fetchRootEntriesForCommit commitId, callback
+        @fetchRootEntriesForCommit commitId, (err, entries) ->
+          if(err)
+            callback err
+          else
+            callback undefined, entries, repo
 
+  # Callback takes 3 parameters: err, commit id and repo instance.
   getHead: (repoId, callback) =>
    @getRepo repoId, (err, repo) ->
       if(err)
         callback err
       else
-        callback undefined, repo.commit
+        callback undefined, repo.commit, repo
 
   # Callback accepts 3 parameters: error, tree and commit id.
   getHeadTree: (repoId, callback) =>
