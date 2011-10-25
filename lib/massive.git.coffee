@@ -85,6 +85,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getUserRepos: (user, type, callback) => @usersDao.findAllRepos user, type, callback
 
+  getNewestRepos: (callback) => @reposDao.getNewestRepos callback
+
   getUserReposEntries: (user, type, callback) => @usersDao.fetchAllRepos user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>

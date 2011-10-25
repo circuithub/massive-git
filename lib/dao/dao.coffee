@@ -70,6 +70,7 @@ class Dao
     entity = {}
     entity.attributes = JSON.parse(row.data)
     metadata = row.metadata
+    entity.lastModifiedParsed = Date.parse(metadata["X-Riak-Last-Modified"])
     userMeta = metadata["X-Riak-Meta"]
     entity.meta = {}
     entity.meta.key = value.key
