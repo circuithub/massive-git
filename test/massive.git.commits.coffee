@@ -4,7 +4,6 @@ _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
-treesDao   = require("../lib/dao/trees.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
@@ -57,7 +56,7 @@ exports.testCommit = ->
       callback err, commit.tree
   # get blobs from tree
   step7 = (treeId, callback) ->
-    treesDao.getBlobs treeId, (err, blobs) ->
+    MassiveGit.getBlobs treeId, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 2
       blob1Copy = (blob for blob in blobs when blob.id() == blob1.id())[0]
@@ -124,7 +123,7 @@ exports.testCommitUpdate = ->
       callback err, commit
   # get blobs from tree
   step5 = (commit, callback) ->
-    treesDao.getBlobs commit.tree, (err, blobs) ->
+    MassiveGit.getBlobs commit.tree, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 1
       blob1Copy = blobs[0]
@@ -158,7 +157,7 @@ exports.testCommitUpdate = ->
       callback err, commit
   # get blobs from tree
   step9 = (commit, callback) ->
-    treesDao.getBlobs commit.tree, (err, blobs) ->
+    MassiveGit.getBlobs commit.tree, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 2
       callback err, commit
