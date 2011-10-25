@@ -77,11 +77,9 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, ok
 
-  repos: (user, type, callback) =>
-    @usersDao.findAllRepos user, type, callback
+  getUserRepos: (user, type, callback) => @usersDao.findAllRepos user, type, callback
 
-  reposEntries: (user, type, callback) =>
-    @usersDao.fetchAllRepos user, type, callback
+  getUserReposEntries: (user, type, callback) => @usersDao.fetchAllRepos user, type, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     preparedEntries = @_prepareEntries entries, repoId
@@ -90,7 +88,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     @_prepareTreeAndCommit treeEntries, repoId, parentCommit, author, message, tasks, callback
 
   addToIndex: (entries, repoId, author, message = "update", callback) =>
-    @headTree repoId, (err, tree, commitId) =>
+    @getHeadTree repoId, (err, tree, commitId) =>
       if(err)
         callback err
       else
@@ -128,13 +126,13 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         @reposDao.save repo, callback
 
   fetchRepoRootEntriesById: (repoId, callback) =>
-    @head repoId, (err, commitId) =>
+    @getHead repoId, (err, commitId) =>
       if(err)
         callback err
       else
         @fetchRootEntriesForCommit commitId, callback
 
-  head: (repoId, callback) =>
+  getHead: (repoId, callback) =>
    @getRepo repoId, (err, repo) ->
       if(err)
         callback err
@@ -142,15 +140,15 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         callback undefined, repo.commit
 
   # Callback accepts 3 parameters: error, tree and commit id.
-  headTree: (repoId, callback) =>
-    @head repoId, (err, commitId) =>
+  getHeadTree: (repoId, callback) =>
+    @getHead repoId, (err, commitId) =>
       if(err)
         callback err
       else
         @headTreeFromCommit commitId, callback
 
   # Callback accepts 3 parameters: error, tree and commit id.
-  headTreeFromCommit: (commitId, callback) =>
+  getHeadTreeFromCommit: (commitId, callback) =>
     @getCommit commitId, (err, commit) =>
       if(err)
         callback err
@@ -163,13 +161,13 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             callback undefined, tree,commitId
 
   fetchRootEntriesForCommit: (commitId, callback) =>
-    @headTreeFromCommit commitId,(err, tree) =>
+    @getHeadTreeFromCommit commitId,(err, tree) =>
       if(err)
         callback err
       else
-        @treesDao.getBlobs tree.id(), (err, blobs) ->
+        @getBlobs tree.id(), (err, blobs) ->
           if(err)
-            err.message = "Cannot retrive blobs"
+            callback err
           else
             entries = tree.entries
             treeEntries = []
@@ -194,15 +192,23 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 
-  historyForRepo: (repoId, callback) =>
-    @head repoId, (err, commitId) =>
+  getHistoryForRepo: (repoId, callback) =>
+    @getHead repoId, (err, commitId) =>
       if(err)
         callback err
       else
-        @historyForCommit commitId, callback
+        @getHistoryForCommit commitId, callback
 
-  historyForCommit: (commitId, callback) =>
+  getHistoryForCommit: (commitId, callback) =>
     @commitsDao.getParents commitId, callback
+
+  getBlobs: (treeId, callback) =>
+    @treesDao.getBlobs treeId, (err, blobs) ->
+      if(err)
+        err.message = "Cannot retrive blobs"
+        callback err
+      else
+        callback undefined, blobs
 
   getRepo: (id, callback) =>
     if(!id)

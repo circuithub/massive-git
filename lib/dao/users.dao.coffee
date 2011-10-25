@@ -15,8 +15,9 @@ class UsersDao extends Dao
     new User(meta.key, attributes.email, meta.links)
 
   findAllRepos: (user, type, callback) =>
-    @db.add({bucket: "repositories", key_filters: [["starts_with", user]]}).map(@_map).run (err, docs) ->
-    #@db.add("repositories").map(@_map).run (err, docs) ->
+    #@db.add("repositories").map(@_map).run (err, docs) =>
+    #@db.add('repositories').map('Riak.mapValuesJson').run (err, docs) =>
+    @db.add({bucket: "repositories", key_filters: [["tokenize", "$", 0],["eq", user]]}).map(@_map).run (err, docs) ->
       if(err)
          callback err
       else
