@@ -17,11 +17,19 @@ class ReposDao extends Dao
       v.sort ( (a,b) -> return b['lastModifiedParsed'] - a['lastModifiedParsed'] )
       return v
     @db.add(@bucket).map(@_map).reduce(reduceDescending).run (err, docs) =>
-      console.log "newest repos!!", err, docs.length
       if(err)
          callback err
       else
-        console.log "retrieved repos", docs if @log
+        console.log "newest repos", docs.length if @log
+        repos = (@populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
+        callback undefined, repos
+
+  searchByName: (name, callback) =>
+    @db.add({bucket: @bucket, key_filters: [["matches", name]] }).map(@_map).run (err, docs) =>
+      if(err)
+         callback err
+      else
+        console.log "found repos", docs.length if @log
         repos = (@populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
         callback undefined, repos
 
