@@ -1,5 +1,8 @@
 GitObject = require("./git.object").GitObject
 
+# Blob
+# -----------
+# Class representing Git `blob`. Blob can store data of any type.
 Blob = exports.Blob = class Blob extends GitObject
 
   # Constructor takes `data` and optionally `repo` id and blob's `id`.

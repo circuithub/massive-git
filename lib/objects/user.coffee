@@ -9,21 +9,18 @@ User = exports.User = class User extends GitEntity
 
   constructor: (@_id, @email, @_links = []) ->
 
-  addLink: (bucket, key, tag) ->
+  addLink: (bucket, key, tag) =>
     @_links.push @buildLink bucket, key, tag
 
-  removeLink: (bucket, key, tag) ->
+  removeLink: (bucket, key, tag) =>
    @_links = _.select @_links, (link) -> link.bucket != bucket or link.key != key or link.tag != tag
 
   # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.
-  attributes: =>
-    attributes =
-      email : @email
+  attributes: => {email: @email}
 
-  # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
-  links: =>
-    @_links
+  # Method for getting `links` that connect this user with another GitObjects, users or repositories.
+  links: => @_links
 

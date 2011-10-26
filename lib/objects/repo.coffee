@@ -9,7 +9,8 @@ GitEntity = require("./git.entity").GitEntity
 # `public` - flag that indicated whether repo is public or private. Default to `true`.
 # `commit` - last commit for this repository. Can be `null` if repository wasn't commited previously.
 # `forkedFrom` - id of the repository from which this was cloned. Default to `null`.
-class Repo extends GitEntity
+# todo (anton) repo type can be stored as secondary index.
+Repo = exports.Repo = class Repo extends GitEntity
 
   constructor: (@name, @author, @type, @public = true, @commit, @forkedFrom = null) ->
 
@@ -24,9 +25,9 @@ class Repo extends GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: =>
     attributes =
-      name   : @name
-      type   : @type
-      public : @public
+      name  : @name
+      type  : @type
+      public: @public
 
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
@@ -37,6 +38,4 @@ class Repo extends GitEntity
     if(@commit)
       links.push @buildLink "objects", @commit, "commit"
     links
-
-exports.Repo = Repo
 

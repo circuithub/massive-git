@@ -18,5 +18,6 @@ utils.getLinks = (links, tagName) ->
 # Utility method for building link.
 utils.buildLink = (bucket, key, tag) -> { bucket : bucket, key : key, tag : tag }
 
+# Utility method for merging two arrays into one.
 utils.mergeArrays = (first, second) -> Array::push.apply first, second
 

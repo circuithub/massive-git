@@ -12,8 +12,8 @@ TreeEntry = exports.TreeEntry = class TreeEntry
   constructor: (@name, @entry, @mode = 100644, @isFile = false) ->
 
   attributes: =>
-    id   : @entry.id()
-    name : @name
-    type : @entry.type
-    mode : @mode
+    id  : @entry.id()
+    name: @name
+    type: @entry.type
+    mode: @mode
 
