@@ -64,6 +64,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @usersDao.addRepo repo.author, repo.id(), repo.type, (err, ok) ->
           if(err)
+            err.statusCode = 400
             err.message = "User wasn't found"
             callback err
           else
@@ -73,6 +74,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   deleteRepo: (repoId, author, type, callback) =>
     @reposDao.delete repoId, (err, ok) =>
       if(err)
+        err.statusCode = 400
         err.message = "Repo wasn't found"
         callback err
       else

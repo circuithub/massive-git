@@ -4,10 +4,11 @@ MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./fixture/helper"
 
 exports.testInitRepoForFakeUser = ->
-  MassiveGit.initRepo "new-project-name", "fake-user-name", "project", (err, repo) ->
+  randomProjectName = "project" + Math.floor(1000 * Math.random())
+  MassiveGit.initRepo randomProjectName, "fake-user-name", "project", (err, repo) ->
     should.exist err
-    err.should.have.property "message", "Repo already exists"
-    err.should.have.property "statusCode", 422
+    err.should.have.property "message", "User wasn't found"
+    err.should.have.property "statusCode", 400
     should.not.exist repo
 
 exports.testUndefinedRepoName = ->
@@ -38,6 +39,20 @@ exports.testNullUserName = ->
     err.should.have.property "statusCode", 422
     should.not.exist repo
 
-exports.testSaveRepoWithExistentName = ->
-  # todo (anton) implement this test
+exports.testSaveRepoWithExistentName = (beforeExit)->
+  randomProjectName = "project" + Math.floor(1000 * Math.random())
+  # create another user with repo
+  step1 = (callback) ->
+    helper.createUserWithRepo "anton", randomProjectName, "project", callback
+  # create repo with the duplicate name
+  step2 = (repo, callback) ->
+    MassiveGit.initRepo randomProjectName, "anton", "project", (err, repo) ->
+      should.exist err
+      err.should.have.property "message", "Repo already exists"
+      err.should.have.property "statusCode", 422
+      should.not.exist repo
+
+  testCase = new DbTestCase [step1, step2]
+  testCase.run()
+  beforeExit () -> testCase.tearDown()
 
