@@ -87,7 +87,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   getNewestRepos: (callback) => @reposDao.getNewestRepos callback
 
-  searchReposByName: (name, callback) => @reposDao.searchByName name, callback
+  searchRepos: (name, author, callback) => @reposDao.search name, author, callback
 
   getUserReposEntries: (user, type, callback) => @usersDao.fetchAllRepos user, type, callback
 

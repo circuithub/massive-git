@@ -24,8 +24,15 @@ class ReposDao extends Dao
         repos = (@populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
         callback undefined, repos
 
-  searchByName: (name, callback) =>
-    @db.add({bucket: @bucket, key_filters: [["matches", name]] }).map(@_map).run (err, docs) =>
+  search: (name, author, callback) =>
+    key_filters = []
+    if(name and author)
+      key_filters = ["and", [["matches", name]], [["starts_with", author]]]
+    if(name and !author)
+      key_filters = [["matches", name]]
+    if(!name and author)
+      key_filters = [["starts_with", author]]
+    @db.add({bucket: @bucket, key_filters: key_filters }).map(@_map).run (err, docs) =>
       if(err)
          callback err
       else
