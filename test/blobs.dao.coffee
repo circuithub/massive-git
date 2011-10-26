@@ -3,7 +3,7 @@ TestCase = require("./base/test.case").TestCase
 blobsDao = require("../lib/dao/blobs.dao").newInstance()
 Blob     = require("../lib/objects/blob").Blob
 
-exports.testSaveBlob = ->
+exports.testSaveBlob = (beforeExit)->
   # create new blob and save it
   step1 = (callback) ->
     blob = new Blob("test-content", "anton$project1")
@@ -21,4 +21,5 @@ exports.testSaveBlob = ->
   testCase = new TestCase [step1, step2]
   testCase.tearDown = ->  blobsDao.deleteAll()
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 

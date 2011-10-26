@@ -4,7 +4,7 @@ commitsDao = require("../lib/dao/commits.dao").newInstance()
 Commit     = require("../lib/objects/commit").Commit
 
 
-exports.testSaveCommit = ->
+exports.testSaveCommit = (beforeExit)->
   authoredDate = new Date().getTime()
   commitedDate = new Date().getTime()
   # create new commit and save it
@@ -24,4 +24,5 @@ exports.testSaveCommit = ->
   testCase = new TestCase [step1, step2]
   testCase.tearDown = ->  commitsDao.deleteAll()
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 
