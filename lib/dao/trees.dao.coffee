@@ -8,15 +8,14 @@ class TreesDao extends ObjectsDao
     super log
 
   populateEntity: (meta, attributes) =>
-    repository = @getLink meta.links, "repository"
-    new Tree(attributes.entries, repository, meta.key)
+    new Tree(attributes.entries, @getRepository(meta.links), meta.key)
 
   getBlobs: (treeId, callback) =>
-    @walk treeId, [[@bucket, "blob"]], (err, docs) =>
+    @links treeId, [[@bucket, "blob", 0]], (err, docs) =>
       if(err)
          callback err
        else
-         blobs = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs)
+         blobs = (blobsDao.populateEntity doc.meta, doc.data for doc in docs when doc?)
          callback undefined, blobs
 
 exports.newInstance = (log) -> new TreesDao(log)
