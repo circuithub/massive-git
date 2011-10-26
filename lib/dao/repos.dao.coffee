@@ -32,9 +32,11 @@ class ReposDao extends Dao
       key_filters = [["matches", name]]
     if(!name and author)
       key_filters = [["starts_with", author]]
+    console.log "KF", key_filters
     @db.add({bucket: @bucket, key_filters: key_filters }).map(@_map).run (err, docs) =>
       if(err)
-         callback err
+         console.log "cannot find repos", err, "for filters", key_filters if @log
+         callback undefined, []
       else
         console.log "found repos", docs.length if @log
         repos = (@populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)

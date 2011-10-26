@@ -5,7 +5,7 @@ Blob      = require("../lib/objects/blob").Blob
 Tree      = require("../lib/objects/tree").Tree
 TreeEntry = require("../lib/objects/tree.entry").TreeEntry
 
-exports.testSavePlainTree = ->
+exports.testSavePlainTree = (beforeExit) ->
   # create new tree and save it
   step1 = (callback) ->
     blob1 = new Blob("test-content", "anton$project1")
@@ -30,4 +30,5 @@ exports.testSavePlainTree = ->
   testCase = new TestCase [step1, step2]
   testCase.tearDown = -> treesDao.deleteAll()
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 

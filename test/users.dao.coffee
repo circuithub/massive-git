@@ -4,7 +4,7 @@ usersDao = require("../lib/dao/users.dao").newInstance()
 User     = require("../lib/objects/user").User
 
 
-exports.testSaveUser = ->
+exports.testSaveUser = (beforeExit) ->
   # create new user and save it
   step1 = (callback) ->
     user = new User("anton", "anton@circuithub.com")
@@ -15,7 +15,6 @@ exports.testSaveUser = ->
       callback err, user
   # get user from db by id and compare with initial
   step2 = (user, callback) ->
-    console.log "user"
     usersDao.get user.id(), (err, userFromDao) ->
       should.not.exist err
       userFromDao.equals(user).should.be.ok
@@ -23,4 +22,5 @@ exports.testSaveUser = ->
   testCase = new TestCase [step1, step2]
   testCase.tearDown = -> usersDao.deleteAll()
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 
