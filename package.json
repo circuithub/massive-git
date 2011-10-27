@@ -15,7 +15,8 @@
   "dependencies": {
     "riak-js": ">=0.4.1",
     "coffee-script": ">=1.1.2",
-    "underscore": ">=1.2.0"
+    "underscore": ">=1.2.0",
+    "validator": ">=0.3.0"
   },
   "devDependencies": {
     "expresso": ">=0.9.0",

@@ -1,5 +1,7 @@
 async        = require "async"
 _            = require "underscore"
+check        = require("validator").check
+sanitize     = require("validator").sanitize
 utils        = require("./objects/utils")
 User         = require("./objects/user").User
 Repo         = require("./objects/repo").Repo
@@ -23,17 +25,72 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     @treesDao = TreesDao.newInstance()
     @blobsDao = BlobsDao.newInstance()
 
-  newUser: (username, email, callback) =>
-    user = new User username, email
-    @usersDao.save user, callback
+  validateUser: (username, email) ->
+    try
+      # check that name and author were specified
+      check(username, "Invalid parameters").notNull()
+      check(email, "Invalid parameters").notNull()
+      # check mimimum length
+      check(username, "Userame is too small").min(3)
+      # check maximum length
+      check(username, "Username is too big").max(20)
+      # check email
+      check(email, "Email address is not valid").isEmail()
+      return undefined
+    catch e
+      return e.message
 
-  initRepo: (name, author, type, callback) =>
-    if !name? or !author?
+  newUser: (username, email, callback) =>
+    # sanitize input params before further validation
+    username = if username then sanitize(username).trim() else null
+    email = if email then sanitize(email).trim() else null
+    validationMessage = @validateUser(username, email)
+    if(validationMessage)
       err =
-        message: "Invalid parameters"
         statusCode: 422
+        message: validationMessage
       callback err
     else
+      # create user object and save it
+      user = new User username, email
+      @usersDao.exists user.id(), (err, exists) =>
+        if(err)
+          err.statusCode = 400
+          err.message = "Internal error"
+          callback err
+        if(exists)
+          err =
+            statusCode: 422
+            message: "User already exists"
+          callback err
+        else
+          @usersDao.save user, callback
+
+  validateRepo: (name, author) ->
+    try
+      # check that name and author were specified
+      check(name, "Invalid parameters").notNull()
+      check(author, "Invalid parameters").notNull()
+      # sanitize input params before further validation
+      # check mimimum length
+      check(name, "Repository name is too small").min(3)
+      # check maximum length
+      check(name, "Repository name is too big").max(20)
+      return null
+    catch e
+      return e.message
+
+  initRepo: (name, author, type, callback) =>
+    name = if name then sanitize(name).trim() else null
+    author = if author then sanitize(author).trim() else null
+    validationMessage = @validateRepo(name, author)
+    if(validationMessage)
+      err =
+        statusCode: 422
+        message: validationMessage
+      callback err
+    else
+      # create repo object and save it
       repo = new Repo(name, author, type)
       @reposDao.exists repo.id(), (err, exists) =>
         if(err)

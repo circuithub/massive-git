@@ -20,5 +20,5 @@ Remove riak data from this directory:
 
 ## License
 
-Should be here.
+MIT License.
 

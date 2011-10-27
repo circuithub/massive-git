@@ -5,21 +5,24 @@ helper     = require "./helper/helper"
 
 exports.testInitRepoForFakeUser = ->
   randomProjectName = "project" + Math.floor(1000 * Math.random())
-  MassiveGit.initRepo randomProjectName, "fake-user-name", "project", (err, repo) ->
+  username = "fake-user-name" + Math.floor(1000 * Math.random())
+  MassiveGit.initRepo randomProjectName, username, "project", (err, repo) ->
     should.exist err
     err.should.have.property "message", "User wasn't found"
     err.should.have.property "statusCode", 400
     should.not.exist repo
 
 exports.testUndefinedRepoName = ->
-  MassiveGit.initRepo undefined, "fake-user-name", "project", (err, repo) ->
+  username = "fake-user-name" + Math.floor(1000 * Math.random())
+  MassiveGit.initRepo undefined, username, "project", (err, repo) ->
     should.exist err
     err.should.have.property "message", "Invalid parameters"
     err.should.have.property "statusCode", 422
     should.not.exist repo
 
 exports.testNullRepoName = ->
-  MassiveGit.initRepo null, "fake-user-name", "project", (err, repo) ->
+  username = "fake-user-name" + Math.floor(1000 * Math.random())
+  MassiveGit.initRepo null, username, "project", (err, repo) ->
     should.exist err
     err.should.have.property "message", "Invalid parameters"
     err.should.have.property "statusCode", 422
