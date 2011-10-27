@@ -71,27 +71,27 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             callback undefined, repo
 
 
-  deleteRepo: (repoId, author, type, callback) =>
+  deleteRepo: (repoId, author, callback) =>
     @reposDao.delete repoId, (err, ok) =>
       if(err)
         err.statusCode = 400
         err.message = "Repo wasn't found"
         callback err
       else
-        @usersDao.removeRepo author, repoId, type, (err, ok) ->
+        @usersDao.removeRepo author, repoId, (err, ok) ->
           if(err)
             err.message = "User wasn't found"
             callback err
           else
             callback undefined, ok
 
-  getUserRepos: (user, type, callback) => @usersDao.findAllRepos user, type, callback
+  getUserRepos: (user, callback) => @searchRepos undefined, user, callback
 
   getNewestRepos: (callback) => @reposDao.getNewestRepos callback
 
   searchRepos: (name, author, callback) => @reposDao.search name, author, callback
 
-  getUserReposEntries: (user, type, callback) => @usersDao.fetchAllRepos user, type, callback
+  getUserReposEntries: (user, callback) => @usersDao.fetchAllRepos user, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     preparedEntries = @_prepareEntries entries, repoId

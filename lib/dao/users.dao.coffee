@@ -14,17 +14,8 @@ class UsersDao extends Dao
   populateEntity: (meta, attributes) =>
     new User(meta.key, attributes.email, meta.links)
 
-  findAllRepos: (user, type, callback) =>
-    @db.add({bucket: "repositories", key_filters: [["starts_with", user]]}).map(@_map).run (err, docs) ->
-      if(err)
-         callback err
-      else
-        console.log "retrieved repos", docs if @log
-        repos = (reposDao.populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
-        callback undefined, repos
-
   # return map:
-  fetchAllRepos: (user, type, callback) =>
+  fetchAllRepos: (user, callback) =>
     @links user, [["repositories", type, 1],["objects", "commit", 1],["objects", "tree", 1],["objects", "blob", 1]], (err, docs) =>
       if(err)
         callback err
@@ -53,12 +44,12 @@ class UsersDao extends Dao
         user.addLink "repositories", repoId, type
         @save user, callback
 
-  removeRepo: (user, repoId, type, callback) =>
+  removeRepo: (user, repoId, callback) =>
     @get user, (err, user) =>
       if(err)
         callback err
       else
-        user.removeLink "repositories", repoId, type
+        user.removeLink "repositories", repoId
         @save user, callback
 
 
