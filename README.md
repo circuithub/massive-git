@@ -8,6 +8,9 @@ MassiveGit currently implemented on top of riak [http://basho.com/products/riak-
 In future other backends may be implemented.
 
 
+Currently MassiveGit depends on custom version of riak-js module [https://github.com/podviaznikov/riak-js].
+Install it from this repository.
+
 ## Tips
 
 Remove riak data from this directory:
