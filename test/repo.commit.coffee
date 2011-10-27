@@ -5,20 +5,22 @@ Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
-helper     = require "./fixture/helper"
+helper     = require "./helper/helper"
 
-exports.testCommit = ->
+exports.testCommit = (beforeExit) ->
   blob1 = new Blob "test-content"
   blob2 = new Blob "1111"
   randomPart1Name = "part1" + Math.floor(1000 * Math.random())
+  repo1Id = "anton$" + randomPart1Name
   # create user with repo
-  [step1, step2] = helper.createUserWithRepo("anton", randomPart1Name, "part")
+  step1 = (callback) ->
+    helper.createUserWithRepo "anton", randomPart1Name, "part", callback
   # commit two files
-  step3 = (repo, callback) ->
+  step2 = (repo, callback) ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
     MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, callback
   # get entries from commit
-  step4 = (commitId, callback) ->
+  step3 = (commitId, callback) ->
     MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
       should.not.exist err
       console.log "fetching entries for commit", commitId, entries
@@ -29,13 +31,13 @@ exports.testCommit = ->
       blob2Copy.equals(blob2).should.be.ok
       callback undefined, commitId
   # get commit and check it
-  step5 = (commitId, callback) ->
+  step4 = (commitId, callback) ->
     MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
       commit.should.have.property "author", "anton"
       commit.should.have.property "committer", "anton"
       commit.should.have.property "message", "first commit"
-      commit.should.have.property "repo", "anton$part1"
+      commit.should.have.property "repo", repo1Id
       commit.authoredDate.should.exist
       commit.commitedDate.should.exist
       commit.tree.should.exist
@@ -43,10 +45,10 @@ exports.testCommit = ->
       should.not.exist commit.getLink "parent"
       callback err, commit
   # get repo and check it
-  step6 = (commit, callback) ->
+  step5 = (commit, callback) ->
     MassiveGit.getRepo "anton$" + randomPart1Name, (err, repo) ->
       should.not.exist err
-      repo.should.have.property "name", "part1"
+      repo.should.have.property "name", randomPart1Name
       repo.should.have.property "author", "anton"
       repo.should.have.property "type", "part"
       repo.commit.should.equal commit.id()
@@ -55,7 +57,7 @@ exports.testCommit = ->
       repo.public.should.be.ok
       callback err, commit.tree
   # get blobs from tree
-  step7 = (treeId, callback) ->
+  step6 = (treeId, callback) ->
     MassiveGit.getBlobs treeId, (err, blobs) ->
       should.not.exist err
       blobs.should.have.length 2
@@ -65,27 +67,28 @@ exports.testCommit = ->
       blob2Copy.equals(blob2).should.be.ok
       callback err, treeId
   # get tree and check it
-  step8 = (treeId, callback) ->
+  step7 = (treeId, callback) ->
     MassiveGit.getTree treeId, (err, tree) ->
       should.not.exist err
-      tree.should.have.property "repo", "anton$part1"
+      tree.should.have.property "repo", repo1Id
       tree.getLinks("blob").should.have.length 2
       tree.getLinks("blob")[0].should.equal blob1.id()
       tree.getLinks("blob")[1].should.equal blob2.id()
       callback err, blob1, blob2
   # get blob 1 and check it
-  step9 = (blob1, blob2, callback) ->
+  step8 = (blob1, blob2, callback) ->
     MassiveGit.getBlob blob1.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob1).should.be.ok
       callback err, blob2
   # get blob 2 and check it
-  step10 = (blob2, callback) ->
+  step9 = (blob2, callback) ->
     MassiveGit.getBlob blob2.id(), (err, blob) ->
       should.not.exist err
       blob.equals(blob2).should.be.ok
       callback err
 
-  testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9, step10]
+  testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9]
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 

@@ -1,7 +1,7 @@
 should     = require "should"
 DbTestCase = require("./base/db.test.case").DbTestCase
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
-helper     = require "./fixture/helper"
+helper     = require "./helper/helper"
 
 exports.testInitRepoForFakeUser = ->
   randomProjectName = "project" + Math.floor(1000 * Math.random())

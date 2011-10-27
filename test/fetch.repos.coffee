@@ -5,7 +5,7 @@ Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
-helper     = require "./fixture/helper"
+helper     = require "./helper/helper"
 
 exports.testCommit = (beforeExit) ->
   blob1 = new Blob "test-content"

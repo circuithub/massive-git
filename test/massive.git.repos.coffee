@@ -11,7 +11,7 @@ blobsDao   = require("../lib/dao/blobs.dao").newInstance()
 treesDao   = require("../lib/dao/trees.dao").newInstance()
 usersDao   = require("../lib/dao/users.dao").newInstance()
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
-helper     = require "./fixture/helper"
+helper     = require "./helper/helper"
 
 exports.testFindRepos = ->
   randomPart1Name = "part1" + Math.floor(1000 * Math.random())
@@ -85,37 +85,5 @@ exports.testGetUserRepos = ->
       assert.deepEqual repo2.attributes(), repo2Copy.attributes()
 
   testCase = new DbTestCase [step1, step2, step3, step4, step5]
-  testCase.run()
-
-
-exports.testDeleteRepo = ->
-  # create user with two repos
-  step1 = (callback) ->
-    helper.createUserWithRepos "anton", "part1", "part", "part2", "part", callback
-  # find repos
-  step2 = (results, callback) ->
-    repo1 = results[0]
-    repo2 = results[1]
-    MassiveGit.getUserRepos "anton", "part", (err, repos) ->
-      repos.should.have.length 2
-      repo1Copy = _.detect repos, (iterator) -> iterator.id() == repo1.id()
-      repo2Copy = _.detect repos, (iterator) -> iterator.id() == repo2.id()
-      repo1Copy.equals(repo1).should.be.ok
-      repo2Copy.equals(repo2).should.be.ok
-      callback err, repo1, repo2
-  # remove repo
-  step3 = (repo1, repo2, callback) ->
-    MassiveGit.deleteRepo repo1.id(),"anton", "part", (err, user) ->
-      should.not.exist err
-      user.links().should.have.length 1
-      callback err, repo2
-  # find repos
-  step4 = (repo2, callback) ->
-    MassiveGit.getUserRepos "anton", "part", (err, repos) ->
-      repos.should.have.length 1
-      repo2Copy = repos[0]
-      repo2Copy.equals(repo2).should.be.ok
-
-  testCase = new DbTestCase [step1, step2, step3, step4]
   testCase.run()
 

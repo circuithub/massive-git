@@ -1,5 +1,5 @@
 TestCase = require("./test.case").TestCase
-helper   = require "../fixture/helper"
+helper   = require "../helper/helper"
 
 DbTestCase = exports.DbTestCase = class DbTestCase extends TestCase
 

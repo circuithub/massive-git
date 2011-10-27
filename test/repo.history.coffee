@@ -5,13 +5,14 @@ Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
 TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
-helper     = require "./fixture/helper"
+helper     = require "./helper/helper"
 
 #
-exports.testCommitUpdate = ->
+exports.testCommitUpdate = (beforeExit) ->
   blob1 = new Blob JSON.stringify {one:1, two: 2}
   blob2 = new Blob "some-string"
   randomPartName = "part" + Math.floor(1000 * Math.random())
+  repoId = "anton$" + randomPartName
   # create user with repo
   step1 = (callback) ->
     helper.createUserWithRepo "anton", randomPartName, "part", callback
@@ -34,11 +35,10 @@ exports.testCommitUpdate = ->
       commit.should.have.property "author", "anton"
       commit.should.have.property "committer", "anton"
       commit.should.have.property "message", "first commit"
-      commit.should.have.property "repo", "anton$" + randomPartName
+      commit.should.have.property "repo", repoId
       commit.authoredDate.should.exist
       commit.commitedDate.should.exist
       commit.tree.should.exist
-
       callback err, commit
   # get blobs from tree
   step5 = (commit, callback) ->
@@ -52,15 +52,16 @@ exports.testCommitUpdate = ->
   step6 = (commit, callback) ->
     MassiveGit.getTree commit.tree, (err, tree) ->
       should.not.exist err
-      tree.should.have.property "repo", "anton$" + randomPartName
+      tree.should.have.property "repo", repoId
       tree.getLinks("blob").should.have.length 1
       tree.getLinks("blob")[0].should.equal blob1.id()
-      callback err, blob1
+      callback err, commit
   # commit new blob
   step7 = (commit, callback) ->
     entries = [MassiveGit.createTreeEntry "symbol.json", "some-string"]
-    MassiveGit.addToIndex entries, "anton$" + randomPartName, "andrew", "update", (err, commitId) ->
+    MassiveGit.addToIndex entries, repoId, "andrew", "add new file symbol.json", (err, commitId) ->
       should.not.exist err
+      console.log "Commit>>", commit.id(), "updated to", commitId
       callback err, commitId
   # get commit and check it
   step8 = (commitId, callback) ->
@@ -68,8 +69,8 @@ exports.testCommitUpdate = ->
       should.not.exist err
       commit.should.have.property "author", "andrew"
       commit.should.have.property "committer", "andrew"
-      commit.should.have.property "message", "update"
-      commit.should.have.property "repo", "anton$" + randomPartName
+      commit.should.have.property "message", "add new file symbol.json"
+      commit.should.have.property "repo", repoId
       commit.authoredDate.should.exist
       commit.commitedDate.should.exist
       commit.tree.should.exist
@@ -82,4 +83,5 @@ exports.testCommitUpdate = ->
 
   testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9]
   testCase.run()
+  beforeExit () -> testCase.tearDown()
 
