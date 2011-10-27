@@ -10,16 +10,18 @@ helper     = require "./helper/helper"
 exports.testCommit = (beforeExit) ->
   blob1 = new Blob "test-content"
   blob2 = new Blob "1111"
-  randomPartName = "part" + Math.floor(1000 * Math.random())
+  partName = "part" + Math.floor(1000 * Math.random())
+  userName = "anton" + Math.floor(1000 * Math.random())
+  repoId = userName + "$" + partName
   # create user with repo
   step1 = (callback) ->
-    helper.createUserWithRepo "anton", randomPartName, "part", callback
+    helper.createUserWithRepo userName, partName, "part", callback
   # get plain repos
   step2 = (repo, callback) ->
-    MassiveGit.getUserRepos "anton", "part", (err, entries) ->
+    MassiveGit.getUserRepos userName, (err, entries) ->
       should.not.exist err
       entries.should.have.length 1
-      entries[0].id().should.equal "anton$" + randomPartName
+      entries[0].id().should.equal repoId
       callback err
   testCase = new DbTestCase [step1, step2]
   testCase.run()

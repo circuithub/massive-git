@@ -3,18 +3,21 @@ _            = require "underscore"
 check        = require("validator").check
 sanitize     = require("validator").sanitize
 utils        = require("./objects/utils")
-User         = require("./objects/user").User
-Repo         = require("./objects/repo").Repo
-Tree         = require("./objects/tree").Tree
-Blob         = require("./objects/blob").Blob
-TreeEntry    = require("./objects/tree.entry").TreeEntry
-Commit       = require("./objects/commit").Commit
 
 ReposDao     = require "./dao/repos.dao"
 UsersDao     = require "./dao/users.dao"
 CommitsDao   = require "./dao/commits.dao"
 TreesDao     = require "./dao/trees.dao"
 BlobsDao     = require "./dao/blobs.dao"
+
+# Re-export objects.
+User = exports.User = require("./objects/user").User
+Repo = exports.Repo = require("./objects/repo").Repo
+Tree = exports.Tree = require("./objects/tree").Tree
+Blob = exports.Blob = require("./objects/blob").Blob
+Commit = exports.Commit = require("./objects/commit").Commit
+TreeEntry = exports.TreeEntry = require("./objects/tree.entry").TreeEntry
+
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
@@ -30,12 +33,10 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       # check that name and author were specified
       check(username, "Invalid parameters").notNull()
       check(email, "Invalid parameters").notNull()
-      # check mimimum length
-      check(username, "Userame is too small").min(3)
-      # check maximum length
-      check(username, "Username is too big").max(20)
+      # check mimimum and maximum length
+      check(username, "Userame is out of range").len(3, 20)
       # check email
-      check(email, "Email address is not valid").isEmail()
+      check(email, "Email address is invalid").isEmail()
       return undefined
     catch e
       return e.message
@@ -71,11 +72,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       # check that name and author were specified
       check(name, "Invalid parameters").notNull()
       check(author, "Invalid parameters").notNull()
-      # sanitize input params before further validation
-      # check mimimum length
-      check(name, "Repository name is too small").min(3)
-      # check maximum length
-      check(name, "Repository name is too big").max(20)
+      # check mimimum and maximum length
+      check(name, "Repository name is out of range").min(3, 20)
       return null
     catch e
       return e.message
