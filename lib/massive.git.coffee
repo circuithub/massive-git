@@ -152,7 +152,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     preparedEntries = @_prepareEntries entries, repoId
     tasks = preparedEntries.tasks
     treeEntries = preparedEntries.treeEntries
-    @_prepareTreeAndCommit treeEntries, repoId, parentCommit, author, message, tasks, callback
+    async.series tasks, (err, results) =>
+      if err
+        callback err
+      else
+        @_prepareTreeAndCommit treeEntries, repoId, parentCommit, author, message, callback
 
   addToIndex: (entries, repoId, author, message = "update", callback) =>
     @getHeadTree repoId, (err, tree, commitId) =>
@@ -167,19 +171,36 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         newEntriesNames = (entry.name for entry in newEntries)
         mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
         utils.mergeArrays mergedEntries, newEntries
-        @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, tasks, callback
+        async.series tasks, (err, results) =>
+          if err
+            callback err
+          else
+            @_prepareTreeAndCommit mergedEntries, repoId, commitId, author, message, callback
 
-  _prepareTreeAndCommit: (treeEntries, repoId, parentCommit, author, message, tasks, callback) =>
+  _prepareTreeAndCommit: (treeEntries, repoId, parentCommit, author, message, callback) =>
     date = new Date().getTime()
     root = new Tree(treeEntries, repoId)
-    commit = new Commit(root.id(), parentCommit, author, date, author, date, message, repoId)
-    tasks.push async.apply @treesDao.save, root
-    tasks.push async.apply @commitsDao.save, commit
-    tasks.push async.apply @_updateRepoCommitRef, repoId, commit.id()
-    # todo (anton) for some reason when we use parallel my riak server can crash. Investigate this.
-    async.series tasks, (err, results) ->
-      callback err, commit.id()
+    @treesDao.save root, (err, ok) =>
+      if err
+        callback err
+      else
+        @_prepareAndSaveCommit root, parentCommit, author, date, message, repoId, callback
 
+  _prepareAndSaveCommit: (root, parentCommit, author, date, message, repoId, callback) =>
+    @usersDao.get author, (err, user) =>
+      if err
+        callback err
+      else
+        commit = new Commit(root.id(), parentCommit, author, user.email, date, author, user.email, date, message, repoId)
+        @commitsDao.save commit, (err, commit) =>
+          if err
+            callback err
+          else
+            @_updateRepoCommitRef repoId, commit.id(), (err, resp) ->
+              if err
+                callback err
+              else
+                callback undefined, commit.id()
 
   _updateRepoCommitRef: (repoId, commitId, callback) =>
     @getRepo repoId, (err, repo) =>

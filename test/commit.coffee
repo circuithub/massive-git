@@ -5,17 +5,19 @@ Commit = require("../lib/objects/commit").Commit
 # test commit object
 authoredDate = new Date().getTime()
 commitedDate = new Date().getTime()
-commit = new Commit("tree-id", "parent-id", "anton", authoredDate, "andrew", commitedDate, "initial commit", "anton$project1")
+commit = new Commit("tree-id", "parent-id", "anton", "anton@circuithub.com", authoredDate, "andrew", "andrew@circuithub.com", commitedDate, "initial commit", "anton$project1")
 
 
 exports.testCommitProperties = ->
-  commit.id().should.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
+  commit.id().should.equal "bdd1caa1de76e21a5e8afe0676057a3a6685738d"
   commit.should.have.property "type", "commit"
   commit.should.have.property "tree", "tree-id"
   commit.should.have.property "parent", "parent-id"
   commit.should.have.property "author", "anton"
+  commit.should.have.property "authorEmail", "anton@circuithub.com"
   commit.should.have.property "authoredDate", authoredDate
   commit.should.have.property "committer", "andrew"
+  commit.should.have.property "committerEmail", "andrew@circuithub.com"
   commit.should.have.property "commitedDate", commitedDate
   commit.should.have.property "message", "initial commit"
   commit.should.have.property "repo", "anton$project1"

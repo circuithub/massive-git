@@ -38,7 +38,7 @@ class ReposDao extends Dao
          console.log "cannot find repos", err, "for filters", key_filters if @log
          callback undefined, []
       else
-        console.log "found repos", docs.length if @log
+        console.log "found repos", docs.length, docs if @log
         repos = (@populateEntity doc.meta, doc.attributes for doc in docs when doc.meta?)
         callback undefined, repos
 

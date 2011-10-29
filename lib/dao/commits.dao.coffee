@@ -13,9 +13,11 @@ class CommitsDao extends ObjectsDao
       author = @getLink meta.links, "author"
       committer = @getLink meta.links, "committer"
       repository = @getLink meta.links, "repository"
+      authorEmail = attributes.authorEmail
+      committerEmail = attributes.committerEmail
       authoredDate = attributes.authoredDate
       commitedDate = attributes.commitedDate
-      new Commit(tree, parent, author, authoredDate, committer, commitedDate, attributes.message, repository, meta.key)
+      new Commit(tree, parent, author, authorEmail, authoredDate, committer, committerEmail, commitedDate, attributes.message, repository, meta.key)
 
   getParents: (commitId, callback) =>
     @links commitId, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>

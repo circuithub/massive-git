@@ -9,8 +9,8 @@ exports.testSaveCommit = (beforeExit)->
   commitedDate = new Date().getTime()
   # create new commit and save it
   step1 = (callback) ->
-    commit = new Commit("tree-id", "parent-id", "anton", authoredDate, "andrew", commitedDate, "initial commit", "anton$project1")
-    commit.id().should.equal "4ca68e7f293e0b7445beda64f0f8fe854682a0ac"
+    commit = new Commit("tree-id", "parent-id", "anton", "anton@circuithub.com", authoredDate, "andrew", "andrew@circuithub.com", commitedDate, "initial commit", "anton$project1")
+    commit.id().should.equal "bdd1caa1de76e21a5e8afe0676057a3a6685738d"
     commitsDao.save commit, (err, data) ->
       should.not.exist err
       should.exist data
