@@ -4,7 +4,7 @@ utils = require "../objects/utils"
 # Dao
 # -----------
 # Base class for all Dao classes. Some common methods should be implemented here.
-class Dao
+Dao = exports.Dao = class Dao
 
   constructor: (@bucket, @log = true) ->
     @db = riak.getClient({debug: @log})
@@ -30,8 +30,7 @@ class Dao
        callback undefined, entity
 
   # Delete entity by `id`.
-  delete: (id, callback) ->
-    @db.remove @bucket, id, callback
+  delete: (id, callback) => @db.remove @bucket, id, callback
 
   # Delete all entities from `bucket`.
   deleteAll: =>
@@ -42,8 +41,7 @@ class Dao
           @db.remove @bucket, object.meta.key
 
   # Checks if such key exists in database. Callback takes 2 parameters: `err` and `exists` boolean parameter
-  exists: (id, callback) =>
-    @db.exists @bucket, id, callback
+  exists: (id, callback) => @db.exists @bucket, id, callback
 
   # Get all links from entity to some `bucket` under specified `tag`.
   walk: (id, spec, callback) =>
@@ -55,14 +53,12 @@ class Dao
       .map(@_map)
       .run(callback)
 
-  links: (id, spec, callback) =>
-    @db.links @bucket, id, spec, callback
+  links: (id, spec, callback) => @db.links @bucket, id, spec, callback
 
   # Method for building GitEntity.
-  populateEntity: (meta, attributes) =>
+  populateEntity: (meta, attributes) ->
 
-  getLink: (links, tag) =>
-    utils.getLink links, tag
+  getLink: (links, tag) -> utils.getLink links, tag
 
   # Default map functions
   _map: (value) ->
@@ -78,7 +74,4 @@ class Dao
     links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
     entity.meta.links = links
     [entity]
-
-
-exports.Dao = Dao
 

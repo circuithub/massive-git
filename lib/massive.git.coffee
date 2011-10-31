@@ -278,6 +278,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(entry.entry.type == "blob")
         blob = entry.entry
         blob.repo = repoId
+        console.log "ready to save blob", blob.data
         # todo (anton) we can use dao.exists() before saving each blob.
         task = async.apply @blobsDao.save, blob
         tasks.push task
@@ -350,8 +351,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   # Factory method to deal with Git Objects
   # --------------
   # create new tree entry.
-  createTreeEntry: (name, data) => new TreeEntry name, @createBlob(data)
+  createTreeEntry: (name, blob) -> new TreeEntry name, blob
 
   # Create new with provided data.
-  createBlob: (data) -> new Blob data
+  createBlob: (data, repo) -> new Blob(data, repo)
 

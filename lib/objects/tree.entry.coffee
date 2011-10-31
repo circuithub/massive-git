@@ -2,8 +2,8 @@
 # ----------
 # Class represents entry for the `tree`. Each entry has:
 # `name` - name of the file or directory
-# `mode` - mode for file or directory. Used for tree's `id` claculation.
 # `entry` - entry itself. Each entry has `type` and `id`.
+# `mode` - mode for file or directory. Used for tree's `id` claculation.
 TreeEntry = exports.TreeEntry = class TreeEntry
 
   # Constructor takes `data` and optionally `repo` id and blob's `id`.

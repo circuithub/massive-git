@@ -9,8 +9,7 @@ Blob = exports.Blob = class Blob extends GitObject
   constructor: (@data, @repo = null, @_id = null) ->
     super "blob", @repo, @_id
 
-  content: =>
-    @data
+  content: => @data
 
   # Dao related methods.
   # ---------

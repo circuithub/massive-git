@@ -9,8 +9,7 @@ class ObjectsDao extends Dao
     super meta, attributes
 
   # Get link to repository. Can be `null`.
-  getRepository: (links) =>
-    @getLink links, "repository"
+  getRepository: (links) =>  @getLink links, "repository"
 
 exports.ObjectsDao = ObjectsDao
 
