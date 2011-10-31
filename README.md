@@ -20,7 +20,7 @@ Remove riak data from this directory:
 
 ## Configurations
 
-Please updated {js_thread_stack, 32} on your app.config.
+Please updated `js_max_vm_mem` and `js_thread_stack` to 512 MB on your app.config.
 
 See [http://wiki.basho.com/MapReduce.html] for details how to do this and why.
 
