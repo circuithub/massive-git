@@ -3,8 +3,7 @@ ObjectsDao = require("./objects.dao").ObjectsDao
 
 class BlobsDao extends ObjectsDao
 
-  constructor: (log)->
-    super log
+  constructor: (log)-> super log
 
   populateEntity: (meta, attributes) =>
     new Blob(attributes.data, @getRepository(meta.links), meta.key)

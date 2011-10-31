@@ -18,6 +18,12 @@ Remove riak data from this directory:
 `/var/lib/riak/bitcask`
 
 
+## Configurations
+
+Please updated {js_thread_stack, 32} on your app.config.
+
+See [http://wiki.basho.com/MapReduce.html] for details how to do this and why.
+
 ## License
 
 (The MIT License)

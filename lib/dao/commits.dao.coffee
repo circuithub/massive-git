@@ -3,8 +3,7 @@ ObjectsDao = require("./objects.dao").ObjectsDao
 
 class CommitsDao extends ObjectsDao
 
-  constructor: (log)->
-    super log
+  constructor: (log)-> super log
 
   populateEntity: (meta, attributes) =>
     if attributes?
@@ -20,11 +19,10 @@ class CommitsDao extends ObjectsDao
       new Commit(tree, parent, author, authorEmail, authoredDate, committer, committerEmail, commitedDate, attributes.message, repository, meta.key)
 
   getParents: (commitId, callback) =>
-    @links commitId, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
+    @links commitId, [["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1],["objects", "parent", 1]], (err, docs) =>
       if(err)
         callback err
       else
-        console.log "Commits", docs
         commits = []
         for doc in docs
           data = doc.data
