@@ -15,8 +15,5 @@ Blob = exports.Blob = class Blob extends GitObject
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.
-  attributes: =>
-    attributes = super()
-    attributes.data = @data
-    attributes
+  attributes: => @data
 
