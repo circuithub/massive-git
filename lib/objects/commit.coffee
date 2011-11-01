@@ -1,6 +1,5 @@
 GitObject = require("./git.object").GitObject
 
-# todo (anton) author and commiter should also store date!!!!!!!!!!
 Commit = exports.Commit = class Commit extends GitObject
 
   # Constructor takes mandatory `Commit` properties and optionally `repo` id and commit's `id`.

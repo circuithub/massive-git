@@ -24,6 +24,9 @@ Please updated `js_max_vm_mem` and `js_thread_stack` to 512 MB on your app.confi
 
 See [http://wiki.basho.com/MapReduce.html] for details how to do this and why.
 
+Since we are using secondary indexes please make following chnage in the riak app.config:
+`change the storage backend to riak_kv_eleveldb_backend`.
+
 ## License
 
 (The MIT License)

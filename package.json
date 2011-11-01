@@ -2,8 +2,7 @@
   "author": "CircuitHub (circuithub.com)",
   "name": "massive-git",
   "description": "Revision database that implements Git Object Model",
-  "version": "0.4.1",
-  "private": true,
+  "version": "0.5.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/circuithub/massive-git.git"

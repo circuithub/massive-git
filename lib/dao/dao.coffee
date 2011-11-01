@@ -21,7 +21,7 @@ Dao = exports.Dao = class Dao
   # Save entity.
   save: (entity, callback) =>
    console.log "saving entity with id =", entity.id(), "into bucket =", @bucket if @log
-   meta = {links: entity.links()}
+   meta = {links: entity.links(), index: entity.index()}
    @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
@@ -29,10 +29,10 @@ Dao = exports.Dao = class Dao
        console.log "entity was saved in bucket", @bucket, "with id =", entity.id() if @log
        callback undefined, entity
 
-  # Delete entity by `id`.
-  delete: (id, callback) => @db.remove @bucket, id, callback
+  # Remove entity by `id`.
+  remove: (id, callback) => @db.remove @bucket, id, callback
 
-  # Delete all entities from `bucket`.
+  # Remove all entities from `bucket`. TODO (anton) rename to removeAll
   deleteAll: =>
     @db.getAll @bucket, (err, objects) =>
       if(!err)

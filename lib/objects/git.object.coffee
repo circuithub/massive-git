@@ -26,16 +26,18 @@ GitObject = exports.GitObject = class GitObject extends GitEntity
     store = header + content
     sha1 store
 
-  content: =>
-    throw new Error("Should be implemented in every subclass!")
+  content: -> throw new Error("Should be implemented in every subclass!")
 
   # Dao related methods.
   # ---------
 
   # Method for getting plain `attributes` of the GitObject.
-  attributes: =>
-    attributes =
-      type : @type
+  attributes: -> {}
+
+  # Method for getting `index`es of the GitObject.
+  index: =>
+    type: @type
+    repo: @repo
 
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>

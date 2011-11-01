@@ -16,8 +16,11 @@ GitEntity = exports.GitEntity = class GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: -> throw new Error("Should be implemented in every subclass!")
 
+  # Method for getting `index`es of the GitObject.
+  index: -> {}
+
   # Method for getting `links` that connect this GitEntity with git objects, users or repositories.
-  links: => []
+  links: -> []
 
   # Method for finding appropriate link `key` by `tag` name.
   getLink: (tagName) => utils.getLink @links(), tagName

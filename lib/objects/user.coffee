@@ -21,6 +21,10 @@ User = exports.User = class User extends GitEntity
   # Method for getting plain `attributes` of the GitObject.
   attributes: => {email: @email}
 
+  # Method for getting `index`es of the GitObject.
+  index: =>
+    email: @email
+
   # Method for getting `links` that connect this user with another GitObjects, users or repositories.
   links: => @_links
 
