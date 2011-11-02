@@ -127,7 +127,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
 
   deleteRepo: (repoId, author, callback) =>
-    @reposDao.delete repoId, (err, ok) =>
+    @reposDao.remove repoId, (err, ok) =>
       if(err)
         err.statusCode = 400
         err.message = "Repo wasn't found"
