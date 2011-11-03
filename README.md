@@ -15,7 +15,7 @@ Install it from this repository.
 
 Remove riak data from this directory:
 
-`/var/lib/riak/bitcask`
+`/var/lib/riak/leveldb`
 
 
 ## Configurations
