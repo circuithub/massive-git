@@ -21,7 +21,11 @@ Dao = exports.Dao = class Dao
   # Save entity.
   save: (entity, callback) =>
    console.log "saving entity with id =", entity.id(), "into bucket =", @bucket if @log
-   meta = {links: entity.links(), index: entity.index()}
+   meta =
+     links: entity.links()
+     index: entity.index()
+     contentType: entity.contentType if entity.contentType?
+   console.log "Content-type of the saved doc", meta.contentType
    @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
