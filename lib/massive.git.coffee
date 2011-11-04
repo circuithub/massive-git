@@ -353,5 +353,8 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   createTreeEntry: (name, blob) -> new TreeEntry name, blob
 
   # Create new with provided data.
-  createBlob: (data, repo) -> new Blob(data, repo)
+  createBlob: (data, repo, contentType) ->
+    blob = new Blob(data, repo)
+    blob.contentType = contentType if contentType?
+    blob
 
