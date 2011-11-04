@@ -67,18 +67,17 @@ Dao = exports.Dao = class Dao
   # Default map functions
   _map: (value) ->
     row = value.values[0]
+    metadata = row.metadata
+    userMeta = metadata["X-Riak-Meta"]
+    linksArray = metadata["Links"]
+    links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
     entity =
-      meta: {}
-    try
+      meta:
+        key: value.key
+        links: links
+        contentType: metadata["content-type"]
+      lastModifiedParsed: Date.parse(metadata["X-Riak-Last-Modified"])
+    if entity.meta.contentType == "application/json"
       entity.attributes = JSON.parse(row.data)
-      metadata = row.metadata
-      entity.lastModifiedParsed = Date.parse(metadata["X-Riak-Last-Modified"])
-      userMeta = metadata["X-Riak-Meta"]
-      entity.meta.key = value.key
-      linksArray = metadata["Links"]
-      links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
-      entity.meta.links = links
-    catch err
-      # do nothing
     [entity]
 

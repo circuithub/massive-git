@@ -15,7 +15,7 @@ class TreesDao extends ObjectsDao
          console.log "Cannot get blobs for tree", treeId, err if @log?
          callback err
        else
-         blobs = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs when doc? and doc.meta and doc.attributes)
+         blobs = (blobsDao.populateEntity doc.meta, doc.attributes for doc in docs when doc? and doc.attributes?)
          callback undefined, blobs
 
 exports.newInstance = (log) -> new TreesDao(log)
