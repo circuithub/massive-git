@@ -10,7 +10,8 @@ exports.testBlobProperties = ->
   blob.should.have.property "repo", "anton$project1"
   blob.should.have.property "data", "test-content"
   blob.content().should.equal blob.data
-  blob.attributes().should.have.property "type", "blob"
+  blob.index().should.have.property "type", "blob"
+  blob.index().should.have.property "repo", "anton$project1"
 
 exports.testBlobLinks = ->
   blob.links().should.have.length(1)

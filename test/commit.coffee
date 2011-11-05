@@ -21,7 +21,9 @@ exports.testCommitProperties = ->
   commit.should.have.property "commitedDate", commitedDate
   commit.should.have.property "message", "initial commit"
   commit.should.have.property "repo", "anton$project1"
-  commit.attributes().should.have.property "type", "commit"
+  commit.index().should.have.property "type", "commit"
+  commit.index().should.have.property "repo", "anton$project1"
+
 
 exports.testCommitLinks = ->
   commit.links().should.have.length(5)
