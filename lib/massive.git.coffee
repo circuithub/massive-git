@@ -290,8 +290,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @getHistoryForCommit commitId, callback
 
-  getHistoryForCommit: (commitId, callback) =>
-    @commitsDao.getParents commitId, callback
+  getHistoryForCommit: (commitId, callback) =>  @commitsDao.getParents commitId, callback
 
   getBlobs: (treeId, callback) =>
     @treesDao.getBlobs treeId, (err, blobs) ->
@@ -353,8 +352,5 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   createTreeEntry: (name, blob) -> new TreeEntry name, blob
 
   # Create new with provided data.
-  createBlob: (data, repo, contentType = "application/json") ->
-    blob = new Blob(data, repo)
-    blob.contentType = contentType if contentType?
-    blob
+  createBlob: (data, repo, contentType = "application/json") -> new Blob(data, repo, null, contentType)
 

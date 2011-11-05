@@ -7,7 +7,7 @@ GitObject = require("./git.object").GitObject
 Blob = exports.Blob = class Blob extends GitObject
 
   # Constructor takes `data` and optionally `repo` id and blob's `id`.
-  constructor: (@data, @repo = null, @_id = null) ->
+  constructor: (@data, @repo = null, @_id = null, @contentType) ->
     super "blob", @repo, @_id
 
   content: => @data
