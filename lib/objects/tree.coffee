@@ -1,8 +1,6 @@
 _         = require "underscore"
 GitObject = require("./git.object").GitObject
 
-stringFromEntry = (id, name, type, mode) ->
-  mode + " " + type + " " + id + "\t" + name + "\n"
 
 # Tree
 # ---------
@@ -17,9 +15,8 @@ Tree = exports.Tree = class Tree extends GitObject
     @entries = _.sortBy entries, (entry) -> entry.name
 
   content: =>
-    rows = ""
-    rows += stringFromEntry entry.id, entry.name, entry.type, entry.mode for entry in @entries
-    rows
+    stringFromEntry = (id, name, type, mode) -> mode + " " + type + " " + id + "\t" + name + "\n"
+    (stringFromEntry entry.id, entry.name, entry.type, entry.mode for entry in @entries).join("")
 
   # Dao related methods.
   # ---------

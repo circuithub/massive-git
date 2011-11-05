@@ -21,7 +21,11 @@ Dao = exports.Dao = class Dao
   # Save entity.
   save: (entity, callback) =>
    console.log "saving entity with id =", entity.id(), "into bucket =", @bucket if @log
-   meta = {links: entity.links(), index: entity.index()}
+   meta =
+     links: entity.links()
+     index: entity.index()
+     contentType: entity.contentType if entity.contentType?
+   console.log "Content-type of the saved doc", meta.contentType
    @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
      if(err)
        callback err
@@ -63,15 +67,17 @@ Dao = exports.Dao = class Dao
   # Default map functions
   _map: (value) ->
     row = value.values[0]
-    entity = {}
-    entity.attributes = JSON.parse(row.data)
     metadata = row.metadata
-    entity.lastModifiedParsed = Date.parse(metadata["X-Riak-Last-Modified"])
     userMeta = metadata["X-Riak-Meta"]
-    entity.meta = {}
-    entity.meta.key = value.key
     linksArray = metadata["Links"]
     links = ({bucket: link[0], key: link[1], tag: link[2]} for link in linksArray)
-    entity.meta.links = links
+    entity =
+      meta:
+        key: value.key
+        links: links
+        contentType: metadata["content-type"]
+      lastModifiedParsed: Date.parse(metadata["X-Riak-Last-Modified"])
+    if entity.meta.contentType == "application/json"
+      entity.attributes = JSON.parse(row.data)
     [entity]
 

@@ -31,6 +31,10 @@ GitEntity = exports.GitEntity = class GitEntity
   # Method for building link.
   buildLink: (bucket, key, tag) -> utils.buildLink bucket, key, tag
 
+  # Property for getting content type for the GitEntity. By default this method has no implementation.
+  # Should be overriden only in cases where we need explicitly specify content type.
+  #contentType= null
+
   # Method that check whether two `GitEntities` are the same.
   equals: (gitEntity) =>
     @id() == gitEntity.id() and _.isEqual(@links(), gitEntity.links()) and _.isEqual(@attributes(), gitEntity.attributes())

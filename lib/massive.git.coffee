@@ -278,7 +278,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if(entry.entry.type == "blob")
         blob = entry.entry
         blob.repo = repoId
-        console.log "ready to save blob", blob.data
         # todo (anton) we can use dao.exists() before saving each blob.
         task = async.apply @blobsDao.save, blob
         tasks.push task
@@ -291,8 +290,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @getHistoryForCommit commitId, callback
 
-  getHistoryForCommit: (commitId, callback) =>
-    @commitsDao.getParents commitId, callback
+  getHistoryForCommit: (commitId, callback) =>  @commitsDao.getParents commitId, callback
 
   getBlobs: (treeId, callback) =>
     @treesDao.getBlobs treeId, (err, blobs) ->
@@ -354,5 +352,5 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   createTreeEntry: (name, blob) -> new TreeEntry name, blob
 
   # Create new with provided data.
-  createBlob: (data, repo) -> new Blob(data, repo)
+  createBlob: (data, repo, contentType = "application/json") -> new Blob(data, repo, null, contentType)
 
