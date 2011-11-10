@@ -125,6 +125,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, repo
 
+
   deleteRepo: (repoId, author, callback) =>
     @reposDao.remove repoId, (err, ok) =>
       if(err)

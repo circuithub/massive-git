@@ -28,7 +28,6 @@ class CommitsDao extends ObjectsDao
           data = doc.data
           commit = @populateEntity(doc.meta, data)
           commits.push commit if commit?
-        # fetching initial commit by specified i. NOTE (anton) refactor it. We fetching this list in 2 requests here
         @get commitId, (err, commit) ->
           if err 
             callback undefined, commits
