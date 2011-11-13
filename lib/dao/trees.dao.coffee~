@@ -11,7 +11,7 @@ class TreesDao extends ObjectsDao
 
   getBlobs: (treeId, callback) =>
     @walk treeId, [[@bucket, "blob"]], (err, docs) =>
-      if err
+      if(err)
          console.log "Cannot get blobs for tree", treeId, err if @log?
          callback err
        else

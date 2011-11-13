@@ -15,6 +15,9 @@ Blob = exports.Blob = class Blob extends GitObject
   # Dao related methods.
   # ---------
 
+  # User can explicitly specify content type of the blob.
+  #contentType:@contentType
+
   # Method for getting plain `attributes` of the GitObject.
   attributes: => @data
 

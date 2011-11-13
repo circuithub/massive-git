@@ -16,7 +16,7 @@ class ReposDao extends Dao
       v.sort ( (a,b) -> return b['lastModifiedParsed'] - a['lastModifiedParsed'] )
       return v
     @db.add(@bucket).map(@_map).reduce(reduceDescending).run (err, docs) =>
-      if err
+      if(err)
          callback err
       else
         console.log "newest repos", docs.length if @log

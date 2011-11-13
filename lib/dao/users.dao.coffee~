@@ -46,7 +46,7 @@ class UsersDao extends Dao
 
   removeRepo: (user, repoId, callback) =>
     @get user, (err, user) =>
-      if err
+      if(err)
         callback err
       else
         user.removeLink "repositories", repoId

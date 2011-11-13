@@ -27,7 +27,7 @@ Dao = exports.Dao = class Dao
      contentType: entity.contentType if entity.contentType?
    console.log "Content-type of the saved doc", meta.contentType
    @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
-     if err
+     if(err)
        callback err
      else
        console.log "entity was saved in bucket", @bucket, "with id =", entity.id() if @log
@@ -39,7 +39,7 @@ Dao = exports.Dao = class Dao
   # Remove all entities from `bucket`. TODO (anton) rename to removeAll
   deleteAll: =>
     @db.getAll @bucket, (err, objects) =>
-      if !err
+      if(!err)
         objects.forEach (object) =>
           console.log "removing entity from bucket", @bucket, "with id =", object.meta.key if @log
           @db.remove @bucket, object.meta.key

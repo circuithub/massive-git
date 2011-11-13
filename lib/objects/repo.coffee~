@@ -24,7 +24,6 @@ Repo = exports.Repo = class Repo extends GitEntity
 
   # Method for getting plain `attributes` of the GitObject.
   attributes: =>
-    # TODO (Anton) why we have `attributes` key here
     attributes =
       name  : @name
       type  : @type
