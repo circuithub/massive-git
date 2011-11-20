@@ -76,7 +76,7 @@ Dao = exports.Dao = class Dao
         key: value.key
         links: links
         contentType: metadata["content-type"]
-      lastModifiedParsed: Date.parse(metadata["X-Riak-Last-Modified"])
+        lastModified: Date.parse(metadata["X-Riak-Last-Modified"])
     if entity.meta.contentType == "application/json"
       entity.attributes = JSON.parse(row.data)
     [entity]

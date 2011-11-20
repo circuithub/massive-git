@@ -13,7 +13,7 @@ class ReposDao extends Dao
 
   getNewestRepos: (callback) =>
     reduceDescending = ( v , args ) ->
-      v.sort ( (a,b) -> return b['lastModifiedParsed'] - a['lastModifiedParsed'] )
+      v.sort ( (a,b) -> return b.meta.lastModified - a.meta.lastModified )
       return v
     @db.add(@bucket).map(@_map).reduce(reduceDescending).run (err, docs) =>
       if err
@@ -25,14 +25,14 @@ class ReposDao extends Dao
 
   search: (name, author, callback) =>
     key_filters = []
-    if(name and author)
+    if name and author
       key_filters = ["and", [["matches", name]], [["starts_with", author]]]
-    if(name and !author)
+    if name and !author
       key_filters = [["matches", name]]
-    if(!name and author)
+    if !name and author
       key_filters = [["starts_with", author]]
     @db.add({bucket: @bucket, key_filters: key_filters }).map(@_map).run (err, docs) =>
-      if(err)
+      if err
          console.log "cannot find repos", err, "for filters", key_filters if @log
          callback undefined, []
       else

@@ -7,6 +7,7 @@ class BlobsDao extends ObjectsDao
 
   populateEntity: (meta, attributes) =>
     if attributes?
+      attributes = JSON.parse(attributes) if meta.contentType == "application/json"
       new Blob(attributes, @getRepository(meta.links), meta.key, meta.contentType)
 
 exports.newInstance = (log) -> new BlobsDao(log)

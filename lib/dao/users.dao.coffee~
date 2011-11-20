@@ -11,8 +11,7 @@ class UsersDao extends Dao
   constructor: (log) ->
     super "users", log
 
-  populateEntity: (meta, attributes) =>
-    new User(meta.key, attributes.email, meta.links)
+  populateEntity: (meta, attributes) -> new User(meta.key, attributes.email, meta.links)
 
   # return map:
   fetchAllRepos: (user, callback) =>
@@ -46,7 +45,7 @@ class UsersDao extends Dao
 
   removeRepo: (user, repoId, callback) =>
     @get user, (err, user) =>
-      if(err)
+      if err
         callback err
       else
         user.removeLink "repositories", repoId

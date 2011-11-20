@@ -11,8 +11,7 @@ class UsersDao extends Dao
   constructor: (log) ->
     super "users", log
 
-  populateEntity: (meta, attributes) =>
-    new User(meta.key, attributes.email, meta.links)
+  populateEntity: (meta, attributes) -> new User(meta.key, attributes.email, meta.links)
 
   # return map:
   fetchAllRepos: (user, callback) =>

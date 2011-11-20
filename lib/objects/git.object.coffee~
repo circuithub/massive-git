@@ -42,7 +42,7 @@ GitObject = exports.GitObject = class GitObject extends GitEntity
   # Method for getting `links` that connect this GitObject with another GitObjects, users or repositories.
   links: =>
     links = []
-    if @repo
+    if(@repo)
       links.push @buildLink "repositories", @repo, "repository"
     links
 
