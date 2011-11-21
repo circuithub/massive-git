@@ -41,7 +41,7 @@ exports.testSavePng = (beforeExit) ->
       should.not.exist err
       blobFromDao.id().should.equal blob.id()
       callback err
-  testCase = new TestCase step1, step2
+  testCase = new TestCase [step1, step2]
   testCase.tearDown = ->  blobsDao.deleteAll()
   testCase.run()
   beforeExit () -> testCase.tearDown()

@@ -39,6 +39,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       # create user object and save it
       [username, email] = validationResult.sanitizedParameters
       user = new User username, email
+      console.log "user to be created", user
       @usersDao.exists user.id(), (err, exists) =>
         if err
           err.statusCode = 400
@@ -61,6 +62,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       callback err
     else
       # create repo object and save it
+      [name, author] = validationResult.sanitizedParameters
       repo = new Repo(name, author, type)
       @reposDao.exists repo.id(), (err, exists) =>
         if err

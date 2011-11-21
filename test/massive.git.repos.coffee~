@@ -84,6 +84,6 @@ exports.testGetUserRepos = ->
       assert.deepEqual repo2.id(), repo2Copy.id()
       assert.deepEqual repo2.attributes(), repo2Copy.attributes()
 
-  testCase = new DbTestCase step1, step2, step3, step4, step5
+  testCase = new DbTestCase [step1, step2, step3, step4, step5]
   testCase.run()
 

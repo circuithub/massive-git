@@ -21,7 +21,7 @@ exports.testSaveCommit = (beforeExit)->
       should.not.exist err
       commitFromDao.equals(commit).should.be.ok
       callback err
-  testCase = new TestCase step1, step2
+  testCase = new TestCase [step1, step2]
   testCase.tearDown = ->  commitsDao.deleteAll()
   testCase.run()
   beforeExit () -> testCase.tearDown()

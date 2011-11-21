@@ -3,7 +3,7 @@ sanitize = require("validator").sanitize
 
 class ValidationResult
 
-  constructor: (@errorMessage, @sanitizedParameters) ->
+  constructor: (@errorMessage, @sanitizedParameters...) ->
   
   isValid: => !@errorMessage?
 

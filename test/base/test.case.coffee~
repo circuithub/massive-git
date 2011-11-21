@@ -3,7 +3,8 @@ should   = require "should"
 
 TestCase = exports.TestCase = class TestCase
 
-  constructor: (@steps...) ->
+  constructor: (steps...) ->
+    @steps = steps
 
   run: =>
     try

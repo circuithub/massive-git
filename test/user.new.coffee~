@@ -5,7 +5,7 @@ helper     = require "./helper/helper"
 
 exports.testNewUserSuccess = ->
   username = "new-user-name" + Math.floor(100000 * Math.random())
-  MassiveGit.newUser username, "hello@circuithub.com", (err, user) ->
+  MassiveGit.newUser username, "new-user-name@circuithub.com", (err, user) ->
     console.log "error", err, username
     should.not.exist err
     should.exist user

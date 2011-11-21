@@ -23,7 +23,7 @@ exports.testCommit = (beforeExit) ->
       entries.should.have.length 1
       entries[0].id().should.equal repoId
       callback err
-  testCase = new DbTestCase step1, step2
+  testCase = new DbTestCase [step1, step2]
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

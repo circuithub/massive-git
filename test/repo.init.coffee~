@@ -55,7 +55,7 @@ exports.testSaveRepoWithExistentName = (beforeExit)->
       err.should.have.property "statusCode", 422
       should.not.exist repo
 
-  testCase = new DbTestCase step1, step2
+  testCase = new DbTestCase [step1, step2]
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

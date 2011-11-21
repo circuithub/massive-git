@@ -48,7 +48,7 @@ exports.testForkRepoWithAnotherUser = (beforeExit)->
       forkedRepo.public.should.be.ok
       should.not.exist forkedRepo.commit
 
-  testCase = new DbTestCase step1, step2, step3
+  testCase = new DbTestCase [step1, step2, step3]
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

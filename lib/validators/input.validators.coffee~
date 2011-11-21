@@ -35,7 +35,7 @@ exports.validateRepo = (name, author) ->
     check(name, "Invalid parameters").notNull()
     check(author, "Invalid parameters").notNull()
     # check mimimum and maximum length
-    check(name, "Repository name is out of range").min(3, 20)
+    check(name, "Repository name is out of range").len(3, 20)
     return new ValidationResult(null, name, author)
   catch e
     return new ValidationResult e.message

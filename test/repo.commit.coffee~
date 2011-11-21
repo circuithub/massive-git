@@ -88,7 +88,7 @@ exports.testCommit = (beforeExit) ->
       blob.equals(blob2).should.be.ok
       callback err
 
-  testCase = new DbTestCase step1, step2, step3, step4, step5, step6, step7, step8, step9
+  testCase = new DbTestCase [step1, step2, step3, step4, step5, step6, step7, step8, step9]
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

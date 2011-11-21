@@ -35,7 +35,7 @@ exports.testDeleteRepo = (beforeExit) ->
       repo2Copy = repos[0]
       repo2Copy.equals(repo2).should.be.ok
 
-  testCase = new DbTestCase step1, step2, step3, step4
+  testCase = new DbTestCase [step1, step2, step3, step4]
   testCase.run()
   beforeExit () -> testCase.tearDown()
 
