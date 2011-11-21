@@ -1,7 +1,7 @@
 async        = require "async"
 _            = require "underscore"
-check        = require("validator").check
 sanitize     = require("validator").sanitize
+validators   = require "./validators/input.validators"
 utils        = require("./objects/utils")
 
 ReposDao     = require "./dao/repos.dao"
@@ -28,31 +28,16 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     @treesDao = TreesDao.newInstance()
     @blobsDao = BlobsDao.newInstance()
 
-  validateUser: (username, email) ->
-    try
-      # check that name and author were specified
-      check(username, "Invalid parameters").notNull()
-      check(email, "Invalid parameters").notNull()
-      # check mimimum and maximum length
-      check(username, "Userame is out of range").len(3, 20)
-      # check email
-      check(email, "Email address is invalid").isEmail()
-      return undefined
-    catch e
-      return e.message
-
   newUser: (username, email, callback) =>
-    # sanitize input params before further validation
-    username = if username then sanitize(username).trim() else null
-    email = if email then sanitize(email).trim() else null
-    validationMessage = @validateUser(username, email)
-    if(validationMessage)
+    validationResult = validators.validateUser(username, email)
+    if !validationResult.isValid()
       err =
         statusCode: 422
-        message: validationMessage
+        message: validationResult.errorMessage
       callback err
     else
       # create user object and save it
+      [username, email] = validationResult.sanitizedParameters
       user = new User username, email
       @usersDao.exists user.id(), (err, exists) =>
         if err
@@ -67,25 +52,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         else
           @usersDao.save user, callback
 
-  validateRepo: (name, author) ->
-    try
-      # check that name and author were specified
-      check(name, "Invalid parameters").notNull()
-      check(author, "Invalid parameters").notNull()
-      # check mimimum and maximum length
-      check(name, "Repository name is out of range").min(3, 20)
-      return null
-    catch e
-      return e.message
-
   initRepo: (name, author, type, callback) =>
-    name = if name then sanitize(name).trim() else null
-    author = if author then sanitize(author).trim() else null
-    validationMessage = @validateRepo(name, author)
-    if validationMessage
+    validationResult = validators.validateRepo(name, author)
+    if !validationResult.isValid()
       err =
         statusCode: 422
-        message: validationMessage
+        message: validationResult.errorMessage
       callback err
     else
       # create repo object and save it
