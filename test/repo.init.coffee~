@@ -44,6 +44,7 @@ exports.testNullUserName = ->
 
 exports.testSaveRepoWithExistentName = (beforeExit)->
   randomProjectName = "project" + Math.floor(1000 * Math.random())
+  username = "some-user-name" + Math.floor(1000 * Math.random())
   # create another user with repo
   step1 = (callback) ->
     helper.createUserWithRepo "anton", randomProjectName, "project", callback
@@ -55,7 +56,7 @@ exports.testSaveRepoWithExistentName = (beforeExit)->
       err.should.have.property "statusCode", 422
       should.not.exist repo
 
-  testCase = new DbTestCase [step1, step2]
+  testCase = new DbTestCase step1, step2
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

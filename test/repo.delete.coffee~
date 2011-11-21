@@ -5,8 +5,8 @@ MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./helper/helper"
 
 exports.testDeleteRepo = (beforeExit) ->
-  randomRepo1Name = "part-one-for-delete" + Math.floor(1000 * Math.random())
-  randomRepo2Name = "part-second-for-delete" + Math.floor(1000 * Math.random())
+  randomRepo1Name = "part-one-delete" + Math.floor(1000 * Math.random())
+  randomRepo2Name = "part-second-delete" + Math.floor(1000 * Math.random())
   username = "random-user" + Math.floor(1000 * Math.random())
   # create user with two repos
   step1 = (callback) ->
@@ -35,7 +35,7 @@ exports.testDeleteRepo = (beforeExit) ->
       repo2Copy = repos[0]
       repo2Copy.equals(repo2).should.be.ok
 
-  testCase = new DbTestCase [step1, step2, step3, step4]
+  testCase = new DbTestCase step1, step2, step3, step4
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

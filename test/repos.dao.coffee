@@ -58,19 +58,25 @@ exports.testSearchRepos = (beforeExit) ->
        should.not.exist err
        repos.should.have.length 0
        callback err, repos
-  # search repos by first user
+  # search repos by `second-project` word
   step6 = (repos, callback) ->
+     reposDao.search "second-project", undefined, (err, repos) ->
+       should.not.exist err
+       repos.should.have.length 1
+       callback err, repos
+  # search repos by first user
+  step7 = (repos, callback) ->
      reposDao.search undefined, "anton", (err, repos) ->
        should.not.exist err
        repos.should.have.length 2
        callback err, repos
   # search repos by second user
-  step7 = (repos, callback) ->
+  step8 = (repos, callback) ->
      reposDao.search undefined, "andrew", (err, repos) ->
        should.not.exist err
        repos.should.have.length 1
 
-  testCase = new TestCase step1, step2, step3, step4, step5, step6, step7
+  testCase = new TestCase step1, step2, step3, step4, step5, step6, step7, step8
   testCase.tearDown = -> reposDao.deleteAll()
   testCase.run()
   beforeExit () -> testCase.tearDown()

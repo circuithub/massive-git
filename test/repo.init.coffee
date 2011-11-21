@@ -44,12 +44,13 @@ exports.testNullUserName = ->
 
 exports.testSaveRepoWithExistentName = (beforeExit)->
   randomProjectName = "project" + Math.floor(1000 * Math.random())
+  username = "some-user-name" + Math.floor(1000 * Math.random())
   # create another user with repo
   step1 = (callback) ->
-    helper.createUserWithRepo "anton", randomProjectName, "project", callback
+    helper.createUserWithRepo username, randomProjectName, "project", callback
   # create repo with the duplicate name
   step2 = (repo, callback) ->
-    MassiveGit.initRepo randomProjectName, "anton", "project", (err, repo) ->
+    MassiveGit.initRepo randomProjectName, username, "project", (err, repo) ->
       should.exist err
       err.should.have.property "message", "Repo already exists"
       err.should.have.property "statusCode", 422
