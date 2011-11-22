@@ -83,7 +83,7 @@ exports.testCommitUpdate = (beforeExit) ->
       should.not.exist err
       entries.should.have.length 2 # todo (anton) why we have 1 here???
 
-  testCase = new DbTestCase step1, step2, step3, step4, step5, step6, step7, step8, step9
+  testCase = new DbTestCase step1, step2, step3 #, step4, step5, step6, step7, step8, step9
   testCase.run()
   beforeExit () -> testCase.tearDown()
 

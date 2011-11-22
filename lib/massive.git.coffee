@@ -235,6 +235,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             entries = tree.entries
             treeEntries = []
+            console.log "blobs", blobs
             for blob in blobs
               blobId = blob.id()
               name = entry.name for entry in entries when entry.id == blobId

@@ -19,7 +19,7 @@ exports.testCommitUpdate = (beforeExit) ->
     helper.createUserWithRepo username, randomPartName, "part", callback
   # commit 1 file
   step2 = (repo, callback) ->
-    blob = MassiveGit.createBlob(JSON.stringify({one:1, two: 2}), repo, contentType = "application/json")
+    blob = MassiveGit.createBlob(JSON.stringify({one:1, two: 2}), repo.id())
     entries = [MassiveGit.createTreeEntry "datasheet.json", blob]
     MassiveGit.commit entries, repo.id(), username, "first commit", undefined, callback
   # get entries from commit

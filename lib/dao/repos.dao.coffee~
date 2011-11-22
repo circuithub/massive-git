@@ -13,7 +13,7 @@ class ReposDao extends Dao
 
   getNewestRepos: (callback) =>
     reduceDescending = ( v , args ) ->
-      v.sort ( (a,b) -> return b['lastModifiedParsed'] - a['lastModifiedParsed'] )
+      v.sort ( (a,b) -> return b.meta.lastModified - a.meta.lastModified )
       return v
     @db.add(@bucket).map(@_map).reduce(reduceDescending).run (err, docs) =>
       if err

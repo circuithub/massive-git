@@ -6,10 +6,11 @@ class ReposDao extends Dao
   constructor: (log)-> super "repositories", log
 
   populateEntity: (meta, attributes) =>
-    author = @getLink meta.links, "author"
-    forkedFrom = @getLink meta.links, "forked_from"
-    commit = @getLink meta.links, "commit"
-    new Repo(attributes.name, author, attributes.type, attributes.public, commit, forkedFrom)
+    if attributes?
+      author = @getLink meta.links, "author"
+      forkedFrom = @getLink meta.links, "forked_from"
+      commit = @getLink meta.links, "commit"
+      new Repo(attributes.name, author, attributes.type, attributes.public, commit, forkedFrom)
 
   getNewestRepos: (callback) =>
     reduceDescending = ( v , args ) ->

@@ -7,7 +7,8 @@ class TreesDao extends ObjectsDao
   constructor: (log)-> super log
 
   populateEntity: (meta, attributes) =>
-    new Tree(attributes.entries, @getRepository(meta.links), meta.key)
+    if attributes?
+      new Tree(attributes.entries, @getRepository(meta.links), meta.key)
 
   getBlobs: (treeId, callback) =>
     @walk treeId, [[@bucket, "blob"]], (err, docs) =>
