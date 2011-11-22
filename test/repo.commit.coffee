@@ -11,14 +11,15 @@ exports.testCommit = (beforeExit) ->
   blob1 = new Blob "test-content"
   blob2 = new Blob "1111"
   randomPart1Name = "part1" + Math.floor(1000 * Math.random())
-  repo1Id = "anton$" + randomPart1Name
+  username = "random-user" + Math.floor(1000 * Math.random())
+  repo1Id = username + "$" + randomPart1Name
   # create user with repo
   step1 = (callback) ->
-    helper.createUserWithRepo "anton", randomPart1Name, "part", callback
+    helper.createUserWithRepo username, randomPart1Name, "part", callback
   # commit two files
   step2 = (repo, callback) ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
-    MassiveGit.commit entries, repo.id(), "anton", "first commit", undefined, callback
+    MassiveGit.commit entries, repo.id(), username, "first commit", undefined, callback
   # get entries from commit
   step3 = (commitId, callback) ->
     MassiveGit.fetchRootEntriesForCommit commitId, (err, entries) ->
@@ -34,8 +35,8 @@ exports.testCommit = (beforeExit) ->
   step4 = (commitId, callback) ->
     MassiveGit.getCommit commitId, (err, commit) ->
       should.not.exist err
-      commit.should.have.property "author", "anton"
-      commit.should.have.property "committer", "anton"
+      commit.should.have.property "author", username
+      commit.should.have.property "committer", username
       commit.should.have.property "message", "first commit"
       commit.should.have.property "repo", repo1Id
       commit.authoredDate.should.exist
@@ -46,10 +47,10 @@ exports.testCommit = (beforeExit) ->
       callback err, commit
   # get repo and check it
   step5 = (commit, callback) ->
-    MassiveGit.getRepo "anton$" + randomPart1Name, (err, repo) ->
+    MassiveGit.getRepo username + "$" + randomPart1Name, (err, repo) ->
       should.not.exist err
       repo.should.have.property "name", randomPart1Name
-      repo.should.have.property "author", "anton"
+      repo.should.have.property "author", username
       repo.should.have.property "type", "part"
       repo.commit.should.equal commit.id()
       repo.getLink("commit").should.equal commit.id()
