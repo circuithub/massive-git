@@ -1,5 +1,5 @@
-async    = require "async"
-should   = require "should"
+async  = require "async"
+should = require "should"
 
 TestCase = exports.TestCase = class TestCase
 

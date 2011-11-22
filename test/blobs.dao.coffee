@@ -30,7 +30,7 @@ exports.testSavePng = (beforeExit) ->
     png = fs.readFileSync "./test/fixtures/test.png"
     blob = new Blob(png, "anton$project1")
     blob.contentType = "png"
-    blob.id().should.equal "79d667ee1a34cb6a4cef6e99f41439db2392108c"
+    blob.id().should.equal "42d06b1cef22c1d6884c700ecf90a1c79b25eeea"
     blobsDao.save blob, (err, data) ->
       should.not.exist err
       should.exist data

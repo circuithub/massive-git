@@ -15,25 +15,36 @@ helper     = require "./helper/helper"
 
 exports.testFindRepos = ->
   randomPart1Name = "part1" + Math.floor(1000 * Math.random())
+  username = "some-user-name" + Math.floor(1000 * Math.random())
+  secondUsername = "another-user-name" + Math.floor(1000 * Math.random())
   # create repo with different type
-  step0a = (callback) ->
+  # create user
+  step1 = (callback) ->
+    MassiveGit.newUser username, "anton@circuithub.com", (err, user) ->
+      assert.isUndefined err
+      callback err, user
+  step2 = (user, callback) ->
+    MassiveGit.newUser secondUsername, "anton@circuithub.com", (err, user) ->
+      assert.isUndefined err
+      callback err, user
+  step3 = (user, callback) ->
     randomProjectName = "project" + Math.floor(1000 * Math.random())
-    MassiveGit.initRepo randomProjectName, "anton", "project", callback
+    MassiveGit.initRepo randomProjectName, username, "project", callback
   # create repo with different user
-  step0b = (p1, callback) ->
-    MassiveGit.initRepo randomPart1Name, "andrew", "part", callback
+  step4 = (p1, callback) ->
+    MassiveGit.initRepo randomPart1Name, secondUsername, "part", callback
   # create first repo
-  step1 = (p2, callback) ->
-    MassiveGit.initRepo randomPart1Name, "anton", "part", callback
+  step5 = (p2, callback) ->
+    MassiveGit.initRepo randomPart1Name, username, "part", callback
   # create second repo
-  step2 = (repo1, callback) ->
+  step6 = (repo1, callback) ->
     randomPart2Name = "part2" + Math.floor(1000 * Math.random())
-    MassiveGit.initRepo randomPart2Name, "anton", "part", (err, repo) ->
+    MassiveGit.initRepo randomPart2Name, username, "part", (err, repo) ->
       assert.isUndefined err
       callback err, repo1, repo
   # find repos
-  step3 = (repo1, repo2, callback) ->
-    MassiveGit.getUserRepos "anton", "part", (err, repos) ->
+  step7 = (repo1, repo2, callback) ->
+    MassiveGit.getUserRepos username, "part", (err, repos) ->
       console.log "repos", repos, repo1, repo2
       should.not.exist err
       assert.equal 2, repos.length
@@ -46,44 +57,6 @@ exports.testFindRepos = ->
       assert.deepEqual repo2.attributes(), repo2Copy.attributes()
       assert.deepEqual repo2.links(), repo2Copy.links()
 
-  testCase = new DbTestCase step0a, step0b, step1, step2, step3
-  testCase.run()
-
-exports.testGetUserRepos = ->
-  # create user
-  step1 = (callback) ->
-    MassiveGit.newUser "anton", "anton@circuithub.com", (err, user) ->
-      assert.isUndefined err
-      callback err, user
-  # create first repo
-  step2 = (user, callback) ->
-    MassiveGit.initRepo "part1", "anton", "part", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$part1", repo.id()
-      callback err, repo
-  # create repo with different type
-  step3 = (firstRepo, callback) ->
-    MassiveGit.initRepo "project1", "anton", "project", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$project1", repo.id()
-      callback err, firstRepo
-  # create second repo
-  step4 = (repo1, callback) ->
-    MassiveGit.initRepo "part2", "anton", "part", (err, repo) ->
-      assert.isUndefined err
-      assert.equal "anton$part2", repo.id()
-      callback err, repo1, repo
-  # find repos
-  step5 = (repo1, repo2, callback) ->
-    MassiveGit.getUserRepos "anton", "part", (err, repos) ->
-      assert.equal 2, repos.length
-      repo1Copy = _.detect repos, (iterator) -> iterator.id() == repo1.id()
-      repo2Copy = _.detect repos, (iterator) -> iterator.id() == repo2.id()
-      assert.deepEqual repo1.id(), repo1Copy.id()
-      assert.deepEqual repo1.attributes(), repo1Copy.attributes()
-      assert.deepEqual repo2.id(), repo2Copy.id()
-      assert.deepEqual repo2.attributes(), repo2Copy.attributes()
-
-  testCase = new DbTestCase [step1, step2, step3, step4, step5]
+  testCase = new DbTestCase step1, step2, step3, step4, step5, step6, step7
   testCase.run()
 
