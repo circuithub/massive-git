@@ -15,7 +15,7 @@ describe "new entity", ->
 		entity.should.have.property "prop1", 1
 		entity.should.have.property "prop2", 4
 		entity.links().should.be.empty
-		entity.attributes().should.have.property "prop1", 1
+		entity.attributes().should.have.property "prop1", 2
 
 describe "entity 'equals'", ->
   entity = new TestEntity("some-id", 1, 4)

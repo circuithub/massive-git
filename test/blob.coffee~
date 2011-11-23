@@ -1,6 +1,7 @@
 should = require "should"
 Blob   = require("../lib/objects/blob").Blob
 
+
 describe "new blob", ->
   blob = new Blob("test-content", "anton$project1")
   it "should have correct properties", ->
