@@ -51,7 +51,7 @@ describe "init repo", ->
     username = "some-user-name" + Math.floor(1000 * Math.random())
     before (done) ->
       helper.createUserWithRepo username, repoName, "project", done
-    it "", (done) ->
+    it "should return 'Repo already exists' error", (done) ->
       MassiveGit.initRepo repoName, username, "project", (err, repo) ->
         should.exist err
         err.should.have.property "message", "Repo already exists"

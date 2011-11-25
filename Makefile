@@ -1,4 +1,4 @@
-TESTS = test/blob.coffee
+TESTS = test/*.coffee
 
 test-all:
 	@NODE_ENV=test ./node_modules/.bin/mocha \

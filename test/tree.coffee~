@@ -11,7 +11,7 @@ describe "new tree", ->
     entries.push new TreeEntry("symbol.json", blob2).attributes()
     entries.push new TreeEntry("datasheet.json", blob1).attributes()
     tree = new Tree(entries, "anton$project1")
-    it "should have correct properties", ->
+    it "should have correctr properties", ->
       tree.id().should.equal "7a8b327d8ec3e00838b350a59887c4ae6c183928"
       tree.entries.should.have.length 2
       tree.entries.should.equal tree.attributes().entries
@@ -27,7 +27,7 @@ describe "new tree", ->
     entries.push new TreeEntry("datasheet.json", blob1).attributes()
     entries.push new TreeEntry("js", subtree).attributes()
     tree = new Tree(entries, "anton$project1")
-    it "should have correct properties", ->
+    it "should have correctr properties", ->
       tree.id().should.equal "260f756862c7fc027f275aaec07ba4fa2139b0e9"
       tree.entries.should.have.length 2
       tree.entries.should.equal tree.attributes().entries

@@ -23,6 +23,6 @@ describe "build link", ->
   it "should return link with correct properties", ->
     link.should.have.property("bucket", "users")
     link.should.have.property("key", "anton")
-    link.should.have.property("tag", "owner")
+    link.should.have.property("tag", "owner2")
 
 
