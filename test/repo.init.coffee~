@@ -59,7 +59,7 @@ describe "init repo", ->
         should.not.exist repo
         done()
     after (done) ->
-      helper.deleteUser username, done
+      helper.deleteUserWithRepo username, repoName, done
 
 		    
 

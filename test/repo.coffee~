@@ -2,7 +2,7 @@ should = require "should"
 Repo   = require("../lib/objects/repo").Repo
 
 describe "created new repo", ->
-  describe "with regular parameters", ->
+  descibe "with regular parameters", ->
     repo = new Repo("project1", "anton", "project")
     it "should have correct properties", ->
       repo.id().should.equal "anton$project1"
