@@ -4,7 +4,6 @@ sanitize     = require("validator").sanitize
 validators   = require "./validators/input.validators"
 utils        = require("./objects/utils")
 
-# Dao objects
 ReposDao     = require "./dao/repos.dao"
 UsersDao     = require "./dao/users.dao"
 CommitsDao   = require "./dao/commits.dao"
