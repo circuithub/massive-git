@@ -61,16 +61,17 @@ describe "repo validation", ->
   describe "with long repo name", ->
     it "should return 'Repository name is out of range' error", ->
       validators.validateRepo("123456789azwsxedcrfcrfvtgb", "anton").errorMessage.should.equal "Repository name is out of range"
-  describe "with null author name", ->
-    it "should return 'Invalid parameters' error", ->
-      validators.validateRepo("project-one", null).errorMessage.should.equal "Invalid parameters"
-  describe "with undefined author name", ->
-    it "should return 'Invalid parameters' error", ->
-      validators.validateRepo("project-one", undefined).errorMessage.should.equal "Invalid parameters"
-  describe "with empty author name", ->
-    it "should return 'Invalid parameters' error", ->
-      validators.validateRepo("project-one", "").errorMessage.should.equal "Invalid parameters"
-  describe "with blank author name", ->
-    it "should return 'Invalid parameters' error", ->
-      validators.validateRepo("project-one", "      ").errorMessage.should.equal "Invalid parameters"
+
+
+exports.testRepoNullAuthor = ->
+  validators.validateRepo("project-one", null).errorMessage.should.equal "Invalid parameters"
+
+exports.testRepoUndefinedName = ->
+  validators.validateRepo("project-one", undefined).errorMessage.should.equal "Invalid parameters"
+
+exports.testRepoEmptyName = ->
+  validators.validateRepo("project-one", "").errorMessage.should.equal "Invalid parameters"
+
+exports.testRepoBlankName = ->
+  validators.validateRepo("project-one", "       ").errorMessage.should.equal "Invalid parameters"
 

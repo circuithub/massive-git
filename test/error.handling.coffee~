@@ -62,35 +62,56 @@ describe "when id is null", ->
         err.should.have.property "statusCode", 422
         should.not.exist repo
 
-describe "when id is undefined", ->
-  describe "for repo", ->
-    it "should return 'Invalid parameters' error", ->
-      MassiveGit.getRepo undefined, (err, repo) ->
-        err.should.exist
-        err.should.have.property "message", "Invalid parameters"
-        err.should.have.property "statusCode", 422
-        should.not.exist repo
-  describe "for blob", ->
-    it "should return 'Invalid parameters' error", ->
-      MassiveGit.getBlob undefined, (err, repo) ->
-        err.should.exist
-        err.should.have.property "message", "Invalid parameters"
-        err.should.have.property "statusCode", 422
-        should.not.exist repo
-  describe "for commit", ->
-    it "should return 'Invalid parameters' error", ->
-      MassiveGit.getCommit undefined, (err, repo) ->
-        err.should.exist
-        err.should.have.property "message", "Invalid parameters"
-        err.should.have.property "statusCode", 422
-        should.not.exist repo
-  describe "for tree", ->
-    it "should return 'Invalid parameters' error", ->
-      MassiveGit.getTree undefined, (err, repo) ->
-        err.should.exist
-        err.should.have.property "message", "Invalid parameters"
-        err.should.have.property "statusCode", 422
-        should.not.exist repo
 
 
+exports.testGetRepoByNullId = ->
+
+exports.testGetRepoByUndefinedId = ->
+  MassiveGit.getRepo null, (err, repo) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist repo
+
+exports.testGetBlobByNullId = ->
+  MassiveGit.getBlob null, (err, blob) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist blob
+
+exports.testGetBlobByUndefinedId = ->
+  MassiveGit.getBlob null, (err, blob) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist blob
+
+exports.testGetCommitByNullId = ->
+  MassiveGit.getCommit null, (err, commit) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist commit
+
+exports.testGetCommitByUndefinedId = ->
+  MassiveGit.getCommit null, (err, commit) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist commit
+
+exports.testGetTreeByNullId = ->
+  MassiveGit.getTree null, (err, tree) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist tree
+
+exports.testGetTreeByUndefinedId = ->
+  MassiveGit.getTree null, (err, tree) ->
+    err.should.exist
+    err.should.have.property "message", "Invalid parameters"
+    err.should.have.property "statusCode", 422
+    should.not.exist tree
 

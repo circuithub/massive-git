@@ -11,7 +11,7 @@ describe "save", ->
         should.not.exist err
         should.exist data
         done err
-    it "retrieve by id", (done) ->
+    it "retrive by id", (done) ->
       blobsDao.get blob.id(), (err, blobFromDao) ->
         should.not.exist err
         blobFromDao.equals(blob).should.be.ok
@@ -28,7 +28,7 @@ describe "save", ->
         should.not.exist err
         should.exist data
         done err
-    it "retrieve by id", (done) ->
+    it "retrive by id", (done) ->
       blobsDao.get blob.id(), (err, blobFromDao) ->
         should.not.exist err
         blobFromDao.id().should.equal blob.id()
