@@ -36,8 +36,17 @@ helper.deleteRepo = (repoId, callback) -> reposDao.remove repoId, callback
 
 helper.deleteUserWithRepo = (username, repoId, callback) ->
   helper.deleteRepo repoId, (err) ->
-    if err callback err
-    else helper.deleteUser username, callback
+    if err
+      callback err
+    else
+      helper.deleteUser username, callback
+
+helper.deleteUserWithRepos = (username, repoOneId, repoTwoId, callback) ->
+  helper.deleteRepo repoOneId, (err) ->
+    if err 
+      callback err
+    else 
+      helper.deleteUserWithRepo username, repoTwoId, callback
 
 helper.createUserWithRepos = (username, firstReponame, firstRepotype, secondReponame, secondRepotype, mainCallback) ->
   # create user

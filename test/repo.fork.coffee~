@@ -30,7 +30,7 @@ describe "fork repo", ->
       MassiveGit.forkRepo repoId, forkedPartName, forkedUsername, (err, forkedRepo) ->
         should.not.exist err
         forkedRepo.forkedFrom.should.equal repoId
-        forkedRepo.id().should.equal forkedUsername + "$" + forkedPartName
+        forkedRepo.id().should.equal forkedRepoId
         forkedRepo.should.have.property "name", forkedPartName
         forkedRepo.should.have.property "author", forkedUsername
         forkedRepo.public.should.be.ok
