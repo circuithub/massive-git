@@ -1,15 +1,31 @@
 # MassiveGit
 
-MassiveGit - revision controlled database which implements Git Object Model.
+MassiveGit - revision controlled database. 
 
 ## Implementation
 
-MassiveGit currently implemented on top of riak [http://basho.com/products/riak-overview/].
+MassiveGit implements Git Object Model  on top of Riak [http://basho.com/products/riak-overview/].
 In future other backends may be implemented.
-
 
 Currently MassiveGit depends on custom version of riak-js module [https://github.com/podviaznikov/riak-js].
 Install it from this repository.
+
+## Use cases
+
+There are variety of use cases where it can be used:
+
+1. GitHub
+2. CircuitHub
+3. WikiPedia
+4. shapesmith (MCAD)
+
+Basically any case where you need to store revisioned versions of your data. With MassiveGit you get nice abstraction layer which allows you to deal with data in terms of Git: Commit, Tree, Blob, Tag.
+
+## Additional materials
+
+We have video and slide from London Node.js User Group: http://lanyrd.com/2011/lnug-october/skgpw/.
+
+Check them for initial introduction.
 
 ## Tips
 
@@ -26,6 +42,13 @@ See [http://wiki.basho.com/MapReduce.html] for details how to do this and why.
 
 Since we are using secondary indexes please make following change in the riak app.config:
 `change the storage backend to riak_kv_eleveldb_backend`.
+
+## Contributions
+
+MassiveGit is currently is under development. If you need any feature tell us or fork project and implement it by yourself.
+
+We appreciate feedback!
+
 
 ## License
 

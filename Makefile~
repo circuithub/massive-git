@@ -1,9 +1,0 @@
-TESTS = test/*.coffee
-
-test:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--require coffee-script \
-    --reporter list \
-		$(TESTS)
-
-.PHONY: test
