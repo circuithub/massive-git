@@ -3,7 +3,7 @@ Blob      = require("../lib/objects/blob").Blob
 Tree      = require("../lib/objects/tree").Tree
 TreeEntry = require("../lib/objects/tree.entry").TreeEntry
 
-describe "new tree", ->
+describe "new Tree", ->
   describe "with plain structure", ->
     blob1 = new Blob("test-content", "anton$project1")
     blob2 = new Blob("1111", "anton-project1")

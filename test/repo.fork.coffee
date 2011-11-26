@@ -2,8 +2,7 @@ should     = require "should"
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./helper/helper"
 
-
-describe "fork repo", ->
+describe "MassiveGit#forkRepo()", ->
   partName = "part" + Math.floor(1000 * Math.random())
   forkedPartName = "forked-part" + Math.floor(1000 * Math.random())
   username = "random-user" + Math.floor(1000 * Math.random())

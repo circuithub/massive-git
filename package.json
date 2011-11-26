@@ -1,8 +1,8 @@
 {
   "author": "CircuitHub (circuithub.com)",
   "name": "massive-git",
-  "description": "Revision database that implements Git Object Model",
-  "version": "0.5.1",
+  "description": "Revision controlled database that implements Git Object Model on top of Riak",
+  "version": "0.5.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/circuithub/massive-git.git"

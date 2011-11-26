@@ -1,7 +1,7 @@
 should = require "should"
 Commit = require("../lib/objects/commit").Commit
 
-describe "new commit", ->
+describe "new Commit", ->
   authoredDate = new Date().getTime()
   commitedDate = new Date().getTime()
   commit = new Commit("tree-id", "parent-id", "anton", "anton@circuithub.com", authoredDate, "andrew","andrew@circuithub.com", commitedDate, "initial commit", "anton$project1")

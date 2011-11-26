@@ -6,13 +6,12 @@ TreeEntry  = require("../lib/objects/tree.entry").TreeEntry
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./helper/helper"
 
-
-describe "commit repo:", ->
+describe "MassiveGit#commit()", ->
   blob1 = new Blob "test-content"
   blob2 = new Blob "1111"
-  randomPart1Name = "part1" + Math.floor(1000 * Math.random())
+  repo1Name = "repo1" + Math.floor(1000 * Math.random())
   username = "random-user" + Math.floor(100000 * Math.random())
-  repo1Id = username + "$" + randomPart1Name
+  repo1Id = username + "$" + repo1Name
   before (done) ->
     helper.createUserWithRepo username, randomPart1Name, "part", done
   describe "commit two files", ->

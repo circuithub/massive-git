@@ -1,7 +1,7 @@
 should = require "should"
 Blob   = require("../lib/objects/blob").Blob
 
-describe "new blob", ->
+describe "new Blob", ->
   blob = new Blob("test-content", "anton$project1")
   it "should have correct properties", ->
 		blob.id().should.equal "0535cbee7fa4e0fef31389c68336ec6bcb5422b3"
