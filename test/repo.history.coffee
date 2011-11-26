@@ -1,5 +1,4 @@
 should     = require "should"
-DbTestCase = require("./base/db.test.case").DbTestCase
 _          = require "underscore"
 Repo       = require("../lib/objects/repo").Repo
 Blob       = require("../lib/objects/blob").Blob
@@ -8,7 +7,7 @@ MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./helper/helper"
 
 #
-exports.testCommitUpdate = (beforeExit) ->
+testCommitUpdate = (beforeExit) ->
   blob1 = new Blob JSON.stringify {one:1, two: 2}
   blob2 = new Blob "some-string"
   randomPartName = "part" + Math.floor(1000 * Math.random())
@@ -83,7 +82,4 @@ exports.testCommitUpdate = (beforeExit) ->
       should.not.exist err
       entries.should.have.length 2 # todo (anton) why we have 1 here???
 
-  testCase = new DbTestCase step1, step2, step3 #, step4, step5, step6, step7, step8, step9
-  testCase.run()
-  beforeExit () -> testCase.tearDown()
 

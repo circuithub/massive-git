@@ -1,5 +1,4 @@
 should     = require "should"
-DbTestCase = require("./base/db.test.case").DbTestCase
 MassiveGit = new (require("../lib/massive.git").MassiveGit)()
 helper     = require "./helper/helper"
 

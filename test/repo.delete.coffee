@@ -19,7 +19,7 @@ describe "MassiveGit", ->
           err.should.have.property "statusCode", 400
           done()
     describe "existent repo", ->
-      it "should return user object with update link property", (done) ->
+      it "should return user with update link property", (done) ->
         MassiveGit.deleteRepo repo1Id, username, (err, user) ->
           should.not.exist err
           user.links().should.have.length 1
