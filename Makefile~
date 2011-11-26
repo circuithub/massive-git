@@ -1,6 +1,9 @@
-TESTS = test/blob.coffee
+TESTS = test/*.coffee
 
-test-all:
+test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--require coffee-script \
+    --reporter list \
 		$(TESTS)
+
+.PHONY: test
