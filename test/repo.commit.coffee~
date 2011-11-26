@@ -19,5 +19,5 @@ describe "commit repo:", ->
     entries = [new TreeEntry("symbol.json", blob2), new TreeEntry("datasheet.json", blob1)]
     it "should just normally commit them", (done) ->
       MassiveGit.commit entries, repo1Id, username, "first commit", undefined, done
-     
+      
 

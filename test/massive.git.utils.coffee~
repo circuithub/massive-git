@@ -11,6 +11,7 @@ describe "create blob from massive git", ->
   it "should works in the same way as invoking contructor", ->
     blob1.equals(blob2).should.be.ok
 
+
 describe "create tree entry from massive git", ->
   blob1 = new Blob "blob-content"
   treeEntry1 = new TreeEntry "entry.json", blob1

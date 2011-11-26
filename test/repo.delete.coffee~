@@ -16,7 +16,7 @@ describe "repos manipulation:", ->
       MassiveGit.getUserRepos username, (err, repos) ->
         repos.should.have.length 
         done err
-    describe "delete existent repo", ->
+    describe "delete exitent repo", ->
       it "should return user object with update link property", (done) ->
         MassiveGit.deleteRepo repo1Id, username, (err, user) ->
           should.not.exist err
