@@ -1,10 +1,7 @@
 crypto    = require "crypto"
 GitEntity = require("./git.entity").GitEntity
 
-sha1 = (data) ->
-  shasum = crypto.createHash "sha1"
-  shasum.update data
-  shasum.digest "hex"
+sha1 = (data) -> crypto.createHash("sha1").update(data).digest("hex")
 
 # GitObject
 # ------------

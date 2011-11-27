@@ -31,7 +31,7 @@ GitEntity = exports.GitEntity = class GitEntity
   # Method for building link.
   buildLink: (bucket, key, tag) -> utils.buildLink bucket, key, tag
 
-  # Method that check whether two `GitEntities` are the same.
+  # Method checks whether two `GitEntities` are the same.
   equals: (gitEntity) =>
     @id() == gitEntity.id() and _.isEqual(@links(), gitEntity.links()) and _.isEqual(@attributes(), gitEntity.attributes())
 

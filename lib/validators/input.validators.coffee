@@ -7,7 +7,6 @@ class ValidationResult
   
   isValid: => !@errorMessage?
 
-
 # Validate user's data. `username` and `email` are both mandatory.
 exports.validateUser = (username, email) ->
   # sanitize input params before further validation
