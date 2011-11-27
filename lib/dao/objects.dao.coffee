@@ -1,14 +1,13 @@
 Dao = require("./dao").Dao
 
-class ObjectsDao extends Dao
+## ObjectsDao
+## -------------
+## Base Dao for all Git Objects: Blob, Commit, Tree, Tag.
+class exports.ObjectsDao extends Dao
 
   constructor: (log) -> super "objects", log
-
-  populateEntity: (meta, attributes) =>
-    super meta, attributes
 
   # Get link to repository. Can be `null`.
   getRepository: (links) =>  @getLink links, "repository"
 
-exports.ObjectsDao = ObjectsDao
 

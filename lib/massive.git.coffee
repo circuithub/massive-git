@@ -230,18 +230,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if err
         callback err
       else
-        @getBlobs tree.id(), (err, blobs) ->
-          if err
-            callback err
-          else
-            entries = tree.entries
-            treeEntries = []
-            console.log "blobs", blobs
-            for blob in blobs
-              blobId = blob.id()
-              name = entry.name for entry in entries when entry.id == blobId
-              treeEntries.push new TreeEntry name, blob
-            callback err, treeEntries
+        @getTreeEntries tree.id(), callback
 
   _prepareEntries: (entries, repoId) =>
     plainEntries = []
@@ -257,6 +246,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         tasks.push task
     {tasks: tasks, treeEntries: plainEntries}
 
+  # @TODO write test
   getHistoryForRepo: (repoId, callback) =>
     @getHead repoId, (err, commitId) =>
       if err
@@ -264,15 +254,34 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @getHistoryForCommit commitId, callback
 
+  # @TODO write test
   getHistoryForCommit: (commitId, callback) =>  @commitsDao.getParents commitId, callback
-
-  getBlobs: (treeId, callback) =>
-    @treesDao.getBlobs treeId, (err, blobs) ->
+  
+  # @TODO write test
+  getTreeEntries: (treeId, callback) =>
+    @getBlobs treeId, (err, blobs) ->
       if err
-        err.message = "Cannot retrive blobs"
         callback err
       else
-        callback undefined, blobs
+        entries = tree.entries
+        treeEntries = []
+        for blob in blobs
+          blobId = blob.id()
+          name = entry.name for entry in entries when entry.id == blobId
+          treeEntries.push new TreeEntry name, blob
+        callback err, treeEntries
+
+
+  getBlobs: (id, callback) =>
+    if !id
+      callback {statusCode: 422, message: "Invalid parameters"}
+    else
+      @treesDao.getBlobs id, (err, blobs) ->
+        if err
+          err.message = "Cannot retrive blobs"
+          callback err
+        else
+          callback undefined, blobs
 
   getRepo: (id, callback) =>
     if !id

@@ -8,12 +8,10 @@ User       = require("../objects/user").User
 
 class UsersDao extends Dao
 
-  constructor: (log) ->
-    super "users", log
+  constructor: (log) -> super "users", log
 
   populateEntity: (meta, attributes) -> 
-    if attributes?
-      new User(meta.key, attributes.email, meta.links)
+    new User(meta.key, attributes.email, meta.links) if attributes?
 
   # return map:
   fetchAllRepos: (user, callback) =>
@@ -64,4 +62,3 @@ class UsersDao extends Dao
   unfollowUser: (user, userToUnfollow, callback) =>
 
 exports.newInstance = (log) -> new UsersDao(log)
-

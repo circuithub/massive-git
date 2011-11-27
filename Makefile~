@@ -13,4 +13,4 @@ test-ci:
 		$(TESTS)
 
 
-.PHONY: test test-ci
+.PHONY: test

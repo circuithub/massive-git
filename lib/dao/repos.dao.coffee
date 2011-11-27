@@ -3,7 +3,7 @@ Repo = require("../objects/repo").Repo
 
 class ReposDao extends Dao
 
-  constructor: (log)-> super "repositories", log
+  constructor: (log) -> super "repositories", log
 
   populateEntity: (meta, attributes) =>
     if attributes?
