@@ -314,6 +314,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         if err
           err.statusCode = 400
           err.message = "Commit wasn't found"
+          callback err
         else
           callback undefined, commit
 
@@ -325,6 +326,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         if err
           err.statusCode = 400
           err.message = "Tree wasn't found"
+          callback err
         else
           callback undefined, commit
 
