@@ -23,6 +23,7 @@ describe "MassiveGit", ->
         MassiveGit.getRepo repo1Id, (err, repo) ->
           commit = repo.getLink("commit")
           MassiveGit.fetchRootEntriesForCommit commit, (err, entries) ->
+            console.log "CC>>", commit, entries, repo, err
             should.not.exist err
             console.log "fetching entries for commit", commit, entries
             entries.should.have.length 2
@@ -43,7 +44,7 @@ describe "MassiveGit", ->
             commit.should.have.property "repo", repo1Id
             commit.authoredDate.should.exist
             commit.commitedDate.should.exist
-            commit.tree.should.exist
+            console.log "COMMIT", commit
             should.not.exist commit.parent
             should.not.exist commit.getLink "parent"
             done err

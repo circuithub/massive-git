@@ -13,6 +13,7 @@ describe "BlobsDao", ->
         done err
     it "return matching object", (done) ->
       blobsDao.get blob.id(), (err, blobFromDao) ->
+        console.log "XXX", err, blobFromDao, blob
         should.not.exist err
         blobFromDao.equals(blob).should.be.ok
         done err

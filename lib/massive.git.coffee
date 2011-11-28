@@ -226,11 +226,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
             callback undefined, tree,commitId
 
   fetchRootEntriesForCommit: (commitId, callback) =>
-    @getHeadTreeFromCommit commitId,(err, tree) =>
+    @getHeadTreeFromCommit commitId, (err, tree) =>
       if err
         callback err
       else
-        @getTreeEntries tree.id(), callback
+        @getTreeEntries tree, callback
 
   _prepareEntries: (entries, repoId) =>
     plainEntries = []
@@ -258,11 +258,12 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   getHistoryForCommit: (commitId, callback) =>  @commitsDao.getParents commitId, callback
   
   # @TODO write test
-  getTreeEntries: (treeId, callback) =>
-    @getBlobs treeId, (err, blobs) ->
+  getTreeEntries: (tree, callback) =>
+    @getBlobs tree.id(), (err, blobs) ->
       if err
         callback err
       else
+        console.log "XXXX", tree, blobs, tree.id()
         entries = tree.entries
         treeEntries = []
         for blob in blobs
@@ -276,6 +277,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       callback {statusCode: 422, message: "Invalid parameters"}
     else
       @treesDao.getBlobs id, (err, blobs) ->
+        console.log "BLOBS", err, blobs
         if err
           err.message = "Cannot retrive blobs"
           callback err

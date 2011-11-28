@@ -24,7 +24,7 @@ Dao = exports.Dao = class Dao
     meta =
       links: entity.links()
       index: entity.index()
-      contentType: entity.contentType if entity.contentType?
+      contentType: if entity.contentType? then entity.contentType else "application/json"
     console.log "Content-type of the saved doc", meta.contentType
     @db.save @bucket, entity.id(), entity.attributes(), meta, (err, emptyEntity, meta) =>
       if err
