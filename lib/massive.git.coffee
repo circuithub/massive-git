@@ -32,10 +32,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
   newUser: (username, email, callback) =>
     validationResult = validators.validateUser(username, email)
     if !validationResult.isValid()
-      err =
-        statusCode: 422
-        message: validationResult.errorMessage
-      callback err
+      callback {statusCode: 422, message: validationResult.errorMessage}
     else
       # create user object and save it
       [username, email] = validationResult.sanitizedParameters
@@ -43,38 +40,25 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       console.log "user to be created", user, validationResult
       @usersDao.exists user.id(), (err, exists) =>
         if err
-          err.statusCode = 400
-          err.message = "Internal error"
-          callback err
+          callback {statusCode: 400, message: "Internal error"}
         if exists
-          err =
-            statusCode: 422
-            message: "User already exists"
-          callback err
+          callback {statusCode: 422, message: "User already exists"}
         else
           @usersDao.save user, callback
 
   initRepo: (name, author, type, callback) =>
     validationResult = validators.validateRepo(name, author)
     if !validationResult.isValid()
-      err =
-        statusCode: 422
-        message: validationResult.errorMessage
-      callback err
+      callback {statusCode: 422, message: validationResult.errorMessage}
     else
       # create repo object and save it
       [name, author] = validationResult.sanitizedParameters
       repo = new Repo(name, author, type)
       @reposDao.exists repo.id(), (err, exists) =>
         if err
-          err.statusCode = 400
-          err.message = "Internal error"
-          callback err
+          callback {statusCode: 400, message: "Internal error"}
         if exists
-          err =
-            statusCode: 422
-            message: "Repo already exists"
-          callback err
+          callback {statusCode: 422, message: "Repo already exists"}
         else
           @_saveRepo repo, callback
 
@@ -94,18 +78,14 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       else
         @usersDao.addRepo repo.author, repo.id(), repo.type, (err, ok) ->
           if err
-            err.statusCode = 400
-            err.message = "User wasn't found"
-            callback err
+            callback {statusCode: 400, message: "User wasn't found"}
           else
             callback undefined, repo
 
   deleteRepo: (repoId, author, callback) =>
     @reposDao.remove repoId, (err, ok) =>
       if err
-        err.statusCode = 400
-        err.message = "Repo wasn't found"
-        callback err
+        callback {statusCode: 400, message: "Repo wasn't found"}
       else
         @usersDao.removeRepo author, repoId, (err, ok) ->
           if err
@@ -223,14 +203,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           if err
             callback err
           else
-            callback undefined, tree,commitId
+            callback undefined, tree, commitId
 
   fetchRootEntriesForCommit: (commitId, callback) =>
     @getHeadTreeFromCommit commitId, (err, tree) =>
-      if err
-        callback err
-      else
-        @getTreeEntries tree, callback
+      if err then callback(err) else @getTreeEntries tree, callback
 
   _prepareEntries: (entries, repoId) =>
     plainEntries = []
@@ -263,7 +240,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       if err
         callback err
       else
-        console.log "XXXX", tree, blobs, tree.id()
         entries = tree.entries
         treeEntries = []
         for blob in blobs
@@ -277,7 +253,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
       callback {statusCode: 422, message: "Invalid parameters"}
     else
       @treesDao.getBlobs id, (err, blobs) ->
-        console.log "BLOBS", err, blobs
         if err
           err.message = "Cannot retrive blobs"
           callback err
@@ -290,9 +265,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @reposDao.get id, (err, repo) ->
         if err
-          err.statusCode = 400
-          err.message = "Repo wasn't found"
-          callback err
+          callback {statusCode: 400, message: "Repo wasn't found"}
         else
           callback undefined, repo
 
@@ -302,9 +275,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @blobsDao.get id, (err, blob) ->
         if err
-          err.statusCode = 400
-          err.message = "Blob wasn't found"
-          callback err
+          callback {statusCode: 400, message: "Blob wasn't found"}
         else
           callback undefined, blob
 
@@ -314,9 +285,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @commitsDao.get id, (err, commit) ->
         if err
-          err.statusCode = 400
-          err.message = "Commit wasn't found"
-          callback err
+          callback {statusCode: 400, message: "Commit wasn't found"}
         else
           callback undefined, commit
 
@@ -326,9 +295,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
     else
       @treesDao.get id, (err, commit) ->
         if err
-          err.statusCode = 400
-          err.message = "Tree wasn't found"
-          callback err
+          callback {statusCode: 400, message: "Tree wasn't found"}
         else
           callback undefined, commit
 
