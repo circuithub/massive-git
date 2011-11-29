@@ -70,9 +70,9 @@ helper.createUserWithRepos = (username, firstReponame, firstRepotype, secondRepo
 
 
 helper.deleteAll = ->
-  usersDao.deleteAll()
-  reposDao.deleteAll()
-  commitsDao.deleteAll()
-  treesDao.deleteAll()
-  blobsDao.deleteAll()
+  usersDao.removeAll()
+  reposDao.removeAll()
+  commitsDao.removeAll()
+  treesDao.removeAll()
+  blobsDao.removeAll()
 

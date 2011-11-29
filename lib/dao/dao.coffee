@@ -36,13 +36,13 @@ Dao = exports.Dao = class Dao
   # Remove entity by `id`.
   remove: (id, callback) => @db.remove @bucket, id, callback
 
-  # Remove all entities from `bucket`. TODO (anton) rename to removeAll
-  deleteAll: =>
+  # Remove all entities from `bucket`.
+  removeAll: =>
     @db.getAll @bucket, (err, objects) =>
       if !err
         objects.forEach (object) =>
           console.log "removing entity from bucket", @bucket, "with id =", object.meta.key if @log
-          @db.remove @bucket, object.meta.key
+          @remove object.meta.key
 
   # Checks if such key exists in database. Callback takes 2 parameters: `err` and `exists` boolean parameter
   exists: (id, callback) => @db.exists @bucket, id, callback
@@ -51,7 +51,7 @@ Dao = exports.Dao = class Dao
   walk: (id, spec, callback) =>
     linkPhases = spec.map (unit) ->
       bucket: unit[0] or '_', tag: unit[1] or '_', keep: unit[2]?
-    console.log "waling phases", linkPhases
+    console.log "walking phases", linkPhases
     @db
       .add({bucket: @bucket, key_filters: [["eq", id]]})
       .link(linkPhases)

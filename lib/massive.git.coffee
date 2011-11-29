@@ -1,6 +1,5 @@
 async        = require "async"
 _            = require "underscore"
-sanitize     = require("validator").sanitize
 validators   = require "./validators/input.validators"
 utils        = require("./objects/utils")
 
