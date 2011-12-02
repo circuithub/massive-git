@@ -93,13 +93,11 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           else
             callback undefined, ok
 
-  getUserRepos: (user, callback) => @searchRepos undefined, user, callback
+  getUserRepos: (user, callback) => @usersDao.fetchAllRepos user, callback
 
   getNewestRepos: (callback) => @reposDao.getNewestRepos callback
 
   searchRepos: (name, author, callback) => @reposDao.search name, author, callback
-
-  getUserReposEntries: (user, callback) => @usersDao.fetchAllRepos user, callback
 
   commit: (entries, repoId, author, message = "initial commit", parentCommit = undefined, callback) =>
     preparedEntries = @_prepareEntries entries, repoId

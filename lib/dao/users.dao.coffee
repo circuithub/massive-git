@@ -13,27 +13,13 @@ class UsersDao extends Dao
   populateEntity: (meta, attributes) -> 
     new User(meta.key, attributes.email, meta.links) if attributes?
 
-  # return map:
-  fetchAllRepos: (user, callback) =>
-    @links user, [["repositories", type, 1],["objects", "commit", 1],["objects", "tree", 1],["objects", "blob", 1]], (err, docs) =>
+  fetchAllRepos: (username, callback) =>
+    @get username, (err, user) =>
+      console.log "user", user.links()
       if err
         callback err
       else
-        repos = []
-        blobs = []
-        commits = []
-        trees = []
-        for doc in docs
-          data = doc.data
-          if doc.meta.bucket == "repositories"
-            repos.push reposDao.populateEntity doc.meta, data
-          else if doc.meta.bucket == "objects"
-            switch data.type
-              when "blob" then blobs.push blobsDao.populateEntity(doc.meta, data)
-              when "tree" then trees.push treesDao.populateEntity(doc.meta, data)
-              when "commit" then commits.push commitsDao.populateEntity(doc.meta, data)
-
-        callback undefined, {repos: repos, commits: commits, trees: trees, blobs: blobs}
+        callback undefined, user.getLinks "repositories"
 
   addRepo: (user, repoId, type, callback) =>
     @get user, (err, user) =>
