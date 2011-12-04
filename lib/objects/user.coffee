@@ -1,11 +1,11 @@
-_         = require "underscore"
-GitEntity = require("./git.entity").GitEntity
+_      = require "underscore"
+Entity = require("riak-entity").Entity
 
 # User
 # ------------
 # Class represent information about user in the system.
 # User has `id` (which is username) and `email`.
-User = exports.User = class User extends GitEntity
+User = exports.User = class User extends Entity
 
   constructor: (@_id, @email, @_links = []) ->
 

@@ -1,4 +1,4 @@
-Dao = require("./dao").Dao
+Dao = require("riak-entity").Dao
 
 ## ObjectsDao
 ## -------------

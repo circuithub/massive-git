@@ -1,7 +1,6 @@
 async        = require "async"
 _            = require "underscore"
 validators   = require "./validators/input.validators"
-utils        = require("./objects/utils")
 
 # Dao objects
 ReposDao     = require "./dao/repos.dao"
@@ -18,6 +17,8 @@ Blob = exports.Blob = require("./objects/blob").Blob
 Commit = exports.Commit = require("./objects/commit").Commit
 TreeEntry = exports.TreeEntry = require("./objects/tree.entry").TreeEntry
 
+# Utility method for merging two arrays into one.
+mergeArrays = (first, second) -> Array::push.apply first, second
 
 MassiveGit = exports.MassiveGit = class MassiveGit
 
@@ -121,7 +122,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
         mergedEntries = tree.entries
         newEntriesNames = (entry.name for entry in newEntries)
         mergedEntries = _.reject mergedEntries, (entry) -> _.include newEntriesNames, entry.name
-        utils.mergeArrays mergedEntries, newEntries
+        mergeArrays mergedEntries, newEntries
         async.series tasks, (err, results) =>
           if err
             callback err

@@ -1,4 +1,4 @@
-Dao  = require("./dao").Dao
+Dao  = require("riak-entity").Dao
 Repo = require("../objects/repo").Repo
 
 class ReposDao extends Dao

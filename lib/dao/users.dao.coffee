@@ -1,5 +1,5 @@
 _          = require "underscore"
-Dao        = require("./dao").Dao
+Dao        = require("riak-entity").Dao
 reposDao   = require("./repos.dao").newInstance()
 blobsDao   = require("./blobs.dao").newInstance()
 commitsDao = require("./commits.dao").newInstance()

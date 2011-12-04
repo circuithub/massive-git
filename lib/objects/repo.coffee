@@ -1,4 +1,4 @@
-GitEntity = require("./git.entity").GitEntity
+Entity = require("riak-entity").Entity
 
 # Repo
 # ---------
@@ -9,7 +9,7 @@ GitEntity = require("./git.entity").GitEntity
 # `public` - flag that indicated whether repo is public or private. Default to `true`.
 # `commit` - last commit for this repository. Can be `null` if repository wasn't commited previously.
 # `forkedFrom` - id of the repository from which this was cloned. Default to `null`.
-Repo = exports.Repo = class Repo extends GitEntity
+Repo = exports.Repo = class Repo extends Entity
 
   constructor: (@name, @author, @type, @public = true, @commit, @forkedFrom = null) ->
 
