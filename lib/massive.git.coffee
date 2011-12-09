@@ -176,7 +176,7 @@ MassiveGit = exports.MassiveGit = class MassiveGit
 
   # Callback takes 3 parameters: err, commit id and repo instance.
   getHead: (repoId, callback) =>
-   @getRepo repoId, (err, repo) ->
+    @getRepo repoId, (err, repo) ->
       if err
         callback err
       else
@@ -244,7 +244,6 @@ MassiveGit = exports.MassiveGit = class MassiveGit
           name = entry.name for entry in entries when entry.id == blob.id()
           treeEntries.push new TreeEntry name, blob
         callback err, treeEntries
-
 
   getBlobs: (id, callback) =>
     if !id
