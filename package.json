@@ -9,7 +9,7 @@
   },
   "main": "./index.coffee",
   "engines": {
-    "node": "~v0.4.12"
+    "node": "~v0.4.10"
   },
   "dependencies": {
     "riak-entity": ">=0.1.0",
